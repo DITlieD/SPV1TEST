@@ -1,0 +1,210 @@
+This is an excellent strategic pivot. Transitioning the system to the 1-minute (1m) timeframe aligns perfectly with the "Velocity" objective. By leveraging WebSockets, we can dramatically accelerate the feedback loop, allowing the evolutionary process to iterate, adapt, and exploit short-lived alpha much faster.
+
+However, this is not merely a configuration change; it is a transition into the domain of **Medium-Frequency Trading (MFT)**. This domain presents unique challenges: the signal-to-noise ratio is low, transaction costs dominate profitability, and computational efficiency is critical.
+
+Here is the blueprint for the MFT Velocity Upgrade.
+
+### I. The MFT Velocity Upgrade: Implementation Plan
+
+This upgrade focuses on the most critical aspects for successful 1m trading: Simulation Fidelity, Microstructure Awareness, and Optimized Infrastructure.
+
+#### Phase 1: High-Fidelity Simulation (Crucial)
+
+If the simulation does not accurately reflect reality, the Forge will optimize for strategies that fail in live trading. The backtester must rigorously model the costs of MFT.
+
+**1. Implement Realistic Costs in the Backtester**
+
+  * **File:** `forge/crucible/numba_backtester.py` (or the active backtester file)
+  * **Action:** Introduce parameters for fees, spread, and slippage into the core execution logic.
+
+<!-- end list -->
+
+```python
+# In numba_backtester.py
+import numba
+import numpy as np
+
+class VectorizedBacktester:
+    def __init__(self, initial_capital=1000.0, 
+                 # Reduced profit target for 1m (e.g., 1.0% instead of 5.0%)
+                 profit_target_pct=1.0, 
+                 # Realistic MFT Costs (Example: Bybit Taker fees)
+                 fees_pct=0.055,      # Taker fee (0.055%)
+                 spread_bps=2.0,      # Typical spread in basis points (0.02%)
+                 slippage_factor=0.005): # Additional slippage factor
+        # ... (other parameters)
+        self.fee_rate = fees_pct / 100.0
+        self.spread_factor = spread_bps / 10000.0
+        self.slippage_factor = slippage_factor
+
+# The Numba core function must be updated to use these parameters during execution
+@numba.jit(nopython=True)
+def _run_backtest_core(open_prices, ..., initial_capital, fee_rate, spread_factor, slippage_factor):
+    # ... (Initialization)
+    
+    for i in range(1, n_samples):
+        # ... (Signal detection logic)
+        
+        # When a trade occurs:
+        if trade_action != 0:
+            base_price = open_prices[i] # Assuming execution at the open of the next bar
+            
+            if trade_action == 1: # Buy
+                # 1. Cross the Spread (Buy at Ask)
+                price_with_spread = base_price * (1 + spread_factor)
+                # 2. Apply Slippage
+                execution_price = price_with_spread * (1 + slippage_factor)
+            
+            else: # Sell
+                # 1. Cross the Spread (Sell at Bid)
+                price_with_spread = base_price * (1 - spread_factor)
+                # 2. Apply Slippage
+                execution_price = price_with_spread * (1 - slippage_factor)
+
+            # Calculate Transaction Cost (Fees) and update capital
+            # ... (Implementation of cost calculation based on execution_price and fee_rate)
+
+            # ... (Update position and metrics using execution_price)
+
+    # ... (Calculate final metrics)
+```
+
+#### Phase 2: Microstructure Feature Engineering
+
+We need features optimized for the dynamics of the 1m timeframe, capturing immediate supply/demand balance.
+
+**1. Introduce High-Frequency Features**
+
+  * **File:** `forge/data_processing/feature_factory.py`
+  * **Action:** Add features capturing velocity and intra-bar pressure.
+
+<!-- end list -->
+
+```python
+# In forge/data_processing/feature_factory.py
+import pandas as pd
+import numpy as np
+
+class FeatureFactory:
+    # ... (other methods)
+
+    def _process_single_asset(self, df: pd.DataFrame) -> pd.DataFrame:
+        # ... (Existing features: VMD/Wavelets, Particle Filter, Technicals)
+
+        # --- High-Frequency Microstructure Features ---
+        
+        # 1. Velocity (Smoothed intensity)
+        df['volume_velocity_5'] = df['volume'].rolling(window=5).mean()
+        df['price_velocity_5'] = df['close'].diff().abs().rolling(window=5).mean()
+        
+        # 2. Micro-Volatility (Short window)
+        df['micro_vol_10'] = df['close'].pct_change().rolling(window=10).std()
+
+        # 3. Close Location Value (CLV) - A proxy for Order Flow Imbalance
+        df['clv'] = self._calculate_clv(df)
+        
+        # ... (Sanitization and return)
+
+    def _calculate_clv(self, df: pd.DataFrame) -> pd.Series:
+        # Measures pressure within the bar: ((Close - Low) - (High - Close)) / (High - Low)
+        range_hl = df['high'] - df['low']
+        pressure = ((df['close'] - df['low']) - (df['high'] - df['close']))
+        
+        # Handle division by zero (if High == Low)
+        clv = pressure / range_hl.replace(0, np.nan)
+        return clv.fillna(0)
+```
+
+#### Phase 3: Evolutionary Tuning for MFT
+
+To combat the high noise level of 1m data, the evolutionary process must adapt.
+
+**1. Increase Parsimony Pressure**
+
+  * **File:** `forge/evolution/strategy_synthesizer.py`
+  * **Action:** Significantly increase the penalty for complex models to favor generalization over overfitting.
+
+<!-- end list -->
+
+```python
+# In strategy_synthesizer.py -> StrategySynthesizer.__init__
+        # Increased parsimony pressure for 1m timeframe noise
+        # Increased from 0.001 (Velocity V1) to 0.01 (MFT Velocity)
+        self.parsimony_coeff = 0.01 
+```
+
+**2. Shorten Training Windows**
+
+  * **File:** `forge/overlord/task_scheduler.py`
+  * **Action:** Alpha decays rapidly at 1m. Train on shorter, more recent datasets.
+
+<!-- end list -->
+
+```python
+# In task_scheduler.py -> run_single_forge_cycle
+    # ... (Ensure app_config is available)
+    try:
+        # ... (Delayed Imports, including pandas)
+        
+        # Reduce historical data tail for 1m training
+        # Focus on the last ~33 hours (2000 minutes)
+        primary_timeframe = app_config.TIMEFRAMES.get('microstructure', '5m')
+        data_limit = 2000 if primary_timeframe == '1m' else 5000
+        
+        if not os.path.exists(raw_data_path):
+            raise FileNotFoundError(f"Raw data file not found: {raw_data_path}")
+            
+        df_raw = pd.read_csv(raw_data_path, index_col='timestamp', parse_dates=True).tail(data_limit)
+        # ...
+```
+
+#### Phase 4: Infrastructure and Configuration
+
+**1. Configuration Update**
+
+  * **File:** `config.py`
+  * **Action:** Update the `TIMEFRAMES` to prioritize 1m execution.
+
+<!-- end list -->
+
+```python
+# In config.py
+# --- Timeframe Configuration (MFT Velocity Focus) ---
+TIMEFRAMES = {
+    'strategic': '15m',      # Used for high-level bias and regime context
+    'tactical': '5m',        # Setup confirmation
+    'microstructure': '1m'   # PRIMARY execution timeframe
+}
+# Ensure data preparation scripts (e.g., prepare_all_data.py) fetch sufficient 1m data.
+```
+
+**2. WebSocket Optimization (Latency and Robustness)**
+
+  * **File:** `crucible_engine.py`
+  * **Action:** The `_trade_watcher_and_resampler` loop is critical. Ensure it efficiently processes data via `ccxt.pro` (WebSockets) upon the 1m candle close and handles connection drops robustly.
+
+<!-- end list -->
+
+```python
+# In crucible_engine.py -> _trade_watcher_and_resampler
+import ccxt
+import asyncio
+
+    async def _trade_watcher_and_resampler(self):
+        self.logger.info("Starting Trade Watcher and Resampler loop (MFT 1m Focus)...")
+        # ... (Initialization)
+        while not self.stop_event.is_set():
+            try:
+                # (Existing data ingestion and resampling logic)
+                # Ensure this logic is optimized to trigger processing immediately when the 1m bar closes.
+                
+                # Placeholder sleep if the loop structure requires it
+                await asyncio.sleep(0.5) 
+
+            except ccxt.NetworkError as e:
+                self.logger.warning(f"WebSocket Network Error (Critical at 1m): {e}. Attempting rapid reconnection...")
+                await asyncio.sleep(2) # Rapid retry
+            except Exception as e:
+                self.logger.error(f"Error in WebSocket loop: {e}", exc_info=True)
+                await asyncio.sleep(15)
+```

@@ -1,0 +1,533 @@
+This is the comprehensive implementation blueprint for activating the Causal Cognition Architecture (CCA) components within your training pipeline, replacing the placeholders in `train_sde_brain.py`.
+
+This implementation provides the core structure, data flow, foundational feature engineering, and proxy models required for the ACN architecture.
+
+### 1\. Configuration (`config.py`)
+
+We define the parameters for the ACN architecture.
+
+```python
+# config.py
+import logging
+
+# --- General Configuration ---
+ASSET_UNIVERSE = [
+    "BTC/USDT:USDT", "ETH/USDT:USDT", "SOL/USDT:USDT", "XRP/USDT:USDT", 
+    "DOGE/USDT:USDT", "BNB/USDT:USDT", "ASTER/USDT:USDT", "ENA/USDT:USDT", 
+    "SUI/USDT:USDT", "ADA/USDT:USDT"
+]
+ACTIVE_EXCHANGE = 'bybit'
+DATA_DIR = 'data'
+MODEL_DIR = 'models'
+LOG_LEVEL = logging.INFO
+
+# --- Timeframe Configuration (MTFA Velocity Focus) ---
+TIMEFRAMES = {
+    'strategic': '1h',
+    'tactical': '15m',
+    'microstructure': '1m'
+}
+
+# --- ACN Configuration ---
+ACN_CONFIG = {
+    'training_window': 10000, # Default training window size (bars)
+    # Influence Mapper
+    'im_entropy_window': 60,
+}
+```
+
+### 2\. Data Handling Utilities
+
+#### `data_fetcher.py` (OHLCV)
+
+```python
+# data_fetcher.py
+import pandas as pd
+import logging
+import os
+# Ensure config is imported if used globally
+try:
+    import config as app_config
+except ImportError:
+    # Fallback if config is not available at the module level
+    class ConfigFallback:
+        DATA_DIR = 'data'
+    app_config = ConfigFallback()
+
+logger = logging.getLogger(__name__)
+
+def load_historical_data(symbol, timeframe, limit=10000):
+    """Loads historical OHLCV data from CSV."""
+    try:
+        base_symbol = symbol.split(':')[0].replace('/', '')
+        file_path = os.path.join(app_config.DATA_DIR, f"{base_symbol}_{timeframe}_raw.csv")
+        
+        if not os.path.exists(file_path):
+            logger.warning(f"Data file not found: {file_path}")
+            return pd.DataFrame()
+            
+        df = pd.read_csv(file_path, index_col='timestamp', parse_dates=True)
+        return df.tail(limit)
+    except Exception as e:
+        logger.error(f"Error loading historical data for {symbol}: {e}")
+        return pd.DataFrame()
+```
+
+#### `l2_collector.py` (L2 Data Loading)
+
+```python
+# l2_collector.py
+import pandas as pd
+import logging
+import os
+try:
+    import config as app_config
+except ImportError:
+    class ConfigFallback:
+        DATA_DIR = 'data'
+    app_config = ConfigFallback()
+
+logger = logging.getLogger(__name__)
+
+def load_historical_l2_data(symbol: str) -> pd.DataFrame:
+    """
+    Loads historical L2 snapshot data for training.
+    ASSUMPTION: L2 data is stored in a pre-processed snapshot format.
+    Format: timestamp, bid_p_0, bid_v_0, ask_p_0, ask_v_0, ...
+    """
+    try:
+        base_symbol = symbol.split(':')[0].replace('/', '')
+        # Adjust file extension based on actual storage format (CSV or Parquet)
+        file_path = os.path.join(app_config.DATA_DIR, f"{base_symbol}_L2_snapshots.csv")
+        
+        if not os.path.exists(file_path):
+            logger.warning(f"L2 Data file not found: {file_path}")
+            return pd.DataFrame()
+            
+        df_l2 = pd.read_csv(file_path, index_col='timestamp', parse_dates=True)
+        
+        # Verify essential columns exist
+        required_cols = ['bid_p_0', 'bid_v_0', 'ask_p_0', 'ask_v_0']
+        if not all(col in df_l2.columns for col in required_cols):
+            logger.error(f"L2 data missing required L1 columns: {required_cols}")
+            return pd.DataFrame()
+
+        return df_l2
+    except Exception as e:
+        logger.error(f"Error loading L2 data for {symbol}: {e}")
+        return pd.DataFrame()
+```
+
+### 3\. Microstructure Features (`microstructure_features_l2.py`)
+
+Implements OFI, BPR, WMP, and Spread.
+
+```python
+# forge/data_processing/microstructure_features_l2.py
+import pandas as pd
+import numpy as np
+import logging
+
+logger = logging.getLogger(__name__)
+
+def calculate_microstructure_features(df_l2: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculates high-frequency microstructure features from L1 snapshot data.
+    """
+    if df_l2.empty:
+        return pd.DataFrame()
+
+    logger.info("Calculating Microstructure Features (OFI, BPR, WMP)...")
+    features = pd.DataFrame(index=df_l2.index)
+
+    # Extract Level 1 data (Assuming columns exist based on l2_collector validation)
+    bid_vol_0 = df_l2['bid_v_0']
+    ask_vol_0 = df_l2['ask_v_0']
+    bid_price_0 = df_l2['bid_p_0']
+    ask_price_0 = df_l2['ask_p_0']
+
+    total_vol = bid_vol_0 + ask_vol_0
+    
+    # 1. Book Pressure Ratio (BPR) - Level 1
+    features['BPR_L1'] = bid_vol_0 / total_vol
+    features['BPR_L1'].replace([np.inf, -np.inf], 0.5, inplace=True) # 0.5 indicates balance
+
+    # 2. Weighted Mid-Price (WMP) and Spread
+    wmp = (ask_price_0 * bid_vol_0 + bid_price_0 * ask_vol_0) / total_vol
+    features['WMP'] = wmp
+    features['Spread'] = ask_price_0 - bid_price_0
+
+    # 3. Order Flow Imbalance (OFI) - Level 1
+    # OFI tracks the net change in volume at the best bid/ask, accounting for price movements.
+    
+    # Calculate differences from the previous snapshot
+    prev_bid_p = bid_price_0.shift(1)
+    prev_ask_p = ask_price_0.shift(1)
+    prev_bid_v = bid_vol_0.shift(1)
+    prev_ask_v = ask_vol_0.shift(1)
+
+    ofi = pd.Series(0, index=df_l2.index, dtype=float)
+
+    # Bid side logic
+    ofi += np.where(bid_price_0 > prev_bid_p, bid_vol_0, 0)
+    ofi += np.where(bid_price_0 == prev_bid_p, bid_vol_0 - prev_bid_v, 0)
+    ofi -= np.where(bid_price_0 < prev_bid_p, prev_bid_v, 0)
+
+    # Ask side logic
+    ofi -= np.where(ask_price_0 < prev_ask_p, ask_vol_0, 0)
+    ofi -= np.where(ask_price_0 == prev_ask_p, ask_vol_0 - prev_ask_v, 0)
+    ofi += np.where(ask_price_0 > prev_ask_p, prev_ask_v, 0)
+
+    features['OFI_L1'] = ofi
+
+    # Final sanitization
+    features.replace([np.inf, -np.inf], np.nan, inplace=True)
+    features.fillna(method='ffill', inplace=True)
+    features.fillna(0, inplace=True)
+
+    return features
+```
+
+### 4\. Causal Engines (Placeholders with Proxies)
+
+#### `micro_causality.py` (MCE)
+
+```python
+# forge/modeling/micro_causality.py
+import pandas as pd
+import logging
+
+logger = logging.getLogger("MicroCausalityEngine")
+
+def run_mce_inference(df_microstructure: pd.DataFrame) -> pd.DataFrame:
+    """
+    Runs the Micro-Causality Engine (TFT) inference.
+    Placeholder: Uses feature proxies instead of the actual TFT model.
+    """
+    logger.info("Running MCE inference (TFT Placeholder)...")
+    results = pd.DataFrame(index=df_microstructure.index)
+    
+    # MCE_Skew Proxy: Smoothed OFI (Inferred Inventory Imbalance)
+    if 'OFI_L1' in df_microstructure.columns:
+        # Use Exponential Moving Average for smoother representation
+        results['MCE_Skew'] = df_microstructure['OFI_L1'].ewm(span=60, adjust=False).mean()
+    else:
+        results['MCE_Skew'] = 0.0
+
+    # MCE_Pressure Proxy: Smoothed Spread volatility (Urgency to Unwind)
+    if 'Spread' in df_microstructure.columns:
+        results['MCE_Pressure'] = df_microstructure['Spread'].rolling(window=60, min_periods=1).std()
+    else:
+        results['MCE_Pressure'] = 0.0
+
+    results.fillna(0, inplace=True)
+    return results
+```
+
+#### `macro_causality.py` (Influence Mapper)
+
+```python
+# forge/modeling/macro_causality.py
+import pandas as pd
+import numpy as np
+import logging
+
+logger = logging.getLogger("MacroCausalityEngine")
+
+# Optional dependency for Permutation Entropy
+try:
+    import ordpy
+except ImportError:
+    logging.warning("ordpy not installed. Permutation Entropy will use a placeholder.")
+    ordpy = None
+
+def calculate_permutation_entropy(series, order=3, delay=1):
+    """Calculates the Permutation Entropy (PE)."""
+    if ordpy:
+        try:
+            data = series.dropna().values
+            if len(data) < order + delay: return np.nan
+            # Use normalized entropy for consistency
+            return ordpy.permutation_entropy(data, dx=order, taux=delay, normalized=True)
+        except Exception as e:
+            logger.debug(f"PE calculation error: {e}")
+            return np.nan
+    else:
+        # Placeholder: Rolling standard deviation as a proxy for disorder
+        return series.std()
+
+def calculate_influence_map(cross_asset_data: dict, target_symbol: str, config: dict) -> pd.DataFrame:
+    """
+    Calculates the Influence Map (PE and TE/GAT placeholders).
+    """
+    window = config.get('im_entropy_window', 60)
+    logger.info(f"Calculating Influence Map for {target_symbol} (Window: {window})...")
+    
+    target_df = cross_asset_data.get(target_symbol)
+    if target_df is None: return pd.DataFrame()
+
+    # Align all data by index using close prices
+    aligned_data = pd.DataFrame(index=target_df.index)
+    # Ensure target data is added first for alignment reference
+    if 'close' in target_df.columns:
+        aligned_data[target_symbol] = target_df['close']
+
+    for symbol, df in cross_asset_data.items():
+        if symbol == target_symbol: continue
+        if 'close' in df.columns:
+            # Use merge_asof to align different asset timestamps robustly
+             aligned_data = pd.merge_asof(aligned_data.sort_index(), df[['close']].rename(columns={'close': symbol}).sort_index(), 
+                                               left_index=True, right_index=True, direction='backward')
+
+    influence_features = pd.DataFrame(index=target_df.index)
+
+    # 1. Permutation Entropy (PE) - Rolling calculation
+    influence_features['IM_PE_Target'] = aligned_data[target_symbol].rolling(window=window).apply(
+        calculate_permutation_entropy, raw=False
+    )
+
+    # 2. Transfer Entropy (TE) Proxy (IM_TE_Incoming_Proxy)
+    # Placeholder: Use rolling correlation with the dominant asset (BTC) 
+    
+    dominant_asset = next((k for k in aligned_data.columns if 'BTC' in k), None)
+    if dominant_asset and target_symbol != dominant_asset:
+        influence_features['IM_TE_Incoming_Proxy'] = aligned_data[target_symbol].rolling(window=window).corr(aligned_data[dominant_asset])
+    else:
+        influence_features['IM_TE_Incoming_Proxy'] = 0.0
+
+    # Placeholder (IM_Predicted_Entropy_Delta): For GAT output.
+    influence_features['IM_Predicted_Entropy_Delta'] = 0.0
+
+    return influence_features
+```
+
+### 5\. Symbiotic Crucible (`symbiotic_crucible.py`)
+
+Defines the Implicit Brain (Teacher Model) using LightGBM.
+
+```python
+# forge/evolution/symbiotic_crucible.py
+import pandas as pd
+import logging
+import joblib
+import os
+import lightgbm as lgb
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import log_loss
+
+logger = logging.getLogger("SymbioticCrucible")
+
+class ImplicitBrain:
+    """
+    The Teacher Model (GBM/DNN). Learns complex patterns from the combined CCA feature set.
+    """
+    def __init__(self, feature_list):
+        # LightGBM Configuration (Tuned for high capacity)
+        params = {
+            'objective': 'multiclass',
+            'num_class': 3, # Assuming 3 classes (Buy, Sell, Hold)
+            'metric': 'multi_logloss',
+            'n_estimators': 1500,
+            'learning_rate': 0.01,
+            'num_leaves': 127,    # Increased complexity
+            'verbose': -1,
+            'n_jobs': -1,         # Utilize all cores for training the teacher
+            'random_state': 42,
+            'colsample_bytree': 0.7,
+            'subsample': 0.7,
+        }
+        self.model = lgb.LGBMClassifier(**params)
+        self.features = feature_list
+
+    def train(self, X: pd.DataFrame, y: pd.Series):
+        logger.info("Training Implicit Brain (LightGBM)...")
+        
+        if X.empty or y.empty:
+            logger.error("Training data is empty.")
+            return False
+
+        # Basic train-test split for evaluation (Shuffle=False for time series)
+        X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, shuffle=False)
+
+        try:
+            self.model.fit(X_train, y_train, 
+                           eval_set=[(X_val, y_val)], 
+                           eval_metric='multi_logloss',
+                           callbacks=[lgb.early_stopping(100, verbose=False)])
+            
+            # Evaluate performance
+            val_probs = self.model.predict_proba(X_val)
+            # Ensure labels are correctly handled for log_loss
+            val_loss = log_loss(y_val, val_probs, labels=self.model.classes_)
+            logger.info(f"Implicit Brain training complete. Best Validation LogLoss: {val_loss:.4f}")
+            return True
+        except Exception as e:
+            logger.error(f"Implicit Brain training failed: {e}", exc_info=True)
+            return False
+
+    def save_model(self, model_path):
+        """Saves the trained model (including features list)."""
+        os.makedirs(os.path.dirname(model_path), exist_ok=True)
+        # Save the whole object (including the model and features)
+        joblib.dump(self, model_path)
+        logger.info(f"Implicit Brain saved to {model_path}")
+```
+
+### 6\. The Training Orchestrator (`train_sde_brain.py`)
+
+Integrates all components to train the Implicit Brain.
+
+```python
+# train_sde_brain.py
+import pandas as pd
+import numpy as np
+import logging
+import os
+import config as app_config
+
+# Import Data Handlers
+from data_fetcher import load_historical_data
+from l2_collector import load_historical_l2_data
+
+# Assuming FeatureFactory and labeling are implemented correctly
+# Note: FeatureFactory implementation was not provided in the context, assuming it exists.
+try:
+    from forge.data_processing.feature_factory import FeatureFactory
+except ImportError:
+     print("WARNING: FeatureFactory not found. Standard feature engineering will be skipped.")
+     FeatureFactory = None
+
+# Assuming labeling.py exists
+try:
+    from forge.data_processing.labeling import create_categorical_labels
+except ImportError:
+     print("WARNING: create_categorical_labels not found. Using placeholder.")
+     def create_categorical_labels(df):
+        # Placeholder: return random labels (0, 1, 2)
+        return pd.Series(np.random.randint(0, 3, size=len(df)), index=df.index)
+
+# Import ACN Components
+from forge.data_processing.microstructure_features_l2 import calculate_microstructure_features
+from forge.modeling.micro_causality import run_mce_inference
+from forge.modeling.macro_causality import calculate_influence_map
+from forge.evolution.symbiotic_crucible import ImplicitBrain
+
+logging.basicConfig(level=app_config.LOG_LEVEL, format='%(asctime)s - [SDE Trainer] - %(levelname)s - %(message)s')
+logger = logging.getLogger("TrainSDEBrain")
+
+# Configuration
+# Select the asset to train the brain for (Can be parameterized)
+TARGET_ASSET = "BTC/USDT:USDT" 
+TRAINING_WINDOW_SIZE = app_config.ACN_CONFIG.get('training_window', 10000)
+LTF = app_config.TIMEFRAMES['microstructure']
+
+def main():
+    logger.info(f"=== Starting SDE Implicit Brain Training Pipeline (ACN) for {TARGET_ASSET} ===")
+
+    # 1. Load Cross-Asset Data
+    logger.info("--- Phase 1: Data Loading (Universe and L2) ---")
+    cross_asset_data = {}
+    for symbol in app_config.ASSET_UNIVERSE:
+        df = load_historical_data(symbol, LTF, limit=TRAINING_WINDOW_SIZE)
+        if not df.empty:
+            cross_asset_data[symbol] = df
+
+    if TARGET_ASSET not in cross_asset_data:
+        logger.error("Target asset L1 data missing. Aborting.")
+        return
+
+    # Load L2 data for the target asset
+    df_l2 = load_historical_l2_data(TARGET_ASSET)
+
+    # 2. Standard Feature Engineering
+    logger.info("--- Phase 2: Standard Feature Engineering (FeatureFactory) ---")
+    if FeatureFactory:
+        ff = FeatureFactory(cross_asset_data.copy(), logger=logger)
+        # exchange=None in offline training context
+        processed_data = ff.create_all_features(app_config, exchange=None)
+        df_features = processed_data[TARGET_ASSET]
+    else:
+        # Fallback if FeatureFactory is missing: use raw data
+        df_features = cross_asset_data[TARGET_ASSET].copy()
+
+    # 3. Micro-Causality Engine (MCE) Integration
+    logger.info("--- Phase 3: MCE Integration ---")
+    if not df_l2.empty:
+        # 3.1 Calculate Microstructure Features (OFI, BPR)
+        df_microstructure = calculate_microstructure_features(df_l2)
+        
+        # 3.2 Run MCE Inference (TFT Placeholder)
+        df_mce_signals = run_mce_inference(df_microstructure)
+
+        # 3.3 Align MCE signals (Causality Preservation)
+        # CRITICAL: MCE features are high-frequency. Align backward to prevent lookahead bias.
+        logger.info("Aligning MCE features onto LTF using merge_asof...")
+        df_features = pd.merge_asof(
+            df_features.sort_index(),
+            df_mce_signals.sort_index(),
+            left_index=True,
+            right_index=True,
+            direction='backward'
+        )
+    else:
+        logger.warning("L2 data unavailable. Proceeding without MCE features.")
+
+    # 4. Macro-Causality Engine (Influence Mapper) Integration
+    logger.info("--- Phase 4: Influence Mapper Integration ---")
+    # Requires the raw cross-asset data
+    df_influence = calculate_influence_map(cross_asset_data, TARGET_ASSET, app_config.ACN_CONFIG)
+    
+    if not df_influence.empty:
+        # Align influence features (Causality Preservation)
+        logger.info("Aligning Influence Mapper features using merge_asof...")
+        df_features = pd.merge_asof(
+            df_features.sort_index(),
+            df_influence.sort_index(),
+            left_index=True,
+            right_index=True,
+            direction='backward'
+        )
+    else:
+         logger.warning("Influence Map calculation failed. Proceeding without Macro features.")
+
+    # 5. Labeling and Sanitization
+    logger.info("--- Phase 5: Labeling and Sanitization ---")
+    if 'close' not in df_features.columns:
+         logger.error("'close' price missing for labeling. Aborting.")
+         return
+
+    df_features['label'] = create_categorical_labels(df_features)
+    df_features.replace([np.inf, -np.inf], np.nan, inplace=True)
+    # Final rigorous dropna after all features and labels are aligned
+    df_features.dropna(inplace=True)
+
+    if df_features.empty:
+        logger.error("Dataframe empty after sanitization. Aborting.")
+        return
+
+    # 6. Implicit Brain Training
+    logger.info("--- Phase 6: Implicit Brain Training (SDE) ---")
+    
+    # Define feature columns (excluding OHLCV and label)
+    feature_columns = [col for col in df_features.columns if col not in ['open', 'high', 'low', 'close', 'volume', 'label']]
+    X = df_features[feature_columns]
+    y = df_features['label']
+
+    brain = ImplicitBrain(feature_list=feature_columns)
+    success = brain.train(X, y)
+
+    if success:
+        # Save the model with a unique name based on the asset
+        model_name = TARGET_ASSET.replace('/', '').replace(':', '_')
+        model_path = os.path.join(app_config.MODEL_DIR, f"sde_implicit_brain_{model_name}.pkl")
+        brain.save_model(model_path)
+        logger.info("=== Pipeline Complete Successfully ===")
+    else:
+        logger.error("=== Pipeline Failed ===")
+
+if __name__ == "__main__":
+    # Ensure directories exist
+    os.makedirs(app_config.MODEL_DIR, exist_ok=True)
+    os.makedirs(app_config.DATA_DIR, exist_ok=True)
+    main()
+```

@@ -1,0 +1,21 @@
+######################################################################
+#                                                                    # 
+#                  INSTALL PANDAS-TA LOCALLY                         #
+#                                                                    #
+#               pip install pandas_ta-0.3.14b.tar.gz                 #
+#                   (it is already downloaded)                       #
+#              go to https://graphviz.org/download/                  #
+#                 download the most recent .exe                      #
+#             in the setup add it to your system path                #
+#                then go back to powershell or cmd                   #
+#                     and use this big cmd line;                     ###############################################################################################################################################
+                                                                                                                                                                                                                   #  
+pip install --config-settings="--global-option=build_ext" --config-settings="--global-option=-IC:\Program Files\Graphviz\include" --config-settings="--global-option=-LC:\Program Files\Graphviz\lib" pygraphviz   #   you are gay
+                                                                                                                                                                                                                   #
+#                                                                    ###############################################################################################################################################
+#            then run pip install -r requirements.txt                #
+#                                                                    #
+#         run 0_7_Collect_L2_Data.bat for 24 hours or 7days          #
+#                                                                    #
+#                                                                    #
+######################################################################

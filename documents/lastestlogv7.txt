@@ -1,0 +1,711 @@
+##################################
+#     The Singularity Protocol   #
+#         Cortex Startup         #
+##################################
+
+[1/2] Activating Python Environment...
+[1/2] Environment activated.
+
+[2/2] Launching Cortex (Python Core)....
+--------------------------------------------------------------------
+System Startup Initiated.
+Monitor this window for Cortex logs (Python).
+Press CTRL+C in THIS WINDOW to stop the Python application.
+--------------------------------------------------------------------
+
+[Multiprocessing] Start method is 'None'. Forcing to 'spawn'.
+[Config] Exchange Mode: TESTNET
+[Config] Deployment Strategy: 8 models across 3 assets
+[Config] Active Assets: ['BTC/USDT:USDT', 'ETH/USDT:USDT', 'SOL/USDT:USDT']
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+[App.py] Initializing ServiceManager (Main Process)...
+[App.py] ServiceManager initialized.
+[App.py] ServiceManager: Initializing services...
+2025-10-21 13:42:01,859 - [CrucibleEngine] - INFO - Basic exchange 'bybit' setup complete.
+[Watchtower] Initialized with Elite Preservation System.
+[Watchtower] Current Elites: 0 | Best Profit: +0.00%
+2025-10-21 13:42:01,859 - [CrucibleEngine] - INFO - [PIT CREW] Initialized - Continuous shadow evaluation active
+[Hedge] Initializing weights uniformly.
+2025-10-21 13:42:02,884 - [CrucibleEngine] - INFO - [Crucible] IEL agent loaded successfully.
+2025-10-21 13:42:02,884 - [SingularityEngine] - INFO - Singularity Engine initialized.
+2025-10-21 13:42:02,884 - [SingularityEngine] - INFO - Asset universe order: ['BTC/USDT:USDT', 'ETH/USDT:USDT', 'SOL/USDT:USDT']
+[Model Check] ❌ Missing essential model type 'Specialist'.
+
+============================================================
+===============   MISSING MODELS - MANUAL START REQUIRED   ===============
+============================================================
+Models are missing. Please run '3_Start_Initial_Script.bat' to train them.
+The application will not function correctly until all models are trained.
+============================================================
+
+[App.py] Starting main loop thread...
+2025-10-21 13:42:02,884 - [CrucibleEngine] - INFO - Starting Hyper-Evolutionary Engine...
+[App.py] Main execution block started.
+2025-10-21 13:42:02,888 - [CrucibleEngine] - INFO - ProcessPoolExecutor initialized in run() using 'spawn' context with 15 workers.
+2025-10-21 13:42:02,888 - [CrucibleEngine] - INFO - --- Phase 1: Initializing Core Systems (Waiting for completion)... ---
+2025-10-21 13:42:02,888 - [CrucibleEngine] - INFO - Initializing HMM regime models for market state detection...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-10-21 13:42:02,904 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for BTC/USDT:USDT
+2025-10-21 13:42:02,908 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for ETH/USDT:USDT
+2025-10-21 13:42:02,908 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for SOL/USDT:USDT
+2025-10-21 13:42:02,908 - [CrucibleEngine] - INFO - Loaded 3 existing HMM regime models
+2025-10-21 13:42:02,908 - [CrucibleEngine] - INFO - HMM Regime model initialization complete
+2025-10-21 13:42:02,908 - [CrucibleEngine] - INFO - Initializing immune system for risk monitoring...
+2025-10-21 13:42:02,908 - [CrucibleEngine] - INFO - Immune system initialized successfully
+2025-10-21 13:42:02,908 - [CrucibleEngine] - INFO - Scanning for and loading all existing models from model directories...
+2025-10-21 13:42:02,908 - [CrucibleEngine] - INFO - --- Finished loading existing agents. Total loaded: 0 ---
+2025-10-21 13:42:02,908 - [CrucibleEngine] - INFO - --- Phase 1: Complete. ---
+2025-10-21 13:42:02,908 - [CrucibleEngine] - INFO - --- Phase 2: Starting Main Operational Loops (Concurrent)... ---
+2025-10-21 13:42:02,908 - [CrucibleEngine] - INFO - Starting centralized Forge processing loop (Update V5)...
+2025-10-21 13:42:02,908 - [CrucibleEngine] - INFO - Forge processing loop waiting for a task...
+2025-10-21 13:42:02,908 - [CrucibleEngine] - INFO - [PIT CREW] Shadow evaluation loop started
+2025-10-21 13:42:02,908 - [CrucibleEngine] - INFO - Trade watcher started - monitoring live market data...
+[Data Fetcher] Fetching 200 candles for BTC/USDT:USDT from Bybit...
+2025-10-21 13:42:02,912 - [CrucibleEngine] - INFO - Arena loop started - agents ready for battle...
+2025-10-21 13:42:02,912 - [SingularityEngine] - INFO - Singularity Engine starting its operational loops.
+2025-10-21 13:42:02,912 - [SingularityEngine] - INFO - Starting reactive drift monitoring loop...
+2025-10-21 13:42:02,914 - [SingularityEngine] - INFO - Running reactive drift check...
+2025-10-21 13:42:02,914 - [SingularityEngine] - INFO - Monitoring for concept drift...
+2025-10-21 13:42:02,914 - [SingularityEngine] - INFO - Starting continuous, multi-model Forge loop (Update V5)...
+2025-10-21 13:42:02,914 - [SingularityEngine] - INFO - Deployment Strategy: 8 models across 3 assets
+2025-10-21 13:42:02,914 - [SingularityEngine] - INFO - Starting a new forging cycle for 8 model instances...
+2025-10-21 13:42:02,914 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for BTC/USDT:USDT (Instance 1/4). ID: BTCUSDTUSDT_Model_1
+2025-10-21 13:42:02,918 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:42:02,922 - [CrucibleEngine] - INFO - CrucibleEngine.submit_forge_task called
+2025-10-21 13:42:02,922 - [CrucibleEngine] - INFO - [Elite Preservation] Initialized. Current elites: 0
+2025-10-21 13:42:02,922 - [CrucibleEngine] - INFO - [Elite] No elite DNA found for symbol=BTC/USDT:USDT, architecture=GP2_Evolved, instance=BTCUSDTUSDT_Model_1
+2025-10-21 13:42:02,922 - [CrucibleEngine] - INFO - [Proactive] No elite DNA found for BTCUSDTUSDT_Model_1. Starting from scratch.
+2025-10-21 13:42:02,926 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): BTC/USDT:USDT (Instance: BTCUSDTUSDT_Model_1). DNA inherited: False
+2025-10-21 13:42:02,926 - [CrucibleEngine] - INFO - Putting task on forge queue. Queue size: 0
+2025-10-21 13:42:02,926 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for BTC/USDT:USDT (Instance 2/4). ID: BTCUSDTUSDT_Model_2
+2025-10-21 13:42:02,926 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:42:02,926 - [CrucibleEngine] - INFO - CrucibleEngine.submit_forge_task called
+2025-10-21 13:42:02,926 - [CrucibleEngine] - INFO - [Elite Preservation] Initialized. Current elites: 0
+2025-10-21 13:42:02,926 - [CrucibleEngine] - INFO - [Elite] No elite DNA found for symbol=BTC/USDT:USDT, architecture=GP2_Evolved, instance=BTCUSDTUSDT_Model_2
+2025-10-21 13:42:02,926 - [CrucibleEngine] - INFO - [Proactive] No elite DNA found for BTCUSDTUSDT_Model_2. Starting from scratch.
+2025-10-21 13:42:02,930 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): BTC/USDT:USDT (Instance: BTCUSDTUSDT_Model_2). DNA inherited: False
+2025-10-21 13:42:02,930 - [CrucibleEngine] - INFO - Putting task on forge queue. Queue size: 0
+2025-10-21 13:42:02,930 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for BTC/USDT:USDT (Instance 3/4). ID: BTCUSDTUSDT_Model_3
+2025-10-21 13:42:02,930 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:42:02,934 - [CrucibleEngine] - INFO - CrucibleEngine.submit_forge_task called
+2025-10-21 13:42:02,934 - [CrucibleEngine] - INFO - [Elite Preservation] Initialized. Current elites: 0
+2025-10-21 13:42:02,938 - [CrucibleEngine] - INFO - [Elite] No elite DNA found for symbol=BTC/USDT:USDT, architecture=GP2_Evolved, instance=BTCUSDTUSDT_Model_3
+2025-10-21 13:42:02,938 - [CrucibleEngine] - INFO - [Proactive] No elite DNA found for BTCUSDTUSDT_Model_3. Starting from scratch.
+2025-10-21 13:42:02,938 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): BTC/USDT:USDT (Instance: BTCUSDTUSDT_Model_3). DNA inherited: False
+2025-10-21 13:42:02,938 - [CrucibleEngine] - INFO - Putting task on forge queue. Queue size: 0
+2025-10-21 13:42:02,942 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for BTC/USDT:USDT (Instance 4/4). ID: BTCUSDTUSDT_Model_4
+2025-10-21 13:42:02,942 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:42:02,942 - [CrucibleEngine] - INFO - CrucibleEngine.submit_forge_task called
+2025-10-21 13:42:02,942 - [CrucibleEngine] - INFO - [Elite Preservation] Initialized. Current elites: 0
+2025-10-21 13:42:02,942 - [CrucibleEngine] - INFO - [Elite] No elite DNA found for symbol=BTC/USDT:USDT, architecture=GP2_Evolved, instance=BTCUSDTUSDT_Model_4
+2025-10-21 13:42:02,942 - [CrucibleEngine] - INFO - [Proactive] No elite DNA found for BTCUSDTUSDT_Model_4. Starting from scratch.
+2025-10-21 13:42:02,946 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): BTC/USDT:USDT (Instance: BTCUSDTUSDT_Model_4). DNA inherited: False
+2025-10-21 13:42:02,950 - [CrucibleEngine] - INFO - Putting task on forge queue. Queue size: 0
+2025-10-21 13:42:02,950 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for ETH/USDT:USDT (Instance 1/2). ID: ETHUSDTUSDT_Model_1
+2025-10-21 13:42:02,950 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:42:02,950 - [CrucibleEngine] - INFO - CrucibleEngine.submit_forge_task called
+2025-10-21 13:42:02,954 - [CrucibleEngine] - INFO - [Elite Preservation] Initialized. Current elites: 0
+2025-10-21 13:42:02,954 - [CrucibleEngine] - INFO - [Elite] No elite DNA found for symbol=ETH/USDT:USDT, architecture=GP2_Evolved, instance=ETHUSDTUSDT_Model_1
+2025-10-21 13:42:02,954 - [CrucibleEngine] - INFO - [Proactive] No elite DNA found for ETHUSDTUSDT_Model_1. Starting from scratch.
+2025-10-21 13:42:02,954 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): ETH/USDT:USDT (Instance: ETHUSDTUSDT_Model_1). DNA inherited: False
+2025-10-21 13:42:02,954 - [CrucibleEngine] - INFO - Putting task on forge queue. Queue size: 0
+2025-10-21 13:42:02,954 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for ETH/USDT:USDT (Instance 2/2). ID: ETHUSDTUSDT_Model_2
+2025-10-21 13:42:02,954 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:42:02,954 - [CrucibleEngine] - INFO - CrucibleEngine.submit_forge_task called
+2025-10-21 13:42:02,958 - [CrucibleEngine] - INFO - [Elite Preservation] Initialized. Current elites: 0
+2025-10-21 13:42:02,958 - [CrucibleEngine] - INFO - [Elite] No elite DNA found for symbol=ETH/USDT:USDT, architecture=GP2_Evolved, instance=ETHUSDTUSDT_Model_2
+2025-10-21 13:42:02,958 - [CrucibleEngine] - INFO - [Proactive] No elite DNA found for ETHUSDTUSDT_Model_2. Starting from scratch.
+2025-10-21 13:42:02,958 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): ETH/USDT:USDT (Instance: ETHUSDTUSDT_Model_2). DNA inherited: False
+2025-10-21 13:42:02,958 - [CrucibleEngine] - INFO - Putting task on forge queue. Queue size: 0
+2025-10-21 13:42:02,958 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for SOL/USDT:USDT (Instance 1/2). ID: SOLUSDTUSDT_Model_1
+2025-10-21 13:42:02,958 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:42:02,958 - [CrucibleEngine] - INFO - CrucibleEngine.submit_forge_task called
+2025-10-21 13:42:02,965 - [CrucibleEngine] - INFO - [Elite Preservation] Initialized. Current elites: 0
+2025-10-21 13:42:02,969 - [CrucibleEngine] - INFO - [Elite] No elite DNA found for symbol=SOL/USDT:USDT, architecture=GP2_Evolved, instance=SOLUSDTUSDT_Model_1
+2025-10-21 13:42:02,969 - [CrucibleEngine] - INFO - [Proactive] No elite DNA found for SOLUSDTUSDT_Model_1. Starting from scratch.
+2025-10-21 13:42:02,969 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): SOL/USDT:USDT (Instance: SOLUSDTUSDT_Model_1). DNA inherited: False
+2025-10-21 13:42:02,973 - [CrucibleEngine] - INFO - Putting task on forge queue. Queue size: 0
+2025-10-21 13:42:02,973 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for SOL/USDT:USDT (Instance 2/2). ID: SOLUSDTUSDT_Model_2
+2025-10-21 13:42:02,973 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:42:02,973 - [CrucibleEngine] - INFO - CrucibleEngine.submit_forge_task called
+2025-10-21 13:42:02,973 - [CrucibleEngine] - INFO - [Elite Preservation] Initialized. Current elites: 0
+2025-10-21 13:42:02,973 - [CrucibleEngine] - INFO - [Elite] No elite DNA found for symbol=SOL/USDT:USDT, architecture=GP2_Evolved, instance=SOLUSDTUSDT_Model_2
+2025-10-21 13:42:02,977 - [CrucibleEngine] - INFO - [Proactive] No elite DNA found for SOLUSDTUSDT_Model_2. Starting from scratch.
+2025-10-21 13:42:02,977 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): SOL/USDT:USDT (Instance: SOLUSDTUSDT_Model_2). DNA inherited: False
+2025-10-21 13:42:02,977 - [CrucibleEngine] - INFO - Putting task on forge queue. Queue size: 0
+2025-10-21 13:42:02,977 - [SingularityEngine] - INFO - Submitted 8 forge tasks for this cycle. Now waiting for completion...
+2025-10-21 13:42:02,977 - [SingularityEngine] - INFO - Updating ensemble weights based on performance log...
+2025-10-21 13:42:02,977 - [CrucibleEngine] - INFO - Forge processing loop got a task: BTCUSDTUSDT_Model_1
+2025-10-21 13:42:02,977 - [CrucibleEngine] - INFO - --- Processing Forge task from Proactive (P10): BTC/USDT:USDT (Instance: BTCUSDTUSDT_Model_1) from scratch ---
+2025-10-21 13:42:02,997 - [SingularityEngine] - INFO - Reactive check complete. Sleeping for 60s.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Config] Exchange Mode: TESTNET
+[Config] Deployment Strategy: 8 models across 3 assets
+[Config] Active Assets: ['BTC/USDT:USDT', 'ETH/USDT:USDT', 'SOL/USDT:USDT']
+[Data Fetcher] Fetching 200 candles for ETH/USDT:USDT from Bybit...
+2025-10-21 13:42:04,257 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:04,257 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-21 13:42:04,261 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:04,311 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. VMD Complete.
+2025-10-21 13:42:04,311 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:04,327 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Particle Filter Complete.
+2025-10-21 13:42:04,327 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for BTC/USDT:USDT...
+[Data Fetcher] Fetching 200 candles for SOL/USDT:USDT from Bybit...
+2025-10-21 13:42:05,870 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 4. Order Flow Features Complete.
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.2025-10-21 13:42:14,425 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+2025-10-21 13:42:14,524 - [Wkr 400916] - ForgeWorkerMain - Forge worker for BTC/USDT:USDT will use device: cpu
+   0    10.26         0.164225        5         0.555532        0.0414508     23.85s
+2025-10-21 13:42:15,691 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loading timeframes: ['1h', '15m', '1m']
+2025-10-21 13:42:15,699 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1h: 500 bars from data/BTCUSDT_1h_raw.csv
+2025-10-21 13:42:15,711 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 15m: 500 bars from data/BTCUSDT_15m_raw.csv
+   1     6.05         0.376011        3         0.580182         0.264403      7.96s
+2025-10-21 13:42:15,841 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1m: 2500 bars from data/BTCUSDT_1m_raw.csv
+2025-10-21 13:42:15,841 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Starting multi-timeframe processing and alignment...
+2025-10-21 13:42:15,845 - [Wkr 400916] - MTFA - [MTFA] LTF identified: 1m
+2025-10-21 13:42:15,845 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1h (500 bars)
+2025-10-21 13:42:15,845 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:15,845 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:15,851 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:15,925 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:15,925 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:15,961 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:15,961 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:15,965 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:15,967 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:15,967 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:15,967 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:15,967 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 1h
+2025-10-21 13:42:15,967 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 15m (500 bars)
+2025-10-21 13:42:15,971 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:15,971 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:15,975 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:16,108 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:16,108 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:16,144 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:16,146 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:16,146 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:16,150 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:16,150 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:16,150 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:16,150 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 15m
+2025-10-21 13:42:16,150 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1m (2500 bars)
+2025-10-21 13:42:16,154 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:16,154 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:16,156 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+   2     3.93         0.453318        5          0.58549         0.223004     10.28s
+2025-10-21 13:42:16,588 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:16,588 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+   3     3.77         0.470611        3         0.592509         0.071815      9.09s
+2025-10-21 13:42:16,740 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:16,740 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:16,740 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:16,746 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:16,746 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:16,746 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:16,746 - [Wkr 400916] - MTFA - [MTFA] Kept LTF 1m dataframe intact
+2025-10-21 13:42:16,750 - [Wkr 400916] - MTFA - [MTFA] Aligning 1h features onto 1m...
+2025-10-21 13:42:16,750 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 1h
+2025-10-21 13:42:16,750 - [Wkr 400916] - MTFA - [MTFA] Aligning 15m features onto 1m...
+2025-10-21 13:42:16,750 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 15m
+2025-10-21 13:42:16,754 - [Wkr 400916] - MTFA - [MTFA] Dropped 0 rows with incomplete HTF data
+2025-10-21 13:42:16,754 - [Wkr 400916] - MTFA - [MTFA] Final dataset: 2500 bars with 53 features
+2025-10-21 13:42:16,754 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Processing complete: 2500 bars with 53 features
+2025-10-21 13:42:16,756 - [Wkr 400916] - ForgeWorkerMain - [Feature Synthesizer] Starting feature evolution on merged MTFA data...
+2025-10-21 13:42:16,760 - [Wkr 400916] - ForgeWorkerMain - Forge cycle failed: SymbolicTransformer.__init__() got an unexpected keyword argument 'n_features'
+2025-10-21 13:42:16,760 - [Wkr 400916] - ForgeWorkerMain - ✅ Forge cycle for BTCUSDTUSDT_Model_1 completed.
+2025-10-21 13:42:16,830 - [CrucibleEngine] - INFO - Forge task BTCUSDTUSDT_Model_1 completed, but no new model was registered.
+2025-10-21 13:42:16,834 - [SingularityEngine] - INFO - Forge task for BTCUSDTUSDT_Model_1 completed. Removing from active set.
+2025-10-21 13:42:16,850 - [CrucibleEngine] - INFO - Forge processing loop waiting for a task...
+2025-10-21 13:42:16,854 - [CrucibleEngine] - INFO - Forge processing loop got a task: BTCUSDTUSDT_Model_2
+2025-10-21 13:42:16,866 - [CrucibleEngine] - INFO - --- Processing Forge task from Proactive (P10): BTC/USDT:USDT (Instance: BTCUSDTUSDT_Model_2) from scratch ---
+2025-10-21 13:42:16,910 - [Wkr 400916] - ForgeWorkerMain - Forge worker for BTC/USDT:USDT will use device: cpu
+2025-10-21 13:42:16,910 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loading timeframes: ['1h', '15m', '1m']
+2025-10-21 13:42:16,914 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1h: 500 bars from data/BTCUSDT_1h_raw.csv
+2025-10-21 13:42:16,924 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 15m: 500 bars from data/BTCUSDT_15m_raw.csv
+2025-10-21 13:42:17,048 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1m: 2500 bars from data/BTCUSDT_1m_raw.csv
+2025-10-21 13:42:17,051 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Starting multi-timeframe processing and alignment...
+2025-10-21 13:42:17,051 - [Wkr 400916] - MTFA - [MTFA] LTF identified: 1m
+2025-10-21 13:42:17,052 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1h (500 bars)
+2025-10-21 13:42:17,054 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:17,054 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:17,058 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+   4     3.38         0.499879        3         0.598729         0.187328      8.59s
+2025-10-21 13:42:17,131 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:17,131 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:17,172 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:17,172 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:17,173 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:17,177 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:17,177 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:17,177 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:17,177 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 1h
+2025-10-21 13:42:17,181 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 15m (500 bars)
+2025-10-21 13:42:17,181 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:17,181 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:17,183 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:17,302 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:17,304 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:17,338 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:17,338 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:17,341 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:17,345 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:17,345 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:17,345 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:17,345 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 15m
+2025-10-21 13:42:17,345 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1m (2500 bars)
+2025-10-21 13:42:17,345 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:17,349 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:17,350 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+   5     3.24         0.505666        3         0.621603         0.131217      8.32s
+2025-10-21 13:42:17,770 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:17,774 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:17,945 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:17,945 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:17,949 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:17,953 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:17,953 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:17,953 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:17,953 - [Wkr 400916] - MTFA - [MTFA] Kept LTF 1m dataframe intact
+2025-10-21 13:42:17,953 - [Wkr 400916] - MTFA - [MTFA] Aligning 1h features onto 1m...
+2025-10-21 13:42:17,953 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 1h
+2025-10-21 13:42:17,953 - [Wkr 400916] - MTFA - [MTFA] Aligning 15m features onto 1m...
+2025-10-21 13:42:17,957 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 15m
+2025-10-21 13:42:17,957 - [Wkr 400916] - MTFA - [MTFA] Dropped 0 rows with incomplete HTF data
+2025-10-21 13:42:17,961 - [Wkr 400916] - MTFA - [MTFA] Final dataset: 2500 bars with 53 features
+   6     3.04         0.505277        3         0.606143        0.0173094      7.64s
+2025-10-21 13:42:17,961 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Processing complete: 2500 bars with 53 features
+2025-10-21 13:42:17,961 - [Wkr 400916] - ForgeWorkerMain - [Feature Synthesizer] Starting feature evolution on merged MTFA data...
+2025-10-21 13:42:17,965 - [Wkr 400916] - ForgeWorkerMain - Forge cycle failed: SymbolicTransformer.__init__() got an unexpected keyword argument 'n_features'
+2025-10-21 13:42:17,965 - [Wkr 400916] - ForgeWorkerMain - ✅ Forge cycle for BTCUSDTUSDT_Model_2 completed.
+2025-10-21 13:42:17,983 - [CrucibleEngine] - INFO - Forge task BTCUSDTUSDT_Model_2 completed, but no new model was registered.
+2025-10-21 13:42:17,983 - [SingularityEngine] - INFO - Forge task for BTCUSDTUSDT_Model_2 completed. Removing from active set.
+2025-10-21 13:42:17,995 - [CrucibleEngine] - INFO - Forge processing loop waiting for a task...
+2025-10-21 13:42:18,007 - [CrucibleEngine] - INFO - Forge processing loop got a task: BTCUSDTUSDT_Model_3
+2025-10-21 13:42:18,007 - [CrucibleEngine] - INFO - --- Processing Forge task from Proactive (P10): BTC/USDT:USDT (Instance: BTCUSDTUSDT_Model_3) from scratch ---
+2025-10-21 13:42:18,007 - [Wkr 400916] - ForgeWorkerMain - Forge worker for BTC/USDT:USDT will use device: cpu
+2025-10-21 13:42:18,007 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loading timeframes: ['1h', '15m', '1m']
+2025-10-21 13:42:18,011 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1h: 500 bars from data/BTCUSDT_1h_raw.csv
+2025-10-21 13:42:18,023 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 15m: 500 bars from data/BTCUSDT_15m_raw.csv
+2025-10-21 13:42:18,141 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1m: 2500 bars from data/BTCUSDT_1m_raw.csv
+2025-10-21 13:42:18,141 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Starting multi-timeframe processing and alignment...
+2025-10-21 13:42:18,141 - [Wkr 400916] - MTFA - [MTFA] LTF identified: 1m
+2025-10-21 13:42:18,145 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1h (500 bars)
+2025-10-21 13:42:18,145 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:18,145 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:18,149 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:18,235 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:18,235 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:18,277 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:18,277 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:18,277 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:18,281 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:18,281 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:18,281 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:18,281 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 1h
+2025-10-21 13:42:18,281 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 15m (500 bars)
+2025-10-21 13:42:18,285 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:18,285 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:18,289 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:18,413 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:18,413 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+   7     3.05         0.507388        3         0.604154         0.141105      7.68s
+2025-10-21 13:42:18,445 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:18,445 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:18,445 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:18,451 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:18,451 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:18,451 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:18,451 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 15m
+2025-10-21 13:42:18,453 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1m (2500 bars)
+2025-10-21 13:42:18,453 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:18,453 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:18,457 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+   8     3.01         0.498687        3         0.597989        0.0328641      7.13s
+2025-10-21 13:42:18,904 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:18,904 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:19,071 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:19,071 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:19,073 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:19,077 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:19,077 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:19,077 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:19,077 - [Wkr 400916] - MTFA - [MTFA] Kept LTF 1m dataframe intact
+2025-10-21 13:42:19,077 - [Wkr 400916] - MTFA - [MTFA] Aligning 1h features onto 1m...
+2025-10-21 13:42:19,083 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 1h
+2025-10-21 13:42:19,083 - [Wkr 400916] - MTFA - [MTFA] Aligning 15m features onto 1m...
+2025-10-21 13:42:19,083 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 15m
+2025-10-21 13:42:19,083 - [Wkr 400916] - MTFA - [MTFA] Dropped 0 rows with incomplete HTF data
+2025-10-21 13:42:19,083 - [Wkr 400916] - MTFA - [MTFA] Final dataset: 2500 bars with 53 features
+2025-10-21 13:42:19,083 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Processing complete: 2500 bars with 53 features
+2025-10-21 13:42:19,087 - [Wkr 400916] - ForgeWorkerMain - [Feature Synthesizer] Starting feature evolution on merged MTFA data...
+2025-10-21 13:42:19,091 - [Wkr 400916] - ForgeWorkerMain - Forge cycle failed: SymbolicTransformer.__init__() got an unexpected keyword argument 'n_features'
+2025-10-21 13:42:19,091 - [Wkr 400916] - ForgeWorkerMain - ✅ Forge cycle for BTCUSDTUSDT_Model_3 completed.
+2025-10-21 13:42:19,111 - [CrucibleEngine] - INFO - Forge task BTCUSDTUSDT_Model_3 completed, but no new model was registered.
+2025-10-21 13:42:19,123 - [SingularityEngine] - INFO - Forge task for BTCUSDTUSDT_Model_3 completed. Removing from active set.
+2025-10-21 13:42:19,135 - [CrucibleEngine] - INFO - Forge processing loop waiting for a task...
+2025-10-21 13:42:19,135 - [CrucibleEngine] - INFO - Forge processing loop got a task: BTCUSDTUSDT_Model_4
+2025-10-21 13:42:19,135 - [CrucibleEngine] - INFO - --- Processing Forge task from Proactive (P10): BTC/USDT:USDT (Instance: BTCUSDTUSDT_Model_4) from scratch ---
+2025-10-21 13:42:19,185 - [Wkr 400916] - ForgeWorkerMain - Forge worker for BTC/USDT:USDT will use device: cpu
+2025-10-21 13:42:19,185 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loading timeframes: ['1h', '15m', '1m']
+2025-10-21 13:42:19,191 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1h: 500 bars from data/BTCUSDT_1h_raw.csv
+2025-10-21 13:42:19,199 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 15m: 500 bars from data/BTCUSDT_15m_raw.csv
+   9     3.04         0.496573        3          0.59747         0.143348      6.79s
+2025-10-21 13:42:19,327 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1m: 2500 bars from data/BTCUSDT_1m_raw.csv
+2025-10-21 13:42:19,327 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Starting multi-timeframe processing and alignment...
+2025-10-21 13:42:19,327 - [Wkr 400916] - MTFA - [MTFA] LTF identified: 1m
+2025-10-21 13:42:19,327 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1h (500 bars)
+2025-10-21 13:42:19,327 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:19,327 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:19,331 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:19,418 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:19,418 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:19,466 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:19,466 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:19,466 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:19,470 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:19,470 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:19,470 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:19,478 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 1h
+2025-10-21 13:42:19,478 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 15m (500 bars)
+2025-10-21 13:42:19,478 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:19,478 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:19,482 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:19,617 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:19,617 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:19,653 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:19,653 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:19,653 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:19,657 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:19,657 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:19,657 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:19,661 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 15m
+2025-10-21 13:42:19,661 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1m (2500 bars)
+2025-10-21 13:42:19,662 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:19,662 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:19,662 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+  10     3.07         0.508265        3         0.603692        0.0604875      6.27s
+2025-10-21 13:42:20,076 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:20,080 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:20,249 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:20,249 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:20,249 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:20,255 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:20,255 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:20,255 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:20,255 - [Wkr 400916] - MTFA - [MTFA] Kept LTF 1m dataframe intact
+2025-10-21 13:42:20,255 - [Wkr 400916] - MTFA - [MTFA] Aligning 1h features onto 1m...
+2025-10-21 13:42:20,259 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 1h
+2025-10-21 13:42:20,259 - [Wkr 400916] - MTFA - [MTFA] Aligning 15m features onto 1m...
+2025-10-21 13:42:20,264 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 15m
+2025-10-21 13:42:20,266 - [Wkr 400916] - MTFA - [MTFA] Dropped 0 rows with incomplete HTF data
+2025-10-21 13:42:20,266 - [Wkr 400916] - MTFA - [MTFA] Final dataset: 2500 bars with 53 features
+2025-10-21 13:42:20,266 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Processing complete: 2500 bars with 53 features
+2025-10-21 13:42:20,266 - [Wkr 400916] - ForgeWorkerMain - [Feature Synthesizer] Starting feature evolution on merged MTFA data...
+2025-10-21 13:42:20,270 - [Wkr 400916] - ForgeWorkerMain - Forge cycle failed: SymbolicTransformer.__init__() got an unexpected keyword argument 'n_features'
+2025-10-21 13:42:20,274 - [Wkr 400916] - ForgeWorkerMain - ✅ Forge cycle for BTCUSDTUSDT_Model_4 completed.
+2025-10-21 13:42:20,310 - [CrucibleEngine] - INFO - Forge task BTCUSDTUSDT_Model_4 completed, but no new model was registered.
+2025-10-21 13:42:20,320 - [SingularityEngine] - INFO - Forge task for BTCUSDTUSDT_Model_4 completed. Removing from active set.
+2025-10-21 13:42:20,320 - [CrucibleEngine] - INFO - Forge processing loop waiting for a task...
+2025-10-21 13:42:20,340 - [CrucibleEngine] - INFO - Forge processing loop got a task: ETHUSDTUSDT_Model_1
+2025-10-21 13:42:20,346 - [CrucibleEngine] - INFO - --- Processing Forge task from Proactive (P10): ETH/USDT:USDT (Instance: ETHUSDTUSDT_Model_1) from scratch ---
+2025-10-21 13:42:20,346 - [Wkr 400916] - ForgeWorkerMain - Forge worker for ETH/USDT:USDT will use device: cpu
+2025-10-21 13:42:20,346 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loading timeframes: ['1h', '15m', '1m']
+2025-10-21 13:42:20,350 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1h: 500 bars from data/ETHUSDT_1h_raw.csv
+2025-10-21 13:42:20,360 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 15m: 500 bars from data/ETHUSDT_15m_raw.csv
+  11     2.98         0.500895        3         0.596641        0.0645236      8.26s
+2025-10-21 13:42:20,476 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1m: 2500 bars from data/ETHUSDT_1m_raw.csv
+2025-10-21 13:42:20,476 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Starting multi-timeframe processing and alignment...
+2025-10-21 13:42:20,476 - [Wkr 400916] - MTFA - [MTFA] LTF identified: 1m
+2025-10-21 13:42:20,482 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1h (500 bars)
+2025-10-21 13:42:20,482 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:20,482 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:20,486 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:20,544 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:20,546 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:20,580 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:20,580 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:20,584 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:20,586 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:20,586 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:20,586 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:20,586 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 1h
+2025-10-21 13:42:20,590 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 15m (500 bars)
+2025-10-21 13:42:20,590 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:20,590 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:20,594 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:20,710 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:20,710 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:20,744 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:20,744 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:20,746 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:20,746 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:20,746 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:20,750 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:20,750 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 15m
+2025-10-21 13:42:20,750 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1m (2500 bars)
+2025-10-21 13:42:20,750 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:20,754 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:20,756 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+  12     3.02         0.501186        3         0.598457        0.0841592      5.07s
+2025-10-21 13:42:21,181 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:21,181 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+  13     3.03         0.505692        3         0.604248        0.0898236      5.14s
+2025-10-21 13:42:21,354 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:21,354 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:21,358 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:21,362 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:21,362 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:21,362 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:21,368 - [Wkr 400916] - MTFA - [MTFA] Kept LTF 1m dataframe intact
+2025-10-21 13:42:21,368 - [Wkr 400916] - MTFA - [MTFA] Aligning 1h features onto 1m...
+2025-10-21 13:42:21,368 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 1h
+2025-10-21 13:42:21,368 - [Wkr 400916] - MTFA - [MTFA] Aligning 15m features onto 1m...
+2025-10-21 13:42:21,372 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 15m
+2025-10-21 13:42:21,372 - [Wkr 400916] - MTFA - [MTFA] Dropped 0 rows with incomplete HTF data
+2025-10-21 13:42:21,374 - [Wkr 400916] - MTFA - [MTFA] Final dataset: 2500 bars with 53 features
+2025-10-21 13:42:21,374 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Processing complete: 2500 bars with 53 features
+2025-10-21 13:42:21,374 - [Wkr 400916] - ForgeWorkerMain - [Feature Synthesizer] Starting feature evolution on merged MTFA data...
+2025-10-21 13:42:21,378 - [Wkr 400916] - ForgeWorkerMain - Forge cycle failed: SymbolicTransformer.__init__() got an unexpected keyword argument 'n_features'
+2025-10-21 13:42:21,378 - [Wkr 400916] - ForgeWorkerMain - ✅ Forge cycle for ETHUSDTUSDT_Model_1 completed.
+2025-10-21 13:42:21,423 - [CrucibleEngine] - INFO - Forge task ETHUSDTUSDT_Model_1 completed, but no new model was registered.
+2025-10-21 13:42:21,423 - [SingularityEngine] - INFO - Forge task for ETHUSDTUSDT_Model_1 completed. Removing from active set.
+2025-10-21 13:42:21,425 - [CrucibleEngine] - INFO - Forge processing loop waiting for a task...
+2025-10-21 13:42:21,425 - [CrucibleEngine] - INFO - Forge processing loop got a task: ETHUSDTUSDT_Model_2
+2025-10-21 13:42:21,425 - [CrucibleEngine] - INFO - --- Processing Forge task from Proactive (P10): ETH/USDT:USDT (Instance: ETHUSDTUSDT_Model_2) from scratch ---
+2025-10-21 13:42:21,515 - [Wkr 400916] - ForgeWorkerMain - Forge worker for ETH/USDT:USDT will use device: cpu
+2025-10-21 13:42:21,515 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loading timeframes: ['1h', '15m', '1m']
+2025-10-21 13:42:21,519 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1h: 500 bars from data/ETHUSDT_1h_raw.csv
+2025-10-21 13:42:21,529 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 15m: 500 bars from data/ETHUSDT_15m_raw.csv
+2025-10-21 13:42:21,669 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1m: 2500 bars from data/ETHUSDT_1m_raw.csv
+2025-10-21 13:42:21,669 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Starting multi-timeframe processing and alignment...
+2025-10-21 13:42:21,669 - [Wkr 400916] - MTFA - [MTFA] LTF identified: 1m
+2025-10-21 13:42:21,669 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1h (500 bars)
+2025-10-21 13:42:21,673 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:21,673 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:21,675 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+  14     3.00         0.504137        3         0.601642        0.0433162      4.27s
+2025-10-21 13:42:21,733 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:21,733 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:21,765 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:21,765 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:21,765 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:21,769 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:21,769 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:21,769 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:21,769 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 1h
+2025-10-21 13:42:21,769 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 15m (500 bars)
+2025-10-21 13:42:21,769 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:21,775 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:21,775 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:21,902 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:21,902 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:21,953 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:21,953 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:21,957 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:21,957 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:21,957 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:21,957 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:21,961 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 15m
+2025-10-21 13:42:21,961 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1m (2500 bars)
+2025-10-21 13:42:21,961 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:21,963 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:21,967 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+  15     2.99         0.498766        3         0.602822        0.0661496      4.09s
+2025-10-21 13:42:22,396 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:22,396 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:22,550 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:22,550 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:22,550 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:22,556 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:22,556 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:22,556 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:22,556 - [Wkr 400916] - MTFA - [MTFA] Kept LTF 1m dataframe intact
+2025-10-21 13:42:22,556 - [Wkr 400916] - MTFA - [MTFA] Aligning 1h features onto 1m...
+2025-10-21 13:42:22,560 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 1h
+2025-10-21 13:42:22,560 - [Wkr 400916] - MTFA - [MTFA] Aligning 15m features onto 1m...
+2025-10-21 13:42:22,560 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 15m
+2025-10-21 13:42:22,560 - [Wkr 400916] - MTFA - [MTFA] Dropped 0 rows with incomplete HTF data
+2025-10-21 13:42:22,564 - [Wkr 400916] - MTFA - [MTFA] Final dataset: 2500 bars with 53 features
+2025-10-21 13:42:22,564 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Processing complete: 2500 bars with 53 features
+2025-10-21 13:42:22,564 - [Wkr 400916] - ForgeWorkerMain - [Feature Synthesizer] Starting feature evolution on merged MTFA data...
+2025-10-21 13:42:22,566 - [Wkr 400916] - ForgeWorkerMain - Forge cycle failed: SymbolicTransformer.__init__() got an unexpected keyword argument 'n_features'
+2025-10-21 13:42:22,566 - [Wkr 400916] - ForgeWorkerMain - ✅ Forge cycle for ETHUSDTUSDT_Model_2 completed.
+2025-10-21 13:42:22,566 - [CrucibleEngine] - INFO - Forge task ETHUSDTUSDT_Model_2 completed, but no new model was registered.
+2025-10-21 13:42:22,566 - [SingularityEngine] - INFO - Forge task for ETHUSDTUSDT_Model_2 completed. Removing from active set.
+2025-10-21 13:42:22,570 - [CrucibleEngine] - INFO - Forge processing loop waiting for a task...
+2025-10-21 13:42:22,570 - [CrucibleEngine] - INFO - Forge processing loop got a task: SOLUSDTUSDT_Model_1
+2025-10-21 13:42:22,570 - [CrucibleEngine] - INFO - --- Processing Forge task from Proactive (P10): SOL/USDT:USDT (Instance: SOLUSDTUSDT_Model_1) from scratch ---
+2025-10-21 13:42:22,570 - [Wkr 400916] - ForgeWorkerMain - Forge worker for SOL/USDT:USDT will use device: cpu
+2025-10-21 13:42:22,570 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loading timeframes: ['1h', '15m', '1m']
+2025-10-21 13:42:22,576 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1h: 500 bars from data/SOLUSDT_1h_raw.csv
+2025-10-21 13:42:22,584 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 15m: 500 bars from data/SOLUSDT_15m_raw.csv
+  16     3.02         0.504152        3         0.614473         0.134102      3.45s
+2025-10-21 13:42:22,692 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1m: 2500 bars from data/SOLUSDT_1m_raw.csv
+2025-10-21 13:42:22,692 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Starting multi-timeframe processing and alignment...
+2025-10-21 13:42:22,696 - [Wkr 400916] - MTFA - [MTFA] LTF identified: 1m
+2025-10-21 13:42:22,696 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1h (500 bars)
+2025-10-21 13:42:22,696 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:22,696 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:22,702 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:22,755 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:22,755 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:22,799 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:22,799 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:22,799 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:22,805 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:22,805 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:22,805 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:22,805 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 1h
+2025-10-21 13:42:22,809 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 15m (500 bars)
+2025-10-21 13:42:22,809 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:22,809 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:22,809 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:22,939 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:22,939 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:22,974 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:22,974 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:22,974 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:22,978 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:22,978 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:22,978 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:22,982 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 15m
+2025-10-21 13:42:22,982 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1m (2500 bars)
+2025-10-21 13:42:22,982 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:22,982 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:22,984 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+  17     3.00         0.502223        3         0.611916      0.000114908      3.00s
+2025-10-21 13:42:23,412 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:23,412 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+  18     3.09         0.504352        3         0.608792        0.0825107      2.51s
+2025-10-21 13:42:23,567 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:23,567 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:23,567 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:23,573 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:23,573 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:23,573 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:23,573 - [Wkr 400916] - MTFA - [MTFA] Kept LTF 1m dataframe intact
+2025-10-21 13:42:23,573 - [Wkr 400916] - MTFA - [MTFA] Aligning 1h features onto 1m...
+2025-10-21 13:42:23,577 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 1h
+2025-10-21 13:42:23,577 - [Wkr 400916] - MTFA - [MTFA] Aligning 15m features onto 1m...
+2025-10-21 13:42:23,577 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 15m
+2025-10-21 13:42:23,577 - [Wkr 400916] - MTFA - [MTFA] Dropped 0 rows with incomplete HTF data
+2025-10-21 13:42:23,577 - [Wkr 400916] - MTFA - [MTFA] Final dataset: 2500 bars with 53 features
+2025-10-21 13:42:23,577 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Processing complete: 2500 bars with 53 features
+2025-10-21 13:42:23,581 - [Wkr 400916] - ForgeWorkerMain - [Feature Synthesizer] Starting feature evolution on merged MTFA data...
+2025-10-21 13:42:23,583 - [Wkr 400916] - ForgeWorkerMain - Forge cycle failed: SymbolicTransformer.__init__() got an unexpected keyword argument 'n_features'
+2025-10-21 13:42:23,583 - [Wkr 400916] - ForgeWorkerMain - ✅ Forge cycle for SOLUSDTUSDT_Model_1 completed.
+2025-10-21 13:42:23,658 - [CrucibleEngine] - INFO - Forge task SOLUSDTUSDT_Model_1 completed, but no new model was registered.
+2025-10-21 13:42:23,672 - [SingularityEngine] - INFO - Forge task for SOLUSDTUSDT_Model_1 completed. Removing from active set.
+2025-10-21 13:42:23,688 - [CrucibleEngine] - INFO - Forge processing loop waiting for a task...
+2025-10-21 13:42:23,688 - [CrucibleEngine] - INFO - Forge processing loop got a task: SOLUSDTUSDT_Model_2
+2025-10-21 13:42:23,688 - [CrucibleEngine] - INFO - --- Processing Forge task from Proactive (P10): SOL/USDT:USDT (Instance: SOLUSDTUSDT_Model_2) from scratch ---
+2025-10-21 13:42:23,714 - [Wkr 400916] - ForgeWorkerMain - Forge worker for SOL/USDT:USDT will use device: cpu
+2025-10-21 13:42:23,714 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loading timeframes: ['1h', '15m', '1m']
+2025-10-21 13:42:23,718 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1h: 500 bars from data/SOLUSDT_1h_raw.csv
+2025-10-21 13:42:23,728 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 15m: 500 bars from data/SOLUSDT_15m_raw.csv
+2025-10-21 13:42:23,835 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Loaded 1m: 2500 bars from data/SOLUSDT_1m_raw.csv
+2025-10-21 13:42:23,835 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Starting multi-timeframe processing and alignment...
+2025-10-21 13:42:23,839 - [Wkr 400916] - MTFA - [MTFA] LTF identified: 1m
+2025-10-21 13:42:23,839 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1h (500 bars)
+2025-10-21 13:42:23,839 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:23,843 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:23,845 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+  19     2.94         0.498609        3         0.597689        0.0640126      2.18s
+2025-10-21 13:42:23,905 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:23,905 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:23,937 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:23,937 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:23,941 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:23,941 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:23,945 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:23,945 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:23,945 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 1h
+2025-10-21 13:42:23,945 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 15m (500 bars)
+2025-10-21 13:42:23,949 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:23,951 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:23,951 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:24,087 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:24,087 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:24,123 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:24,123 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:24,123 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:24,127 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:24,127 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:24,131 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:24,131 - [Wkr 400916] - MTFA - [MTFA] Renamed 16 features for 15m
+2025-10-21 13:42:24,131 - [Wkr 400916] - MTFA - [MTFA] Processing features for timeframe: 1m (2500 bars)
+2025-10-21 13:42:24,131 - [Wkr 400916] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:24,133 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-21 13:42:24,133 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+  20     2.99         0.498693        3         0.590378       0.00640667      1.86s
+2025-10-21 13:42:24,590 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-21 13:42:24,590 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:24,759 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-21 13:42:24,759 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-21 13:42:24,759 - [Wkr 400916] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-21 13:42:24,763 - [Wkr 400916] - MTFA - --- Feature Factory: Skipping Feature Synthesis (disabled for this call) ---
+2025-10-21 13:42:24,763 - [Wkr 400916] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-21 13:42:24,763 - [Wkr 400916] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:24,763 - [Wkr 400916] - MTFA - [MTFA] Kept LTF 1m dataframe intact
+2025-10-21 13:42:24,767 - [Wkr 400916] - MTFA - [MTFA] Aligning 1h features onto 1m...
+2025-10-21 13:42:24,767 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 1h
+2025-10-21 13:42:24,767 - [Wkr 400916] - MTFA - [MTFA] Aligning 15m features onto 1m...
+2025-10-21 13:42:24,767 - [Wkr 400916] - MTFA - [MTFA] Successfully aligned 16 features from 15m
+2025-10-21 13:42:24,767 - [Wkr 400916] - MTFA - [MTFA] Dropped 0 rows with incomplete HTF data
+2025-10-21 13:42:24,771 - [Wkr 400916] - MTFA - [MTFA] Final dataset: 2500 bars with 53 features
+2025-10-21 13:42:24,771 - [Wkr 400916] - ForgeWorkerMain - [MTFA] Processing complete: 2500 bars with 53 features
+2025-10-21 13:42:24,773 - [Wkr 400916] - ForgeWorkerMain - [Feature Synthesizer] Starting feature evolution on merged MTFA data...
+2025-10-21 13:42:24,773 - [Wkr 400916] - ForgeWorkerMain - Forge cycle failed: SymbolicTransformer.__init__() got an unexpected keyword argument 'n_features'
+2025-10-21 13:42:24,773 - [Wkr 400916] - ForgeWorkerMain - ✅ Forge cycle for SOLUSDTUSDT_Model_2 completed.
+2025-10-21 13:42:24,777 - [CrucibleEngine] - INFO - Forge task SOLUSDTUSDT_Model_2 completed, but no new model was registered.
+2025-10-21 13:42:24,777 - [SingularityEngine] - INFO - Forge task for SOLUSDTUSDT_Model_2 completed. Removing from active set.
+2025-10-21 13:42:24,777 - [SingularityEngine] - INFO - All active forge tasks for the cycle are complete.
+2025-10-21 13:42:24,777 - [CrucibleEngine] - INFO - Forge processing loop waiting for a task...
+2025-10-21 13:42:24,777 - [SingularityEngine] - INFO - Completed a full forging cycle. Waiting before next cycle...
+  21     2.93         0.496697        3         0.608472        0.0598395      1.29s
+  22     3.07         0.506175        3         0.605589        0.0795962      0.85s
+  23     3.06         0.508796        3         0.596373        0.0632564      0.41s
+  24     2.99         0.505607        3         0.594898        0.0987458      0.00s
+2025-10-21 13:42:26,048 - [CrucibleEngine] - INFO -   -> [BTC/USDT:USDT] Injecting 5 evolved features...
+2025-10-21 13:42:26,048 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object present. Attempting GNN generation (Main context). ---
+2025-10-21 13:42:26,048 - [CrucibleEngine] - INFO -   -> Generating GNN features for the entire market...
+[GNN Pipeline] Starting feature generation...
+[Data Fetcher] Fetching 500 candles for BTC/USDT:USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for ETH/USDT:USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for SOL/USDT:USDT from Bybit...
+[GNN Pipeline] GNN feature generation complete.
+2025-10-21 13:42:27,860 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:42:27,864 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-21 13:42:27,864 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-21 13:42:27,868 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:42:27,913 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 2. VMD Complete.
+2025-10-21 13:42:27,913 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:42:27,929 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 3. Particle Filter Complete.
+2025-10-21 13:42:27,932 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for ETH/USDT:USDT...
+2025-10-21 13:42:29,482 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 4. Order Flow Features Complete.
+2025-10-21 13:42:29,482 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0    10.26        0.0957495       43         0.340175         0.175749      2.40s
+   1     4.79         0.177604       14         0.385414        0.0845285      7.39s
+   2     4.34          0.21705       11         0.387339         0.106517      9.72s
+   3     4.57         0.257268       10         0.417683         0.328316      8.75s
+   4     5.09         0.276953       11         0.411257        0.0966111      8.49s
+   5     6.13         0.299619       18         0.409656          0.13181      8.07s
+   6     6.36         0.303772        7         0.419322         0.358725      7.67s
+   7     7.04         0.307343       15         0.445295        0.0952093      7.48s
+   8     7.43         0.312749       13         0.443262         0.503001      7.08s

@@ -1,0 +1,116 @@
+RULES: DONT IMPLEMENT FAKE CODES, DUMMYS, SIMULATIONS OR PLACEHOLDERS, JUST THE REAL THING.
+
+## Blueprint: Singularity Protocol v2 (Hyper-Evolutionary Testbed)
+
+The Crucible operates in parallel to the main system, acting as an accelerated R&D pipeline.
+
+**The Architecture:**
+
+1.  **The Forge (Model Factory):** Continuously generates new models using adaptive training techniques (WFO/Optimization).
+2.  **The Blueprint Factory (DNA Repository):** The optimization core (Optuna/GP). Aggressively incorporates the DNA of successful models.
+3.  **The Arena (Tournament Manager):** Deploys a pool of models (Agents) into the live (paper) environment (5m or 15m), allocates capital ($200 each), and executes trades.
+4.  **The Watchtower (The Arbiter):** Monitors performance in real-time using robust metrics, decides which models "die," and promotes successful DNA.
+5.  **Prioritize 5m timeframes.
+
+### Detailed Implementation To-Do List
+
+#### Phase 1: High-Frequency Infrastructure and Fidelity
+
+To operate effectively on 5m/15m, the infrastructure must be fast and the simulation realistic.
+
+**1.1. Implement WebSocket Data Ingestion (Mandatory)**
+
+*   **Goal:** Achieve low latency required for LTF trading.
+*   **Files:** `data_processing_v2.py`, `singularity_engine.py`
+*   **Action:**
+    *   Transition from REST API polling to WebSocket streams (using native exchange WS APIs or CCXT Pro).
+    *   The system must be fully asynchronous (`async/await`) and event-driven, triggering calculations immediately upon data arrival.
+
+**1.2. Enhance Simulation Fidelity (Critical)**
+
+*   **Goal:** Ensure the evolutionary process accounts for real-world costs.
+*   **File:** `backtester.py` (The `vectorbt` implementation)
+*   **Steps:**
+    1.  **Dynamic Slippage Modeling:** Implement slippage based on current volatility (EGARCH) and order size relative to volume.
+    2.  **Realistic Spreads:** Simulate the bid-ask spread. Orders should only fill when the price crosses the spread.
+    3.  **Timeframe Selection:** Use this enhanced backtester to determine if 5m or 15m is viable. If average potential profit per trade < 2x average cost, the timeframe is too fast.
+
+#### Phase 2: The Arena (Tournament Manager)
+
+**2.1. Implement Multi-Agent Orchestration**
+
+*   **New Module:** `forge/crucible/arena_manager.py`
+*   **Task:** Manage the simultaneous execution and lifecycle of multiple models.
+*   **Steps:**
+    1.  Define a `CrucibleAgent` class to encapsulate a model's DNA, its dedicated capital pool ($200), and its performance metrics.
+    2.  Initialize a pool of N agents (e.g., 10).
+    3.  In the main loop (`singularity_engine.py` or a dedicated `crucible_engine.py`), iterate through all active agents concurrently, generating signals and managing virtual orders independently.
+
+#### Phase 3: The Watchtower (The Arbiter)
+
+The Watchtower must distinguish skill from luck (noise) rapidly.
+
+**3.1. Define Robust Evaluation Metrics**
+
+*   **New Module:** `forge/crucible/watchtower.py`
+*   **Task:** Define criteria for termination and promotion beyond raw PnL.
+*   **Metrics:**
+    *   **Probabilistic Sharpe Ratio (PSR):** Estimates the likelihood that the observed Sharpe Ratio is statistically significant (greater than zero). This is crucial for short track records.
+    *   **Deflated Sharpe Ratio (DSR):** (Advanced) Adjusts PSR to account for the multiple testing bias inherent in evaluating many models.
+
+**3.2. Define the Lifecycle Rules (The Reaper)**
+
+*   **File:** `forge/crucible/watchtower.py`
+*   **Steps:**
+    1.  **Termination (Death):** If an agent breaches the absolute drawdown limit (e.g., loses 50-100% of capital).
+    2.  **Termination (Decay):** If the rolling PSR/DSR drops below a confidence threshold (e.g., 90%) over a minimum number of trades.
+    3.  **Promotion (Success):** If the PSR/DSR exceeds a high threshold (e.g., 99%).
+
+**3.3. Real-Time Monitoring and Actions**
+
+*   **Action:** The Watchtower continuously monitors these metrics. Upon termination, it signals the Arena to stop the agent and the Blueprint Factory to generate a replacement. Upon success, it extracts the DNA and sends it to the Factory.
+
+#### Phase 4: The Blueprint Factory (Accelerated Evolution)
+
+This manages the evolution based on the Arena results, aggressively favoring recent winners.
+
+**4.1. DNA Extraction and Elite Pool Management**
+
+*   **File:** `forge/crucible/blueprint_factory.py` (Refactoring `elite_tuner.py` concepts)
+*   **Steps:**
+    1.  Collect the DNA (Parameters + Feature Subset) of promoted models (Success) and the top K recently terminated models.
+    2.  Maintain an "Elite Pool" of the highest-scoring DNA based on PSR/DSR.
+
+**4.2. Implement Aggressive Elitism (Multi-Parent Warm Starts)**
+
+*   **File:** `forge/crucible/blueprint_factory.py`
+*   **Task:** Ensure new models heavily leverage the DNA of the Elite Pool.
+*   **Steps:**
+    1.  When initializing a new optimization study (e.g., in Optuna), use `study.enqueue_trial(elite_dna)` multiple times to seed the search with the DNA of *all* models in the Elite Pool.
+    2.  This ensures the next generation starts its search from the best known solutions.
+
+#### Phase 5: Adaptive Model Training (The Smart Forge)
+
+Dynamically adjust training resources (data size, steps) based on the environment and model needs.
+
+**5.1. Adaptive Training Steps (Efficiency)**
+
+*   **Goal:** Train only as long as necessary and stop unpromising models early.
+*   **Implementation:**
+    1.  **Early Stopping (Model Level):** During model training (LGBM, BNN), monitor validation loss. If it stops improving for a set "patience," stop training.
+    2.  **Optuna Pruning (Optimization Level):** Utilize Optuna's pruning capabilities (e.g., `MedianPruner`). If an optimization trial performs poorly during the early stages of the backtest, Optuna stops the evaluation, saving significant time.
+
+**5.2. Adaptive Data Horizons (Relevance)**
+
+*   **Goal:** Dynamically determine how much data to use for training.
+*   **Implementation (Leveraging Drift Detection):**
+    1.  Use the Drift Detector (ADWIN) in `wfo_manager.py`.
+    2.  When training a new model, set the start of the training window to the *most recent significant drift point*.
+    *   *Logic:* Stable market = longer window (more data). Turbulent market (recent drift) = shorter window (focus on current regime).
+
+**5.3. (Advanced) Curriculum Learning**
+
+*   **Goal:** Improve model stability by training sequentially.
+*   **Implementation:**
+    1.  Segment training data by volatility (EGARCH) or regime (HDBSCAN).
+    2.  Train the model first on stable/low-volatility periods, then introduce high-volatility/noisy periods.

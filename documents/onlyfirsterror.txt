@@ -1,0 +1,833 @@
+##################################
+#                                #
+#    The Singularity Protocol    #
+#    Autonomous Trading System   #
+#                                #
+##################################
+
+Checking for virtual environment at: .\venv
+Found virtual environment.
+
+Activating virtual environment...
+Virtual environment activated successfully.
+
+Starting the application...
+Press CTRL+C to stop the server.
+
+[Multiprocessing] Start method is 'None'. Forcing to 'spawn'.
+[App.py] Initializing ServiceManager (Main Process)...
+[App.py] ServiceManager initialized.
+[App.py] ServiceManager: Initializing services...
+[Model Check] ❌ Missing essential model type 'Specialist'.
+
+============================================================
+===============   MISSING MODELS - INITIATING GENESIS   ===============
+============================================================
+Running automatic training script (Start_Script.bat). This will take some time...
+--- Activating Virtual Environment ---
+
+[1/3] Preparing all data...
+
+[DataPrep] --- Starting Concurrent Data Preparation (Last 90 Days) ---
+[DataPrep] -> SKIPPING BTC/USDT:USDT 15m (recent, 22.7h old)
+[DataPrep] -> SKIPPING BTC/USDT:USDT 5m (recent, 22.7h old)
+[DataPrep] -> SKIPPING BTC/USDT:USDT 1m (recent, 22.1h old)
+[DataPrep] -> SKIPPING ETH/USDT:USDT 15m (recent, 22.7h old)
+[DataPrep] -> SKIPPING ETH/USDT:USDT 5m (recent, 22.7h old)
+[DataPrep] -> SKIPPING ETH/USDT:USDT 1m (recent, 22.1h old)
+[DataPrep] -> SKIPPING SOL/USDT:USDT 15m (recent, 22.7h old)
+[DataPrep] -> SKIPPING SOL/USDT:USDT 5m (recent, 22.7h old)
+[DataPrep] -> SKIPPING SOL/USDT:USDT 1m (recent, 22.1h old)
+[DataPrep] -> SKIPPING XRP/USDT:USDT 15m (recent, 22.7h old)
+[DataPrep] -> SKIPPING XRP/USDT:USDT 5m (recent, 22.6h old)
+[DataPrep] -> SKIPPING XRP/USDT:USDT 1m (recent, 22.1h old)
+[DataPrep] -> SKIPPING DOGE/USDT:USDT 15m (recent, 22.7h old)
+[DataPrep] -> SKIPPING DOGE/USDT:USDT 5m (recent, 22.6h old)
+[DataPrep] -> SKIPPING DOGE/USDT:USDT 1m (recent, 22.1h old)
+[DataPrep] -> SKIPPING BNB/USDT:USDT 15m (recent, 22.6h old)
+[DataPrep] -> SKIPPING BNB/USDT:USDT 5m (recent, 22.2h old)
+[DataPrep] -> SKIPPING BNB/USDT:USDT 1m (recent, 22.1h old)
+[DataPrep] -> SKIPPING ASTER/USDT:USDT 15m (recent, 22.6h old)
+[DataPrep] -> SKIPPING ASTER/USDT:USDT 5m (recent, 22.2h old)
+[DataPrep] -> SKIPPING ASTER/USDT:USDT 1m (recent, 22.2h old)
+[DataPrep] -> SKIPPING ENA/USDT:USDT 15m (recent, 22.2h old)
+[DataPrep] -> SKIPPING ENA/USDT:USDT 5m (recent, 22.2h old)
+[DataPrep] -> SKIPPING ENA/USDT:USDT 1m (recent, 22.1h old)
+[DataPrep] -> SKIPPING SUI/USDT:USDT 15m (recent, 22.2h old)
+[DataPrep] -> SKIPPING SUI/USDT:USDT 5m (recent, 22.1h old)
+[DataPrep] -> SKIPPING SUI/USDT:USDT 1m (recent, 22.1h old)
+[DataPrep] -> SKIPPING ADA/USDT:USDT 15m (recent, 22.2h old)
+[DataPrep] -> SKIPPING ADA/USDT:USDT 5m (recent, 22.1h old)
+[DataPrep] -> SKIPPING ADA/USDT:USDT 1m (recent, 22.1h old)
+
+[DataPrep] --- Data Preparation Finished ---
+
+[2/3] Running Auxiliary Model (HMM, RL Governor) Trainer...
+
+[Genesis] --- Starting Parallel Auxiliary Model Training ---
+[Genesis] Using 10 parallel processes.
+[Genesis] --- Processing for BTC/USDT:USDT ---
+[Genesis] (BTC/USDT:USDT) ✅ Auxiliary models are up-to-date. Skipping.
+[Genesis] --- Processing for ETH/USDT:USDT ---
+[Genesis] (ETH/USDT:USDT) ✅ Auxiliary models are up-to-date. Skipping.
+[Genesis] --- Processing for SOL/USDT:USDT ---
+[Genesis] (SOL/USDT:USDT) ✅ Auxiliary models are up-to-date. Skipping.
+[Genesis] --- Processing for XRP/USDT:USDT ---
+[Genesis] (XRP/USDT:USDT) ✅ Auxiliary models are up-to-date. Skipping.
+[Genesis] --- Processing for DOGE/USDT:USDT ---
+[Genesis] (DOGE/USDT:USDT) ✅ Auxiliary models are up-to-date. Skipping.
+[Genesis] --- Processing for BNB/USDT:USDT ---
+[Genesis] (BNB/USDT:USDT) ✅ Auxiliary models are up-to-date. Skipping.
+[Genesis] --- Processing for ASTER/USDT:USDT ---
+[Genesis] (ASTER/USDT:USDT) ✅ Auxiliary models are up-to-date. Skipping.
+[Genesis] --- Processing for ENA/USDT:USDT ---
+[Genesis] (ENA/USDT:USDT) ✅ Auxiliary models are up-to-date. Skipping.
+[Genesis] --- Processing for SUI/USDT:USDT ---
+[Genesis] (SUI/USDT:USDT) ✅ Auxiliary models are up-to-date. Skipping.
+[Genesis] --- Processing for ADA/USDT:USDT ---
+[Genesis] (ADA/USDT:USDT) ✅ Auxiliary models are up-to-date. Skipping.
+
+[Genesis] --- Saving Trained Auxiliary Models ---
+
+[Genesis] --- Auxiliary Model Training Complete ---
+
+[3/3] Running Online Model Trainer...
+
+[Genesis] --- Starting Parallel Online Model Training (10 processes) ---
+
+[Genesis] --- Genesis Online Model Trainer for BTC/USDT:USDT ---
+  -> [Genesis] (BTC/USDT:USDT) ✅ Online model is up-to-date. Skipping.
+
+[Genesis] --- Genesis Online Model Trainer for ETH/USDT:USDT ---
+  -> [Genesis] (ETH/USDT:USDT) ✅ Online model is up-to-date. Skipping.
+
+[Genesis] --- Genesis Online Model Trainer for SOL/USDT:USDT ---
+  -> [Genesis] (SOL/USDT:USDT) ✅ Online model is up-to-date. Skipping.
+
+[Genesis] --- Genesis Online Model Trainer for XRP/USDT:USDT ---
+  -> [Genesis] (XRP/USDT:USDT) ✅ Online model is up-to-date. Skipping.
+
+[Genesis] --- Genesis Online Model Trainer for DOGE/USDT:USDT ---
+  -> [Genesis] (DOGE/USDT:USDT) ✅ Online model is up-to-date. Skipping.
+
+[Genesis] --- Genesis Online Model Trainer for BNB/USDT:USDT ---
+  -> [Genesis] (BNB/USDT:USDT) ✅ Online model is up-to-date. Skipping.
+
+[Genesis] --- Genesis Online Model Trainer for ASTER/USDT:USDT ---
+  -> [Genesis] (ASTER/USDT:USDT) ✅ Online model is up-to-date. Skipping.
+
+[Genesis] --- Genesis Online Model Trainer for ENA/USDT:USDT ---
+  -> [Genesis] (ENA/USDT:USDT) ✅ Online model is up-to-date. Skipping.
+
+[Genesis] --- Genesis Online Model Trainer for SUI/USDT:USDT ---
+  -> [Genesis] (SUI/USDT:USDT) ✅ Online model is up-to-date. Skipping.
+
+[Genesis] --- Genesis Online Model Trainer for ADA/USDT:USDT ---
+  -> [Genesis] (ADA/USDT:USDT) ✅ Online model is up-to-date. Skipping.
+
+[Genesis] --- Initial training for all online models complete. ---
+
+--- ALL MODELS TRAINED SUCCESSFULLY ---
+[App.py] Model training script finished successfully.
+2025-10-19 16:26:55,811 - [CrucibleEngine] - INFO - Basic exchange 'bybit' setup complete.
+[Watchtower] Initialized.
+[Hedge] Initializing weights uniformly.
+2025-10-19 16:26:55,811 - [SingularityEngine] - INFO - Singularity Engine initialized.
+[App.py] Automatically starting main loop thread after initialization.
+[ServiceManager] Starting main loop thread...
+[ServiceManager] Main loop thread started.
+[App.py] Main execution block started.
+2025-10-19 16:26:55,811 - [CrucibleEngine] - INFO - Starting Hyper-Evolutionary Engine...
+2025-10-19 16:26:55,811 - [CrucibleEngine] - INFO - ProcessPoolExecutor initialized in run() using 'spawn' context with 15 workers.
+2025-10-19 16:26:55,811 - [CrucibleEngine] - INFO - --- Phase 1: Initializing Regime Models (Waiting for completion)... ---
+2025-10-19 16:26:55,811 - [CrucibleEngine] - INFO - Initializing regime models for market state detection...
+2025-10-19 16:26:55,815 - [CrucibleEngine] - INFO - No existing regime models found - training new ones...
+ * Serving Flask app 'app'
+ * Debug mode: off
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[BTC/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[Data Fetcher] Fetching 1000 candles for BTC/USDT from Binance...
+[ETH/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[SOL/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[XRP/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[Data Fetcher] Fetching 1000 candles for ETH/USDT from Binance...
+[DOGE/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[Data Fetcher] Fetching 1000 candles for SOL/USDT from Binance...
+[Data Fetcher] Fetching 1000 candles for XRP/USDT from Binance...
+[BNB/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[ASTER/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[Data Fetcher] Fetching 1000 candles for DOGE/USDT from Binance...
+[ENA/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[SUI/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[Data Fetcher] Fetching 1000 candles for BNB/USDT from Binance...
+[Data Fetcher] Fetching 1000 candles for ASTER/USDT from Binance...
+[Data Fetcher] Fetching 1000 candles for ENA/USDT from Binance...
+[Data Fetcher] Fetching 1000 candles for SUI/USDT from Binance...
+[ADA/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[Data Fetcher] Fetching 1000 candles for ADA/USDT from Binance...
+--- ERROR fetching market data for ASTER/USDT from Binance: bybit does not have market symbol ASTER/USDT
+[ASTER/USDT:USDT] WARNING: Could not fetch data for regime model initialization.
+--- ERROR fetching market data for ENA/USDT from Binance: bybit does not have market symbol ENA/USDT
+[ENA/USDT:USDT] WARNING: Could not fetch data for regime model initialization.
+[DynamicRegimeModel] Fitting on 582 samples using 13 features...
+[DynamicRegimeModel] Fit complete. Found 2 distinct regimes.
+[ADA/USDT:USDT] Regime model fitted successfully.
+[DynamicRegimeModel] Fitting on 1000 samples using 14 features...
+[DynamicRegimeModel] Fit complete. Found 2 distinct regimes.
+[SUI/USDT:USDT] Regime model fitted successfully.
+[DynamicRegimeModel] Fitting on 1000 samples using 14 features...
+[DynamicRegimeModel] Fit complete. Found 2 distinct regimes.
+[BNB/USDT:USDT] Regime model fitted successfully.
+[DynamicRegimeModel] Fitting on 1000 samples using 14 features...
+[DynamicRegimeModel] Fit complete. Found 3 distinct regimes.
+[DOGE/USDT:USDT] Regime model fitted successfully.
+[DynamicRegimeModel] Fitting on 1000 samples using 14 features...
+[DynamicRegimeModel] Fit complete. Found 4 distinct regimes.
+[ETH/USDT:USDT] Regime model fitted successfully.
+[DynamicRegimeModel] Fitting on 1000 samples using 14 features...
+[DynamicRegimeModel] Fit complete. Found 3 distinct regimes.
+[BTC/USDT:USDT] Regime model fitted successfully.
+[DynamicRegimeModel] Fitting on 1000 samples using 14 features...
+[DynamicRegimeModel] Fit complete. Found 2 distinct regimes.
+[XRP/USDT:USDT] Regime model fitted successfully.
+[DynamicRegimeModel] Fitting on 1000 samples using 14 features...
+[DynamicRegimeModel] Fit complete. Found 4 distinct regimes.
+[SOL/USDT:USDT] Regime model fitted successfully.
+2025-10-19 16:27:15,023 - [CrucibleEngine] - INFO - Regime model trained for BTC/USDT:USDT
+2025-10-19 16:27:15,023 - [CrucibleEngine] - INFO - Regime model trained for ETH/USDT:USDT
+2025-10-19 16:27:15,024 - [CrucibleEngine] - INFO - Regime model trained for SOL/USDT:USDT
+2025-10-19 16:27:15,024 - [CrucibleEngine] - INFO - Regime model trained for XRP/USDT:USDT
+2025-10-19 16:27:15,024 - [CrucibleEngine] - INFO - Regime model trained for DOGE/USDT:USDT
+2025-10-19 16:27:15,024 - [CrucibleEngine] - INFO - Regime model trained for BNB/USDT:USDT
+2025-10-19 16:27:15,025 - [CrucibleEngine] - INFO - Regime model trained for SUI/USDT:USDT
+2025-10-19 16:27:15,025 - [CrucibleEngine] - INFO - Regime model trained for ADA/USDT:USDT
+2025-10-19 16:27:15,025 - [CrucibleEngine] - INFO - Regime model initialization complete
+2025-10-19 16:27:15,025 - [CrucibleEngine] - INFO - --- Phase 1: Complete. ---
+2025-10-19 16:27:15,026 - [CrucibleEngine] - INFO - --- Phase 2: Initializing Immune System (Waiting for completion)... ---
+2025-10-19 16:27:15,026 - [CrucibleEngine] - INFO - Initializing immune system for risk monitoring...
+2025-10-19 16:27:15,027 - [CrucibleEngine] - ERROR - Failed to initialize immune system: empty(): argument 'size' failed to unpack the object at pos 2 with error "type must be tuple of ints,but got module"
+2025-10-19 16:27:15,027 - [CrucibleEngine] - WARNING - Continuing without immune system - risk monitoring disabled
+2025-10-19 16:27:15,027 - [CrucibleEngine] - INFO - --- Phase 2: Complete. ---
+2025-10-19 16:27:15,028 - [CrucibleEngine] - INFO - --- Phase 3: Starting main operational loops (Concurrent)... ---
+2025-10-19 16:27:15,028 - [CrucibleEngine] - INFO - Starting centralized Forge processing loop...
+2025-10-19 16:27:15,028 - [CrucibleEngine] - INFO - Starting background seeding of Generation 0 agents...
+2025-10-19 16:27:15,029 - [CrucibleEngine] - INFO - Found 4 existing model(s) for BTC/USDT:USDT. Creating single agent...
+2025-10-19 16:27:15,029 - [V3Agent_BTCUSDT] - INFO - V3Agent initialized for BTC/USDT:USDT.
+2025-10-19 16:27:15,029 - [V3Agent_BTCUSDT] - INFO - Reloading all models in parallel for BTC/USDT:USDT...
+2025-10-19 16:27:15,030 - [V3Agent_BTCUSDT] - INFO - [MODEL LOADING] Searching for models with symbol: 'BTC/USDT:USDT'
+2025-10-19 16:27:15,030 - [V3Agent_BTCUSDT] - INFO - [MODEL LOADING] Found 4 specialist model directories
+2025-10-19 16:27:15,030 - [V3Agent_BTCUSDT] - INFO - Loading Deep RL Governor from models\BTCUSDT_RLG.joblib
+2025-10-19 16:27:15,030 - [CrucibleEngine] - INFO - Trade watcher started - monitoring live market data...
+[RL Governor] Initializing agent on device: cuda
+2025-10-19 16:27:15,030 - [V3Agent_BTCUSDT] - INFO - [MODEL LOADING] Model paths: ['models\\BTCUSDTUSDT_GP_2_0_20251019_150739', 'models\\BTCUSDTUSDT_GP_2_0_20251019_151921', 'models\\BTCUSDTUSDT_GP_2_0_20251019_155248', 'models\\BTCUSDTUSDT_GP_2_0_20251019_160934']
+[Data Fetcher] Fetching 200 candles for BTC/USDT from Binance...
+2025-10-19 16:27:15,030 - [V3Agent_BTCUSDT] - INFO - Loading HDBSCAN model from models\BTCUSDT_HDBSCAN.joblib
+2025-10-19 16:27:15,032 - [CrucibleEngine] - INFO - Arena loop started - agents ready for battle...
+2025-10-19 16:27:15,032 - [SingularityEngine] - INFO - Singularity Engine starting its operational loops.
+2025-10-19 16:27:15,031 - [V3Agent_BTCUSDT] - WARNING - Metadata not found for model in models\BTCUSDTUSDT_GP_2_0_20251019_150739. Skipping.
+2025-10-19 16:27:15,033 - [SingularityEngine] - INFO - Starting reactive drift monitoring loop...
+2025-10-19 16:27:15,033 - [V3Agent_BTCUSDT] - WARNING - Metadata not found for model in models\BTCUSDTUSDT_GP_2_0_20251019_151921. Skipping.
+2025-10-19 16:27:15,033 - [SingularityEngine] - INFO - Running reactive drift check...
+2025-10-19 16:27:15,034 - [SingularityEngine] - INFO - Monitoring for concept drift...
+2025-10-19 16:27:15,034 - [V3Agent_BTCUSDT] - WARNING - Metadata not found for model in models\BTCUSDTUSDT_GP_2_0_20251019_155248. Skipping.
+2025-10-19 16:27:15,034 - [SingularityEngine] - INFO - Starting proactive Forge loop (Centralized Queue Mode)...
+2025-10-19 16:27:15,034 - [V3Agent_BTCUSDT] - WARNING - Metadata not found for model in models\BTCUSDTUSDT_GP_2_0_20251019_160934. Skipping.
+2025-10-19 16:27:15,035 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): BTC/USDT:USDT. Inheritance: False
+2025-10-19 16:27:15,035 - [V3Agent_BTCUSDT] - WARNING - No specialist models found for BTC/USDT:USDT. Agent will be inactive.
+2025-10-19 16:27:15,036 - [SingularityEngine] - INFO - Updating ensemble weights based on performance log...
+2025-10-19 16:27:15,036 - [CrucibleEngine] - INFO - --- Processing Forge task from Proactive (P10): BTC/USDT:USDT ---
+2025-10-19 16:27:15,047 - [SingularityEngine] - INFO - Reactive check complete. Sleeping for 600s.
+2025-10-19 16:27:15,047 - [V3Agent_BTCUSDT] - INFO - All models reloaded successfully for BTC/USDT:USDT.
+2025-10-19 16:27:15,048 - [CrucibleEngine] - INFO - ✅ AGENT BTCUSDT_agent_loaded LOADED. Models: 0
+2025-10-19 16:27:15,048 - [CrucibleEngine] - INFO - Found 1 existing model(s) for ETH/USDT:USDT. Creating single agent...
+2025-10-19 16:27:15,048 - [V3Agent_ETHUSDT] - INFO - V3Agent initialized for ETH/USDT:USDT.
+2025-10-19 16:27:15,048 - [V3Agent_ETHUSDT] - INFO - Reloading all models in parallel for ETH/USDT:USDT...
+2025-10-19 16:27:15,049 - [V3Agent_ETHUSDT] - INFO - Loading Deep RL Governor from models\ETHUSDT_RLG.joblib
+[RL Governor] Initializing agent on device: cuda
+2025-10-19 16:27:15,049 - [V3Agent_ETHUSDT] - INFO - Loading HDBSCAN model from models\ETHUSDT_HDBSCAN.joblib
+2025-10-19 16:27:15,049 - [V3Agent_ETHUSDT] - INFO - [MODEL LOADING] Searching for models with symbol: 'ETH/USDT:USDT'
+2025-10-19 16:27:15,050 - [V3Agent_ETHUSDT] - INFO - [MODEL LOADING] Found 1 specialist model directories
+2025-10-19 16:27:15,050 - [V3Agent_ETHUSDT] - INFO - [MODEL LOADING] Model paths: ['models\\ETHUSDTUSDT_GP_2_0_20251019_150856']
+2025-10-19 16:27:15,050 - [V3Agent_ETHUSDT] - WARNING - Metadata not found for model in models\ETHUSDTUSDT_GP_2_0_20251019_150856. Skipping.
+2025-10-19 16:27:15,050 - [V3Agent_ETHUSDT] - WARNING - No specialist models found for ETH/USDT:USDT. Agent will be inactive.
+2025-10-19 16:27:15,054 - [V3Agent_ETHUSDT] - INFO - All models reloaded successfully for ETH/USDT:USDT.
+2025-10-19 16:27:15,054 - [CrucibleEngine] - INFO - ✅ AGENT ETHUSDT_agent_loaded LOADED. Models: 0
+2025-10-19 16:27:15,054 - [CrucibleEngine] - INFO - Found 1 existing model(s) for SOL/USDT:USDT. Creating single agent...
+2025-10-19 16:27:15,054 - [V3Agent_SOLUSDT] - INFO - V3Agent initialized for SOL/USDT:USDT.
+2025-10-19 16:27:15,055 - [V3Agent_SOLUSDT] - INFO - Reloading all models in parallel for SOL/USDT:USDT...
+2025-10-19 16:27:15,055 - [V3Agent_SOLUSDT] - INFO - Loading Deep RL Governor from models\SOLUSDT_RLG.joblib
+[RL Governor] Initializing agent on device: cuda
+2025-10-19 16:27:15,055 - [V3Agent_SOLUSDT] - INFO - Loading HDBSCAN model from models\SOLUSDT_HDBSCAN.joblib
+2025-10-19 16:27:15,056 - [V3Agent_SOLUSDT] - INFO - [MODEL LOADING] Searching for models with symbol: 'SOL/USDT:USDT'
+2025-10-19 16:27:15,056 - [V3Agent_SOLUSDT] - INFO - [MODEL LOADING] Found 1 specialist model directories
+2025-10-19 16:27:15,057 - [V3Agent_SOLUSDT] - INFO - [MODEL LOADING] Model paths: ['models\\SOLUSDTUSDT_GP_2_0_20251019_150938']
+2025-10-19 16:27:15,057 - [V3Agent_SOLUSDT] - WARNING - Metadata not found for model in models\SOLUSDTUSDT_GP_2_0_20251019_150938. Skipping.
+2025-10-19 16:27:15,057 - [V3Agent_SOLUSDT] - WARNING - No specialist models found for SOL/USDT:USDT. Agent will be inactive.
+2025-10-19 16:27:15,059 - [V3Agent_SOLUSDT] - INFO - All models reloaded successfully for SOL/USDT:USDT.
+2025-10-19 16:27:15,060 - [CrucibleEngine] - INFO - ✅ AGENT SOLUSDT_agent_loaded LOADED. Models: 0
+2025-10-19 16:27:15,060 - [CrucibleEngine] - INFO - Found 1 existing model(s) for XRP/USDT:USDT. Creating single agent...
+2025-10-19 16:27:15,060 - [V3Agent_XRPUSDT] - INFO - V3Agent initialized for XRP/USDT:USDT.
+2025-10-19 16:27:15,060 - [V3Agent_XRPUSDT] - INFO - Reloading all models in parallel for XRP/USDT:USDT...
+2025-10-19 16:27:15,061 - [V3Agent_XRPUSDT] - INFO - Loading Deep RL Governor from models\XRPUSDT_RLG.joblib
+[RL Governor] Initializing agent on device: cuda
+2025-10-19 16:27:15,061 - [V3Agent_XRPUSDT] - INFO - Loading HDBSCAN model from models\XRPUSDT_HDBSCAN.joblib
+2025-10-19 16:27:15,061 - [V3Agent_XRPUSDT] - INFO - [MODEL LOADING] Searching for models with symbol: 'XRP/USDT:USDT'
+2025-10-19 16:27:15,062 - [V3Agent_XRPUSDT] - INFO - [MODEL LOADING] Found 1 specialist model directories
+2025-10-19 16:27:15,062 - [V3Agent_XRPUSDT] - INFO - [MODEL LOADING] Model paths: ['models\\XRPUSDTUSDT_GP_2_0_20251019_151311']
+2025-10-19 16:27:15,062 - [V3Agent_XRPUSDT] - WARNING - Metadata not found for model in models\XRPUSDTUSDT_GP_2_0_20251019_151311. Skipping.
+2025-10-19 16:27:15,063 - [V3Agent_XRPUSDT] - WARNING - No specialist models found for XRP/USDT:USDT. Agent will be inactive.
+2025-10-19 16:27:15,065 - [V3Agent_XRPUSDT] - INFO - All models reloaded successfully for XRP/USDT:USDT.
+2025-10-19 16:27:15,065 - [CrucibleEngine] - INFO - ✅ AGENT XRPUSDT_agent_loaded LOADED. Models: 0
+2025-10-19 16:27:15,066 - [CrucibleEngine] - INFO - Found 1 existing model(s) for DOGE/USDT:USDT. Creating single agent...
+2025-10-19 16:27:15,066 - [V3Agent_DOGEUSDT] - INFO - V3Agent initialized for DOGE/USDT:USDT.
+2025-10-19 16:27:15,066 - [V3Agent_DOGEUSDT] - INFO - Reloading all models in parallel for DOGE/USDT:USDT...
+2025-10-19 16:27:15,067 - [V3Agent_DOGEUSDT] - INFO - Loading Deep RL Governor from models\DOGEUSDT_RLG.joblib
+[RL Governor] Initializing agent on device: cuda
+2025-10-19 16:27:15,067 - [V3Agent_DOGEUSDT] - INFO - Loading HDBSCAN model from models\DOGEUSDT_HDBSCAN.joblib
+2025-10-19 16:27:15,067 - [V3Agent_DOGEUSDT] - INFO - [MODEL LOADING] Searching for models with symbol: 'DOGE/USDT:USDT'2025-10-19 16:27:15,067 - [V3Agent_DOGEUSDT] - INFO - [MODEL LOADING] Found 1 specialist model directories
+2025-10-19 16:27:15,068 - [V3Agent_DOGEUSDT] - INFO - [MODEL LOADING] Model paths: ['models\\DOGEUSDTUSDT_GP_2_0_20251019_151708']
+2025-10-19 16:27:15,068 - [V3Agent_DOGEUSDT] - WARNING - Metadata not found for model in models\DOGEUSDTUSDT_GP_2_0_20251019_151708. Skipping.
+2025-10-19 16:27:15,068 - [V3Agent_DOGEUSDT] - WARNING - No specialist models found for DOGE/USDT:USDT. Agent will be inactive.
+2025-10-19 16:27:15,071 - [V3Agent_DOGEUSDT] - INFO - All models reloaded successfully for DOGE/USDT:USDT.
+2025-10-19 16:27:15,071 - [CrucibleEngine] - INFO - ✅ AGENT DOGEUSDT_agent_loaded LOADED. Models: 0
+2025-10-19 16:27:15,072 - [CrucibleEngine] - INFO - Found 1 existing model(s) for BNB/USDT:USDT. Creating single agent...
+2025-10-19 16:27:15,072 - [V3Agent_BNBUSDT] - INFO - V3Agent initialized for BNB/USDT:USDT.
+2025-10-19 16:27:15,072 - [V3Agent_BNBUSDT] - INFO - Reloading all models in parallel for BNB/USDT:USDT...
+2025-10-19 16:27:15,072 - [V3Agent_BNBUSDT] - INFO - Loading Deep RL Governor from models\BNBUSDT_RLG.joblib
+[RL Governor] Initializing agent on device: cuda
+2025-10-19 16:27:15,073 - [V3Agent_BNBUSDT] - INFO - Loading HDBSCAN model from models\BNBUSDT_HDBSCAN.joblib
+2025-10-19 16:27:15,073 - [V3Agent_BNBUSDT] - INFO - [MODEL LOADING] Searching for models with symbol: 'BNB/USDT:USDT'
+2025-10-19 16:27:15,073 - [V3Agent_BNBUSDT] - INFO - [MODEL LOADING] Found 1 specialist model directories
+2025-10-19 16:27:15,074 - [V3Agent_BNBUSDT] - INFO - [MODEL LOADING] Model paths: ['models\\BNBUSDTUSDT_GP_2_0_20251019_152114']
+2025-10-19 16:27:15,074 - [V3Agent_BNBUSDT] - WARNING - Metadata not found for model in models\BNBUSDTUSDT_GP_2_0_20251019_152114. Skipping.
+2025-10-19 16:27:15,074 - [V3Agent_BNBUSDT] - WARNING - No specialist models found for BNB/USDT:USDT. Agent will be inactive.
+2025-10-19 16:27:15,077 - [V3Agent_BNBUSDT] - INFO - All models reloaded successfully for BNB/USDT:USDT.
+2025-10-19 16:27:15,077 - [CrucibleEngine] - INFO - ✅ AGENT BNBUSDT_agent_loaded LOADED. Models: 0
+2025-10-19 16:27:15,077 - [CrucibleEngine] - INFO - Found 1 existing model(s) for ASTER/USDT:USDT. Creating single agent...
+2025-10-19 16:27:15,077 - [V3Agent_ASTERUSDT] - INFO - V3Agent initialized for ASTER/USDT:USDT.
+2025-10-19 16:27:15,078 - [V3Agent_ASTERUSDT] - INFO - Reloading all models in parallel for ASTER/USDT:USDT...
+2025-10-19 16:27:15,078 - [V3Agent_ASTERUSDT] - INFO - Loading Deep RL Governor from models\ASTERUSDT_RLG.joblib
+[RL Governor] Initializing agent on device: cuda
+2025-10-19 16:27:15,078 - [V3Agent_ASTERUSDT] - INFO - Loading HDBSCAN model from models\ASTERUSDT_HDBSCAN.joblib
+2025-10-19 16:27:15,078 - [V3Agent_ASTERUSDT] - INFO - [MODEL LOADING] Searching for models with symbol: 'ASTER/USDT:USDT'
+2025-10-19 16:27:15,079 - [V3Agent_ASTERUSDT] - INFO - [MODEL LOADING] Found 1 specialist model directories
+2025-10-19 16:27:15,079 - [V3Agent_ASTERUSDT] - INFO - [MODEL LOADING] Model paths: ['models\\ASTERUSDTUSDT_GP_2_0_20251019_150124']
+2025-10-19 16:27:15,080 - [V3Agent_ASTERUSDT] - WARNING - Metadata not found for model in models\ASTERUSDTUSDT_GP_2_0_20251019_150124. Skipping.
+2025-10-19 16:27:15,080 - [V3Agent_ASTERUSDT] - WARNING - No specialist models found for ASTER/USDT:USDT. Agent will be inactive.
+2025-10-19 16:27:15,081 - [V3Agent_ASTERUSDT] - INFO - All models reloaded successfully for ASTER/USDT:USDT.
+2025-10-19 16:27:15,081 - [CrucibleEngine] - INFO - ✅ AGENT ASTERUSDT_agent_loaded LOADED. Models: 0
+2025-10-19 16:27:15,082 - [CrucibleEngine] - INFO - Found 1 existing model(s) for ENA/USDT:USDT. Creating single agent...
+2025-10-19 16:27:15,082 - [V3Agent_ENAUSDT] - INFO - V3Agent initialized for ENA/USDT:USDT.
+2025-10-19 16:27:15,082 - [V3Agent_ENAUSDT] - INFO - Reloading all models in parallel for ENA/USDT:USDT...
+2025-10-19 16:27:15,083 - [V3Agent_ENAUSDT] - INFO - Loading Deep RL Governor from models\ENAUSDT_RLG.joblib
+[RL Governor] Initializing agent on device: cuda
+2025-10-19 16:27:15,083 - [V3Agent_ENAUSDT] - INFO - Loading HDBSCAN model from models\ENAUSDT_HDBSCAN.joblib
+2025-10-19 16:27:15,083 - [V3Agent_ENAUSDT] - INFO - [MODEL LOADING] Searching for models with symbol: 'ENA/USDT:USDT'
+2025-10-19 16:27:15,083 - [V3Agent_ENAUSDT] - INFO - [MODEL LOADING] Found 1 specialist model directories
+2025-10-19 16:27:15,085 - [V3Agent_ENAUSDT] - INFO - [MODEL LOADING] Model paths: ['models\\ENAUSDTUSDT_GP_2_0_20251019_152249']
+2025-10-19 16:27:15,085 - [V3Agent_ENAUSDT] - WARNING - Metadata not found for model in models\ENAUSDTUSDT_GP_2_0_20251019_152249. Skipping.
+2025-10-19 16:27:15,085 - [V3Agent_ENAUSDT] - WARNING - No specialist models found for ENA/USDT:USDT. Agent will be inactive.
+2025-10-19 16:27:15,087 - [V3Agent_ENAUSDT] - INFO - All models reloaded successfully for ENA/USDT:USDT.
+2025-10-19 16:27:15,087 - [CrucibleEngine] - INFO - ✅ AGENT ENAUSDT_agent_loaded LOADED. Models: 0
+2025-10-19 16:27:15,088 - [CrucibleEngine] - INFO - Found 1 existing model(s) for SUI/USDT:USDT. Creating single agent...
+2025-10-19 16:27:15,088 - [V3Agent_SUIUSDT] - INFO - V3Agent initialized for SUI/USDT:USDT.
+2025-10-19 16:27:15,088 - [V3Agent_SUIUSDT] - INFO - Reloading all models in parallel for SUI/USDT:USDT...
+2025-10-19 16:27:15,088 - [V3Agent_SUIUSDT] - INFO - Loading Deep RL Governor from models\SUIUSDT_RLG.joblib
+[RL Governor] Initializing agent on device: cuda
+2025-10-19 16:27:15,088 - [V3Agent_SUIUSDT] - INFO - Loading HDBSCAN model from models\SUIUSDT_HDBSCAN.joblib
+2025-10-19 16:27:15,089 - [V3Agent_SUIUSDT] - INFO - [MODEL LOADING] Searching for models with symbol: 'SUI/USDT:USDT'
+2025-10-19 16:27:15,089 - [V3Agent_SUIUSDT] - INFO - [MODEL LOADING] Found 1 specialist model directories
+2025-10-19 16:27:15,089 - [V3Agent_SUIUSDT] - INFO - [MODEL LOADING] Model paths: ['models\\SUIUSDTUSDT_GP_2_0_20251019_152417']
+2025-10-19 16:27:15,090 - [V3Agent_SUIUSDT] - WARNING - Metadata not found for model in models\SUIUSDTUSDT_GP_2_0_20251019_152417. Skipping.
+2025-10-19 16:27:15,090 - [V3Agent_SUIUSDT] - WARNING - No specialist models found for SUI/USDT:USDT. Agent will be inactive.
+2025-10-19 16:27:15,093 - [V3Agent_SUIUSDT] - INFO - All models reloaded successfully for SUI/USDT:USDT.
+2025-10-19 16:27:15,093 - [CrucibleEngine] - INFO - ✅ AGENT SUIUSDT_agent_loaded LOADED. Models: 0
+2025-10-19 16:27:15,093 - [CrucibleEngine] - INFO - Found 1 existing model(s) for ADA/USDT:USDT. Creating single agent...
+2025-10-19 16:27:15,093 - [V3Agent_ADAUSDT] - INFO - V3Agent initialized for ADA/USDT:USDT.
+2025-10-19 16:27:15,094 - [V3Agent_ADAUSDT] - INFO - Reloading all models in parallel for ADA/USDT:USDT...
+2025-10-19 16:27:15,094 - [V3Agent_ADAUSDT] - INFO - Loading Deep RL Governor from models\ADAUSDT_RLG.joblib
+[RL Governor] Initializing agent on device: cuda
+2025-10-19 16:27:15,094 - [V3Agent_ADAUSDT] - INFO - Loading HDBSCAN model from models\ADAUSDT_HDBSCAN.joblib
+2025-10-19 16:27:15,094 - [V3Agent_ADAUSDT] - INFO - [MODEL LOADING] Searching for models with symbol: 'ADA/USDT:USDT'
+2025-10-19 16:27:15,095 - [V3Agent_ADAUSDT] - INFO - [MODEL LOADING] Found 1 specialist model directories
+2025-10-19 16:27:15,095 - [V3Agent_ADAUSDT] - INFO - [MODEL LOADING] Model paths: ['models\\ADAUSDTUSDT_GP_2_0_20251019_152513']
+2025-10-19 16:27:15,096 - [V3Agent_ADAUSDT] - WARNING - Metadata not found for model in models\ADAUSDTUSDT_GP_2_0_20251019_152513. Skipping.
+2025-10-19 16:27:15,096 - [V3Agent_ADAUSDT] - WARNING - No specialist models found for ADA/USDT:USDT. Agent will be inactive.
+2025-10-19 16:27:15,098 - [V3Agent_ADAUSDT] - INFO - All models reloaded successfully for ADA/USDT:USDT.
+2025-10-19 16:27:15,098 - [CrucibleEngine] - INFO - ✅ AGENT ADAUSDT_agent_loaded LOADED. Models: 0
+2025-10-19 16:27:15,099 - [CrucibleEngine] - INFO - --- Initial seeding submission loop finished. ---
+2025-10-19 16:27:15,837 - [Wkr 460236] - ForgeWorkerMain - Starting FeatureFactory initialization for single asset: BTC/USDT:USDT
+2025-10-19 16:27:15,837 - [Wkr 460236] - ForgeWorkerMain - Running FeatureFactory.create_all_features...
+2025-10-19 16:27:15,838 - [Wkr 460236] - ForgeWorkerMain - --- Feature Factory: Starting Processing ---
+2025-10-19 16:27:15,838 - [Wkr 460236] - ForgeWorkerMain -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:27:15,843 - [Wkr 460236] - ForgeWorkerMain -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+[Data Fetcher] Fetching 200 candles for ETH/USDT from Binance...
+2025-10-19 16:27:16,396 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:27:16,397 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:27:16,401 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+[Data Fetcher] Fetching 200 candles for SOL/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for XRP/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for DOGE/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for BNB/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for ASTER/USDT from Binance...
+--- ERROR fetching market data for ASTER/USDT from Binance: bybit does not have market symbol ASTER/USDT
+2025-10-19 16:27:17,472 - [CrucibleEngine] - WARNING - No data received for ASTER/USDT:USDT
+[Data Fetcher] Fetching 200 candles for ENA/USDT from Binance...
+--- ERROR fetching market data for ENA/USDT from Binance: bybit does not have market symbol ENA/USDT
+2025-10-19 16:27:17,473 - [CrucibleEngine] - WARNING - No data received for ENA/USDT:USDT
+[Data Fetcher] Fetching 200 candles for SUI/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for ADA/USDT from Binance...
+2025-10-19 16:27:18,183 - [CrucibleEngine] - INFO -   -> [BTC/USDT:USDT] Created 6 IMF features (actual IMFs: 6)
+2025-10-19 16:27:18,183 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:27:18,183 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:27:18,198 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:27:18,199 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:27:18,199 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[BTC/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:27:18,201 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:27:18,201 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:27:18,204 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:27:19,516 - [CrucibleEngine] - INFO -   -> [ETH/USDT:USDT] Created 6 IMF features (actual IMFs: 5)
+2025-10-19 16:27:19,516 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:27:19,517 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:27:19,545 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:27:19,547 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:27:19,547 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[ETH/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:27:19,548 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:27:19,548 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:27:19,551 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:27:19,552 - [CrucibleEngine] - INFO -   -> [SOL/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:27:19,553 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:27:19,553 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:27:19,578 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:27:19,579 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:27:19,579 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[SOL/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:27:19,581 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:27:19,581 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:27:19,584 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:27:19,584 - [CrucibleEngine] - INFO -   -> [XRP/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:27:19,585 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:27:19,586 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:27:19,604 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:27:19,605 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:27:19,605 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[XRP/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:27:19,606 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:27:19,607 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:27:19,609 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:27:19,609 - [CrucibleEngine] - INFO -   -> [DOGE/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:27:19,610 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:27:19,611 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:27:19,626 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:27:19,627 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:27:19,627 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[DOGE/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:27:19,628 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:27:19,628 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:27:19,631 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:27:21,247 - [CrucibleEngine] - INFO -   -> [BNB/USDT:USDT] Created 6 IMF features (actual IMFs: 6)
+2025-10-19 16:27:21,247 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:27:21,248 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:27:21,262 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:27:21,263 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:27:21,264 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[BNB/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:27:21,265 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:27:21,265 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:27:21,268 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:27:21,268 - [CrucibleEngine] - INFO -   -> [SUI/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:27:21,269 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:27:21,269 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:27:21,285 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:27:21,286 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:27:21,286 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[SUI/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:27:21,287 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:27:21,288 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:27:21,290 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:27:21,291 - [CrucibleEngine] - INFO -   -> [ADA/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:27:21,292 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:27:21,292 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:27:21,308 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:27:21,309 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:27:21,309 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+2025-10-19 16:27:28,338 - [Wkr 460236] - ForgeWorkerMain -   -> [BTC/USDT:USDT] Created 6 IMF features (actual IMFs: 7)
+2025-10-19 16:27:28,339 - [Wkr 460236] - ForgeWorkerMain -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:27:28,339 - [Wkr 460236] - ForgeWorkerMain -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:27:28,630 - [Wkr 460236] - ForgeWorkerMain -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:27:28,633 - [Wkr 460236] - ForgeWorkerMain - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:27:28,634 - [Wkr 460236] - ForgeWorkerMain - --- Feature Factory: All Processing Complete ---
+2025-10-19 16:27:28,635 - [Wkr 460236] - ForgeWorkerMain - FeatureFactory execution complete.
+[Labeling] Creating labels with Symmetrical Triple-Barrier (PT/SL: 2.0*ATR, Max Hold: 20 bars)
+[Labeling] Distribution: BUY=2033, SELL=2270, HOLD=697
+[EnvClassifier] Current Environment: Low_Volatility_Reversion (Vol: 226.43, Trend: 64.87)
+
+============================================================
+| FORGE: Starting Bake-Off for BTC/USDT:USDT in 'Low_Volatility_Reversion'
+============================================================
+
+[Bake-Off] Starting GP 2.0 training...
+
+[Bake-Off] Training GP 2.0 (1 PROCESSES in PARALLEL, Pop: 400, Gen: 100)...
+  [GP Island 1/1] Starting evolution...
+2025-10-19 16:27:29,060 - [Wkr 460236] - ForgeWorkerMain - [GP 2.0] Starting evolution for 100 generations, Pop: 400...
+gen     nevals  avg             std             min             max
+0       400     -10.1176        0.231861        -11.9277        -9.91318
+1       223     -10.0341        0.0517666       -10.3894        -9.91318
+2       252     -10.0347        0.126454        -11.9287        -9.91318
+3       242     -10.0212        0.0611676       -10.3904        -9.90918
+4       218     -10.0231        0.10748         -11.0558        -9.90918
+5       226     -10.0145        0.118873        -11.9294        -9.87303
+6       246     -10.0149        0.111865        -10.8141        -9.87303
+7       250     -10.0041        0.113569        -11.2547        -9.87303
+8       236     -10.0095        0.165292        -11.9345        -9.87303
+9       235     -9.99532        0.161437        -11.9294        -9.87103
+10      228     -10.0016        0.159354        -11.9297        -9.87103
+11      249     -9.99438        0.17786         -11.9317        -9.79636
+12      240     -9.98251        0.121922        -10.5825        -9.85772
+13      249     -9.99927        0.18286         -11.9317        -9.85372
+14      230     -9.98538        0.185565        -11.9317        -9.80173
+15      251     -9.99029        0.137662        -11.3637        -9.80173
+16      215     -9.97896        0.142332        -11.0696        -9.80173
+17      246     -9.98439        0.139569        -10.8081        -9.80173
+18      247     -10.0059        0.260526        -11.9377        -9.80173
+19      227     -9.98252        0.258263        -11.9317        -9.80173
+20      255     -9.98879        0.227654        -11.9297        -9.80173
+21      228     -9.97138        0.228925        -11.9326        -9.79882
+22      239     -9.94658        0.187922        -11.9377        -9.79973
+23      239     -9.93335        0.145925        -10.9465        -9.79836
+24      238     -9.91506        0.133837        -10.7982        -9.79636
+25      260     -9.9319         0.194142        -11.5675        -9.79573
+26      232     -9.91109        0.161509        -10.9598        -9.79773
+27      248     -9.91277        0.153432        -11.1013        -9.79836
+28      210     -9.90912        0.148745        -11.0557        -9.79713
+29      243     -9.92563        0.15092         -11.0308        -9.79713
+30      230     -9.92901        0.165215        -11.9337        -9.79713
+31      236     -9.9298         0.171395        -11.9241        -9.79713
+32      254     -9.93913        0.136321        -10.8181        -9.79713
+33      237     -9.93926        0.176242        -11.9297        -9.79713
+34      244     -9.94345        0.175114        -11.9266        -9.79573
+35      256     -9.94325        0.168839        -11.9377        -9.79573
+36      234     -9.92972        0.180509        -11.9327        -9.79573
+37      238     -9.93332        0.1485          -11.0997        -9.79573
+38      238     -9.92495        0.132041        -10.8141        -9.79573
+39      259     -9.93688        0.144396        -10.9909        -9.79517
+40      239     -9.93427        0.175518        -11.9357        -9.79436
+41      250     -9.93474        0.135606        -10.8201        -9.79436
+42      222     -9.9223         0.129751        -10.7303        -9.79436
+43      255     -9.93732        0.126731        -10.4074        -9.79436
+44      233     -9.93988        0.136573        -10.6231        -9.79436
+45      223     -9.93421        0.160532        -11.9427        -9.79436
+46      243     -9.94634        0.173604        -11.9377        -9.79436
+47      254     -9.9594         0.210018        -11.9357        -9.79436
+48      254     -9.9536         0.17383         -11.9297        -9.79436
+49      259     -9.95734        0.19795         -11.9377        -9.79436
+50      238     -9.95222        0.154592        -11.4544        -9.79436
+51      253     -9.94993        0.166977        -11.9297        -9.79436
+52      243     -9.93753        0.126894        -10.6649        -9.79436
+53      235     -9.93212        0.149742        -11.0662        -9.79436
+54      237     -9.93653        0.150314        -11.1345        -9.79436
+55      228     -9.94488        0.187382        -11.942         -9.79436
+56      230     -9.93661        0.192352        -11.9201        -9.79436
+57      230     -9.921          0.133105        -11.0121        -9.79436
+58      223     -9.93515        0.187024        -11.6081        -9.79436
+59      258     -9.94193        0.16865         -11.3072        -9.79436
+60      229     -9.93277        0.154419        -11.0015        -9.79436
+61      243     -9.94129        0.134423        -11.0876        -9.79436
+62      232     -9.93023        0.15969         -11.9297        -9.79436
+63      241     -9.92948        0.131527        -10.8824        -9.79436
+64      226     -9.94635        0.209337        -11.9298        -9.79436
+65      236     -9.94153        0.148866        -11.0821        -9.79436
+66      239     -9.93999        0.137357        -11.2797        -9.79436
+67      233     -9.95023        0.158178        -11.9297        -9.79436
+68      245     -9.9393         0.127358        -10.814         -9.79436
+69      242     -9.93994        0.15241         -11.2258        -9.79436
+70      236     -9.93915        0.147662        -11.0211        -9.79436
+71      257     -9.95015        0.14065         -11.1666        -9.79436
+72      250     -9.94065        0.141375        -10.7604        -9.79436
+73      243     -9.94375        0.171678        -11.9317        -9.79436
+74      273     -9.94202        0.144504        -10.9785        -9.79436
+75      248     -9.95429        0.174434        -11.8408        -9.79436
+76      246     -9.9424         0.123277        -10.8121        -9.79436
+77      254     -9.94296        0.138123        -10.807         -9.79436
+78      215     -9.93612        0.197007        -11.9367        -9.79436
+79      239     -9.94243        0.147661        -10.8106        -9.79436
+80      226     -9.94296        0.195273        -11.9377        -9.79436
+81      247     -9.9286         0.131655        -11.0503        -9.79436
+82      219     -9.94349        0.20315         -11.9374        -9.79436
+83      227     -9.93397        0.176779        -11.9377        -9.79436
+84      253     -9.93834        0.140988        -10.8117        -9.79436
+85      238     -9.93989        0.158617        -11.9377        -9.79436
+86      246     -9.9366         0.162408        -11.9354        -9.79436
+87      246     -9.93244        0.126188        -10.7664        -9.79436
+88      255     -9.93995        0.125475        -10.8029        -9.79436
+89      229     -9.92375        0.113897        -10.4169        -9.79436
+90      226     -9.93444        0.186845        -11.9397        -9.79436
+91      233     -9.93235        0.1492          -11.0617        -9.79436
+92      224     -9.93057        0.150125        -11.3577        -9.79436
+93      242     -9.94213        0.145934        -10.9065        -9.79436
+94      250     -9.9554         0.173864        -11.9354        -9.79436
+95      245     -9.95539        0.199199        -11.9317        -9.79436
+96      232     -9.94197        0.143394        -10.8723        -9.79436
+97      224     -9.92778        0.130812        -10.8155        -9.79436
+98      234     -9.93349        0.165312        -11.9334        -9.79436
+99      241     -9.93384        0.130226        -10.6367        -9.79436
+100     265     -9.95376        0.180701        -11.9357        -9.79436
+2025-10-19 16:27:59,678 - [Wkr 460236] - ForgeWorkerMain - [GP 2.0] Evolution complete.
+  [GP Island 1/1] Complete! Fitness: -9.7944
+[Bake-Off] GP 2.0 training complete. Best Fitness: -9.7944
+
+------------------------------------------------------------
+| FORGE: Entering Validation Gauntlet
+------------------------------------------------------------
+
+--- Validating Challenger: GP 2.0 ---
+
+[Gauntlet] STARTING FULL GAUNTLET FOR: EvolvedStrategyWrapper on BTC/USDT:USDT
+
+[Gauntlet] STEP 1: RUNNING IN-SAMPLE SANITY CHECK
+[Gauntlet]   -> ✅ PASSED: In-sample Sharpe: 0.65, PnL: 389.34%
+
+[Gauntlet] STEP 2: RUNNING WALK-FORWARD ANALYSIS
+[Gauntlet]   -> Adaptive sizing: train=512, test=128 (available=800)
+[Gauntlet]   -> ✅ PASSED: WFA Avg Sharpe: 0.41 (6 trades)
+
+[Gauntlet] STEP 3: RUNNING MONTE CARLO ANALYSIS
+[Gauntlet]   -> ⚠️ SKIPPED: Not enough trades (6)
+
+[Gauntlet] STEP 4: RUNNING FEATURE PERMUTATION IMPORTANCE
+[Gauntlet]   -> Baseline Sharpe: 0.44
+  -> Permuting Features: 100%|████████████████████████████████████████████████████████| 14/14 [00:00<00:00, 437.39it/s]
+[Gauntlet]   -> ✅ PASSED: GP strategy uses 4 features. Top: 'SMA_20' (1582.5%), Permuted Sharpe: -5.73
+
+[Gauntlet] ✅✅✅ EvolvedStrategyWrapper PASSED ALL CHECKS! ✅✅✅
+
+============================================================
+| FORGE: Selecting Champion from Gauntlet Results
+============================================================
+[ModelRegistry] Attempting to register GP 2.0 for BTC/USDT:USDT
+[ModelRegistry] Model ID: BTCUSDTUSDT_GP_2_0_20251019_162759
+[ModelRegistry] Model dir: models\BTCUSDTUSDT_GP_2_0_20251019_162759
+SUCCESS: Registered new model BTCUSDTUSDT_GP_2_0_20251019_162759
+2025-10-19 16:27:59,739 - [Wkr 460236] - ForgeWorkerMain - ✅ Forge cycle for BTCUSDT-proactive-1760858835 completed.
+2025-10-19 16:27:59,743 - [CrucibleEngine] - ERROR - Failed to deserialize winning DNA: Can't get attribute 'Individual' on <module 'deap.creator' from 'C:\\Users\\LieD\\Desktop\\crypto trading bots\\.Singularity Protocol\\venv\\lib\\site-packages\\deap\\creator.py'>
+2025-10-19 16:27:59,743 - [V3Agent_BTCUSDT] - INFO - V3Agent initialized for BTC/USDT:USDT.
+2025-10-19 16:27:59,743 - [V3Agent_BTCUSDT] - INFO - Reloading all models in parallel for BTC/USDT:USDT...
+2025-10-19 16:27:59,744 - [V3Agent_BTCUSDT] - INFO - Loading Deep RL Governor from models\BTCUSDT_RLG.joblib
+[RL Governor] Initializing agent on device: cuda
+2025-10-19 16:27:59,744 - [V3Agent_BTCUSDT] - INFO - Loading HDBSCAN model from models\BTCUSDT_HDBSCAN.joblib
+2025-10-19 16:27:59,754 - [V3Agent_BTCUSDT] - INFO - [MODEL LOADING] Searching for models with symbol: 'BTC/USDT:USDT'
+2025-10-19 16:27:59,754 - [V3Agent_BTCUSDT] - INFO - [MODEL LOADING] Found 5 specialist model directories
+2025-10-19 16:27:59,754 - [V3Agent_BTCUSDT] - INFO - [MODEL LOADING] Model paths: ['models\\BTCUSDTUSDT_GP_2_0_20251019_150739', 'models\\BTCUSDTUSDT_GP_2_0_20251019_151921', 'models\\BTCUSDTUSDT_GP_2_0_20251019_155248', 'models\\BTCUSDTUSDT_GP_2_0_20251019_160934', 'models\\BTCUSDTUSDT_GP_2_0_20251019_162759']
+2025-10-19 16:27:59,754 - [V3Agent_BTCUSDT] - WARNING - Metadata not found for model in models\BTCUSDTUSDT_GP_2_0_20251019_150739. Skipping.
+2025-10-19 16:27:59,755 - [V3Agent_BTCUSDT] - WARNING - Metadata not found for model in models\BTCUSDTUSDT_GP_2_0_20251019_151921. Skipping.
+2025-10-19 16:27:59,755 - [V3Agent_BTCUSDT] - WARNING - Metadata not found for model in models\BTCUSDTUSDT_GP_2_0_20251019_155248. Skipping.
+2025-10-19 16:27:59,755 - [V3Agent_BTCUSDT] - WARNING - Metadata not found for model in models\BTCUSDTUSDT_GP_2_0_20251019_160934. Skipping.
+2025-10-19 16:27:59,760 - [V3Agent_BTCUSDT] - INFO - [MODEL LOADING] Attempting to load GP 2.0 from: models\BTCUSDTUSDT_GP_2_0_20251019_162759\strategy_components.dill
+2025-10-19 16:27:59,760 - [V3Agent_BTCUSDT] - INFO - [MODEL LOADING] File exists, loading with dill...
+2025-10-19 16:27:59,767 - [V3Agent_BTCUSDT] - INFO - [MODEL LOADING] Creating EvolvedStrategyWrapper...
+2025-10-19 16:27:59,767 - [V3Agent_BTCUSDT] - INFO - [MODEL LOADING] ✅ Successfully loaded GP 2.0 model: BTCUSDTUSDT_GP_2_0_20251019_162759
+2025-10-19 16:27:59,767 - [V3Agent_BTCUSDT] - INFO - Active model ID: BTCUSDTUSDT_GP_2_0_20251019_162759
+2025-10-19 16:27:59,768 - [V3Agent_BTCUSDT] - INFO - All models reloaded successfully for BTC/USDT:USDT.
+2025-10-19 16:27:59,768 - [CrucibleEngine] - INFO - AGENT BTCUSDTUSDT_GP_2_0_20251019_162759 IS LIVE AND ARMED. Models loaded: 1. DNA captured: False.
+[Data Fetcher] Fetching 200 candles for BTC/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for ETH/USDT from Binance...
+2025-10-19 16:28:18,451 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:28:18,452 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:28:18,455 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+[Data Fetcher] Fetching 200 candles for SOL/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for XRP/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for DOGE/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for BNB/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for ASTER/USDT from Binance...
+--- ERROR fetching market data for ASTER/USDT from Binance: bybit does not have market symbol ASTER/USDT
+2025-10-19 16:28:19,594 - [CrucibleEngine] - WARNING - No data received for ASTER/USDT:USDT
+[Data Fetcher] Fetching 200 candles for ENA/USDT from Binance...
+--- ERROR fetching market data for ENA/USDT from Binance: bybit does not have market symbol ENA/USDT
+2025-10-19 16:28:19,597 - [CrucibleEngine] - WARNING - No data received for ENA/USDT:USDT
+[Data Fetcher] Fetching 200 candles for SUI/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for ADA/USDT from Binance...
+2025-10-19 16:28:20,186 - [CrucibleEngine] - INFO -   -> [BTC/USDT:USDT] Created 6 IMF features (actual IMFs: 6)
+2025-10-19 16:28:20,186 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:28:20,187 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:28:20,210 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:28:20,212 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:28:20,212 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[BTC/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:28:20,213 - [V3Agent_BTCUSDT] - WARNING - Model BTCUSDTUSDT_GP_2_0_20251019_162759 requires missing features: {'imf_6'}. Skipping prediction.
+2025-10-19 16:28:20,213 - [V3Agent_BTCUSDT] - WARNING - No valid predictions from any specialist model.
+2025-10-19 16:28:20,214 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:28:20,215 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:28:20,219 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:28:21,604 - [CrucibleEngine] - INFO -   -> [ETH/USDT:USDT] Created 6 IMF features (actual IMFs: 5)
+2025-10-19 16:28:21,604 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:28:21,604 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:28:21,620 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:28:21,622 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:28:21,622 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[ETH/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:28:21,623 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:28:21,624 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:28:21,627 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:28:21,627 - [CrucibleEngine] - INFO -   -> [SOL/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:28:21,628 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:28:21,628 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:28:21,643 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:28:21,644 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:28:21,644 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[SOL/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:28:21,645 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:28:21,646 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:28:21,649 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:28:21,649 - [CrucibleEngine] - INFO -   -> [XRP/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:28:21,649 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:28:21,649 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:28:21,665 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:28:21,667 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:28:21,667 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[XRP/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:28:21,668 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:28:21,668 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:28:21,670 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:28:21,671 - [CrucibleEngine] - INFO -   -> [DOGE/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:28:21,672 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:28:21,672 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:28:21,687 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:28:21,688 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:28:21,688 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[DOGE/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:28:21,689 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:28:21,690 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:28:21,693 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:28:23,437 - [CrucibleEngine] - INFO -   -> [BNB/USDT:USDT] Created 6 IMF features (actual IMFs: 6)
+2025-10-19 16:28:23,438 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:28:23,438 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:28:23,453 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:28:23,454 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:28:23,454 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[BNB/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:28:23,455 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:28:23,456 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:28:23,459 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:28:23,459 - [CrucibleEngine] - INFO -   -> [SUI/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:28:23,461 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:28:23,461 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:28:23,475 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:28:23,476 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:28:23,476 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[SUI/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:28:23,478 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:28:23,478 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:28:23,480 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:28:23,480 - [CrucibleEngine] - INFO -   -> [ADA/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:28:23,481 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:28:23,482 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:28:23,496 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:28:23,497 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:28:23,497 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[Data Fetcher] Fetching 200 candles for BTC/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for ETH/USDT from Binance...
+2025-10-19 16:29:20,626 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:29:20,627 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:29:20,630 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+[Data Fetcher] Fetching 200 candles for SOL/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for XRP/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for DOGE/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for BNB/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for ASTER/USDT from Binance...
+--- ERROR fetching market data for ASTER/USDT from Binance: bybit does not have market symbol ASTER/USDT
+2025-10-19 16:29:22,157 - [CrucibleEngine] - WARNING - No data received for ASTER/USDT:USDT
+[Data Fetcher] Fetching 200 candles for ENA/USDT from Binance...
+--- ERROR fetching market data for ENA/USDT from Binance: bybit does not have market symbol ENA/USDT
+2025-10-19 16:29:22,159 - [CrucibleEngine] - WARNING - No data received for ENA/USDT:USDT
+[Data Fetcher] Fetching 200 candles for SUI/USDT from Binance...
+2025-10-19 16:29:22,258 - [CrucibleEngine] - INFO -   -> [BTC/USDT:USDT] Created 6 IMF features (actual IMFs: 6)
+2025-10-19 16:29:22,259 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:29:22,259 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:29:22,274 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:29:22,275 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:29:22,275 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[BTC/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:29:22,277 - [V3Agent_BTCUSDT] - WARNING - Model BTCUSDTUSDT_GP_2_0_20251019_162759 requires missing features: {'imf_6'}. Skipping prediction.
+2025-10-19 16:29:22,277 - [V3Agent_BTCUSDT] - WARNING - No valid predictions from any specialist model.
+2025-10-19 16:29:22,277 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:29:22,278 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:29:22,280 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+[Data Fetcher] Fetching 200 candles for ADA/USDT from Binance...
+2025-10-19 16:29:23,526 - [CrucibleEngine] - INFO -   -> [ETH/USDT:USDT] Created 6 IMF features (actual IMFs: 5)
+2025-10-19 16:29:23,526 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:29:23,527 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:29:23,540 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:29:23,542 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:29:23,542 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[ETH/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:29:23,543 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:29:23,544 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:29:23,547 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:29:23,547 - [CrucibleEngine] - INFO -   -> [SOL/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:29:23,548 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:29:23,548 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:29:23,563 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:29:23,564 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:29:23,564 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[SOL/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:29:23,565 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:29:23,566 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:29:23,568 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:29:23,569 - [CrucibleEngine] - INFO -   -> [XRP/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:29:23,570 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:29:23,570 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:29:23,586 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:29:23,587 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:29:23,587 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[XRP/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:29:23,588 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:29:23,589 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:29:23,591 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:29:23,591 - [CrucibleEngine] - INFO -   -> [DOGE/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:29:23,593 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:29:23,593 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:29:23,607 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:29:23,609 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:29:23,609 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[DOGE/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:29:23,610 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:29:23,610 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:29:23,613 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:29:25,297 - [CrucibleEngine] - INFO -   -> [BNB/USDT:USDT] Created 6 IMF features (actual IMFs: 6)
+2025-10-19 16:29:25,297 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:29:25,298 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:29:25,312 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BNB/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:29:25,313 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:29:25,313 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[BNB/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:29:25,315 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:29:25,315 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:29:25,318 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:29:25,318 - [CrucibleEngine] - INFO -   -> [SUI/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:29:25,319 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:29:25,319 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:29:25,334 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SUI/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:29:25,336 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:29:25,336 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+[SUI/USDT:USDT] Error during regime prediction offloading: "['imf_6'] not in index"
+2025-10-19 16:29:25,337 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-19 16:29:25,337 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-19 16:29:25,340 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 2. Generating CEEMDAN Features (Potential Hang Point)...
+2025-10-19 16:29:25,340 - [CrucibleEngine] - INFO -   -> [ADA/USDT:USDT] WARNING: Signal has zero variance. Filling with zeros to maintain feature count.
+2025-10-19 16:29:25,341 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 2. CEEMDAN Complete.
+2025-10-19 16:29:25,341 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-19 16:29:25,356 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ADA/USDT:USDT] 3. Particle Filter Complete.
+2025-10-19 16:29:25,357 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-19 16:29:25,358 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---

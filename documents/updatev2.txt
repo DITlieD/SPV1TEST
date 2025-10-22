@@ -1,0 +1,847 @@
+This is the implementation of the 5 requested enhancements for the Rust (Cerebellum) core, based on the analysis of your existing code and the requirements in `implementrustcode.txt`.
+
+### Rust Implementation Code
+
+Below are the new and modified files required for the enhancements.
+
+#### 0\. Dependencies (`Cargo.toml`)
+
+Ensure your `Cargo.toml` includes the necessary dependencies, especially `ordered-float` for the L2 book and secure TLS features for `tokio-tungstenite`.
+
+```toml
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+zmq = "0.10.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+# Ensure secure TLS features are used
+reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+tokio-tungstenite = { version = "0.21", features = ["rustls-tls-webpki-roots"] }
+futures-util = "0.3"
+hmac = "0.12"
+sha2 = "0.10"
+hex = "0.4"
+chrono = "0.4"
+log = "0.4"
+env_logger = "0.11"
+anyhow = "1.0"
+url = "2.5"
+# NEW: For L2 BTreeMap sorting
+ordered-float = "4.2"
+# NEW: For randomized timing in algorithms (e.g., TWAP)
+rand = "0.8"
+# NEW: For Tick Data Storage (Using Arrow/Parquet directly)
+arrow = "50.0"
+parquet = { version = "50.0", features = ["arrow"] }
+```
+
+#### 1\. `src/protocol.rs` (Update)
+
+```rust
+// src/protocol.rs
+use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
+
+// Define IEL Modes with parameters
+#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+pub enum IelMode {
+    Aggressive,
+    Passive,
+    Twap { duration_secs: u64 },
+    Vwap, // Placeholder
+    Adaptive,
+}
+
+// Commands sent from Python (Cortex) to Rust (Cerebellum)
+#[derive(Serialize, Deserialize, Debug)]
+pub enum CortexCommand {
+    Initialize {
+        assets: HashSet<String>,
+    },
+    ExecuteOrder {
+        symbol: String,
+        side: String, // "Buy" or "Sell"
+        quantity: f64,
+        strategy_id: String,
+        iel_mode: IelMode,
+    },
+    Halt, // Failsafe command
+}
+
+// Reports sent from Rust (Cerebellum) to Python (Cortex)
+#[derive(Serialize, Deserialize, Debug)]
+pub enum CerebellumReport {
+    OrderUpdate {
+        symbol: String,
+        strategy_id: String,
+        status: String, // e.g., "NEW", "FILLED", "FAILED"
+        avg_price: f64,
+        executed_qty: f64,
+        latency_ms: u64,
+        error_message: Option<String>,
+    },
+    // NEW: Heartbeat message
+    Heartbeat {
+        timestamp: u64,
+        status: String,
+    }
+}
+```
+
+#### 2\. `src/lob.rs` (L2 Implementation & Security Fix)
+
+This implements L2 depth and crucially removes the insecure TLS verification (`NoCertificateVerification`) present in the original `lob.rs`.
+
+```rust
+// src/lob.rs
+use serde::Deserialize;
+use std::sync::Arc;
+use tokio::sync::RwLock;
+use futures_util::{StreamExt, SinkExt};
+// Use the secure connect_async.
+use tokio_tungstenite::{connect_async, tungstenite::Message};
+use url::Url;
+use log::{info, error, warn, debug};
+use std::collections::{HashMap, BTreeMap};
+use ordered_float::OrderedFloat;
+
+// Fine-grained locking: HashMap holds Arcs to individual book RwLocks.
+pub type GlobalBooks = Arc<RwLock<HashMap<String, Arc<RwLock<OrderBook>>>>>;
+type PriceLevel = OrderedFloat<f64>;
+
+#[derive(Debug, Clone)]
+pub struct OrderBook {
+    pub symbol: String,
+    // BTreeMap sorts ascending. Use last_key_value() for best bid, first_key_value() for best ask.
+    pub bids: BTreeMap<PriceLevel, f64>,
+    pub asks: BTreeMap<PriceLevel, f64>,
+    pub last_update_id: u64,
+}
+
+impl OrderBook {
+    pub fn new(symbol: String) -> Self {
+        Self {
+            symbol,
+            bids: BTreeMap::new(),
+            asks: BTreeMap::new(),
+            last_update_id: 0,
+        }
+    }
+
+    pub fn apply_snapshot(&mut self, snapshot: &WsMessage) {
+        self.bids.clear();
+        self.asks.clear();
+        self.last_update_id = snapshot.data.update_id;
+        self.update_levels(&snapshot.data.bids, true);
+        self.update_levels(&snapshot.data.asks, false);
+        debug!("[LOB] Snapshot applied for {}. UpdateID: {}", self.symbol, self.last_update_id);
+    }
+
+    pub fn apply_delta(&mut self, delta: &WsMessage) {
+        if delta.data.update_id <= self.last_update_id {
+            warn!("[LOB] Outdated delta for {}. Current: {}, Received: {}", self.symbol, self.last_update_id, delta.data.update_id);
+            return;
+        }
+        self.last_update_id = delta.data.update_id;
+        self.update_levels(&delta.data.bids, true);
+        self.update_levels(&delta.data.asks, false);
+    }
+
+    fn update_levels(&mut self, levels: &[[String; 2]], is_bid: bool) {
+        let book = if is_bid { &mut self.bids } else { &mut self.asks };
+        for level in levels {
+            if let (Ok(price_f64), Ok(size)) = (level[0].parse::<f64>(), level[1].parse::<f64>()) {
+                let price = OrderedFloat(price_f64);
+                if size == 0.0 {
+                    book.remove(&price);
+                } else {
+                    book.insert(price, size);
+                }
+            }
+        }
+    }
+
+    pub fn get_bbo(&self) -> (Option<(f64, f64)>, Option<(f64, f64)>) {
+        let best_bid = self.bids.last_key_value().map(|(p, s)| (p.0, *s));
+        let best_ask = self.asks.first_key_value().map(|(p, s)| (p.0, *s));
+        (best_bid, best_ask)
+    }
+}
+
+// Structures for deserializing Bybit V5 L2 WebSocket messages
+#[derive(Deserialize, Debug)]
+struct WsMessage {
+    topic: String,
+    #[serde(rename = "type")]
+    msg_type: String,
+    data: L2Data,
+}
+
+#[derive(Deserialize, Debug)]
+struct L2Data {
+    #[serde(rename = "s")]
+    symbol: String,
+    #[serde(rename = "u")]
+    update_id: u64,
+    #[serde(rename = "b")]
+    bids: Vec<[String; 2]>,
+    #[serde(rename = "a")]
+    asks: Vec<[String; 2]>,
+}
+
+const BYBIT_WS_URL: &str = "wss://stream.bybit.com/v5/public/spot";
+
+pub async fn market_data_handler(books: GlobalBooks, assets: Vec<String>) {
+    if assets.is_empty() { return; }
+    let url = Url::parse(BYBIT_WS_URL).expect("Invalid WebSocket URL");
+
+    // Connect securely
+    let (mut ws_stream, _) = connect_async(url).await.expect("Failed to connect to WebSocket");
+    info!("[MDH] WebSocket connected securely.");
+
+    // Initialize local book structures within the global state
+    {
+        let mut books_write = books.write().await;
+        for asset in &assets {
+             books_write.entry(asset.clone()).or_insert_with(|| Arc::new(RwLock::new(OrderBook::new(asset.clone()))));
+        }
+    }
+
+    // Subscribe to L2 streams (orderbook.50)
+    let subscriptions: Vec<String> = assets.iter().map(|s| format!("orderbook.50.{}", s)).collect();
+    let subscribe_msg = serde_json::json!({
+        "op": "subscribe",
+        "args": subscriptions
+    });
+
+    ws_stream.send(Message::Text(subscribe_msg.to_string())).await.expect("Failed to subscribe");
+    info!("[MDH] Subscribed to L2 feeds (depth 50).");
+
+    while let Some(msg) = ws_stream.next().await {
+        match msg {
+            Ok(Message::Text(text)) => {
+                if let Err(e) = process_message(text, &books).await {
+                    error!("[MDH] Error processing message: {}", e);
+                }
+            },
+            Ok(Message::Ping(data)) => { ws_stream.send(Message::Pong(data)).await.ok(); },
+            Err(e) => { error!("[MDH] WebSocket error: {}", e); break; }
+            _ => {}
+        }
+    }
+}
+
+async fn process_message(text: String, books: &GlobalBooks) -> Result<(), anyhow::Error> {
+    if !text.contains("orderbook.50.") { return Ok(()); }
+
+    let msg: WsMessage = serde_json::from_str(&text)?;
+    let symbol = msg.data.symbol.clone();
+
+    // Access the specific book lock efficiently
+    let books_read = books.read().await;
+    if let Some(book_lock) = books_read.get(&symbol) {
+        let mut book = book_lock.write().await; // Acquire write lock for the specific book
+        match msg.msg_type.as_str() {
+            "snapshot" => book.apply_snapshot(&msg),
+            "delta" => book.apply_delta(&msg),
+            _ => (),
+        }
+    }
+    Ok(())
+}
+```
+
+#### 3\. `src/matching_engine.rs` (LOB Matching Engine Simulation) - NEW FILE
+
+```rust
+// src/matching_engine.rs
+use crate::lob::{GlobalBooks, OrderBook};
+use anyhow::{Result, anyhow};
+
+// This module simulates execution against the LOB for slippage/VWAP estimation.
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Side {
+    Buy,
+    Sell,
+}
+
+pub struct ExecutionSimulationReport {
+    pub filled_quantity: f64,
+    pub avg_price: f64, // VWAP
+    pub slippage_bps: f64,
+}
+
+pub struct MatchingEngineSimulator;
+
+impl MatchingEngineSimulator {
+    pub async fn simulate_execution(
+        symbol: &str,
+        side: Side,
+        quantity: f64,
+        books: GlobalBooks
+    ) -> Result<ExecutionSimulationReport> {
+        let books_read = books.read().await;
+        if let Some(book_lock) = books_read.get(symbol) {
+            let book = book_lock.read().await;
+
+            // Calculate mid-price
+            let (bbo_bid, bbo_ask) = book.get_bbo();
+            let mid_price = if let (Some((bid_p, _)), Some((ask_p, _))) = (bbo_bid, bbo_ask) {
+                (bid_p + ask_p) / 2.0
+            } else {
+                return Err(anyhow!("Insufficient liquidity"));
+            };
+
+            let (filled_quantity, weighted_price_sum) = match side {
+                Side::Buy => Self::match_buy(quantity, &book),
+                Side::Sell => Self::match_sell(quantity, &book),
+            };
+
+            if filled_quantity > 0.0 {
+                let avg_price = weighted_price_sum / filled_quantity;
+                let price_diff = (avg_price - mid_price).abs();
+                let slippage_bps = (price_diff / mid_price) * 10000.0;
+
+                Ok(ExecutionSimulationReport {
+                    filled_quantity,
+                    avg_price,
+                    slippage_bps,
+                })
+            } else {
+                Err(anyhow!("Order could not be filled"))
+            }
+
+        } else {
+            Err(anyhow!("Symbol {} not found", symbol))
+        }
+    }
+
+    // Match buy against asks (lowest first)
+    fn match_buy(mut quantity_remaining: f64, book: &OrderBook) -> (f64, f64) {
+        let mut filled_quantity = 0.0;
+        let mut weighted_price_sum = 0.0;
+
+        for (price_of, qty_at_level) in book.asks.iter() {
+            if quantity_remaining <= 0.0 { break; }
+            let fill_at_level = quantity_remaining.min(*qty_at_level);
+            filled_quantity += fill_at_level;
+            weighted_price_sum += fill_at_level * price_of.0;
+            quantity_remaining -= fill_at_level;
+        }
+        (filled_quantity, weighted_price_sum)
+    }
+
+    // Match sell against bids (highest first - using rev())
+    fn match_sell(mut quantity_remaining: f64, book: &OrderBook) -> (f64, f64) {
+        let mut filled_quantity = 0.0;
+        let mut weighted_price_sum = 0.0;
+
+        for (price_of, qty_at_level) in book.bids.iter().rev() {
+            if quantity_remaining <= 0.0 { break; }
+            let fill_at_level = quantity_remaining.min(*qty_at_level);
+            filled_quantity += fill_at_level;
+            weighted_price_sum += fill_at_level * price_of.0;
+            quantity_remaining -= fill_at_level;
+        }
+        (filled_quantity, weighted_price_sum)
+    }
+}
+```
+
+#### 4\. `src/exchange.rs` (IEL v2 Algorithms)
+
+```rust
+// src/exchange.rs
+// ... (Keep existing imports: reqwest, hmac, sha2, hex, chrono, anyhow) ...
+use log::{info, warn, error};
+use crate::protocol::{CortexCommand, CerebellumReport, IelMode};
+use crate::lob::GlobalBooks;
+use tokio::time::{sleep, Duration};
+use rand::Rng;
+use anyhow::{Result, anyhow};
+
+// ... (HmacSha256 definition) ...
+
+#[derive(Clone)]
+pub struct ExchangeClient {
+    // ... (client fields: client, api_key, api_secret, base_url) ...
+}
+
+impl ExchangeClient {
+    // ... (new() and sign() methods remain as in original implementation) ...
+
+    // Helper to get BBO safely
+    async fn get_bbo(&self, symbol: &str, books: &GlobalBooks) -> Result<(f64, f64)> {
+        let books_read = books.read().await;
+        let book_lock = books_read.get(symbol).ok_or_else(|| anyhow!("LOB data unavailable for {}", symbol))?;
+        let book = book_lock.read().await;
+        let (best_bid, best_ask) = book.get_bbo();
+
+        let bid_p = best_bid.ok_or_else(|| anyhow!("Best bid missing"))?.0;
+        let ask_p = best_ask.ok_or_else(|| anyhow!("Best ask missing"))?.0;
+        Ok((bid_p, ask_p))
+    }
+
+    // Intelligent Execution Layer (IEL) Logic
+    pub async fn execute_iel(&self, cmd: CortexCommand, books: GlobalBooks) -> Result<CerebellumReport> {
+        let start_time = std::time::Instant::now();
+
+        if let CortexCommand::ExecuteOrder { symbol, side, quantity, strategy_id, iel_mode } = cmd {
+            
+            // --- Smart Order Router (SOR) / Strategy Dispatcher ---
+            let result = match iel_mode {
+                IelMode::Aggressive => self.execute_aggressive(&symbol, &side, quantity, &books).await,
+                IelMode::Twap { duration_secs } => self.execute_twap(&symbol, &side, quantity, duration_secs).await,
+                IelMode::Adaptive => self.execute_adaptive(&symbol, &side, quantity, &books).await,
+                _ => {
+                    warn!("[IEL] Mode {:?} not fully implemented. Falling back to Aggressive.", iel_mode);
+                    self.execute_aggressive(&symbol, &side, quantity, &books).await
+                }
+            };
+
+            let execution_time = start_time.elapsed().as_millis();
+
+            // Standardize report generation
+            match result {
+                Ok(mut report) => {
+                    if let CerebellumReport::OrderUpdate { strategy_id: ref mut sid, latency_ms: ref mut lat, .. } = report {
+                        *sid = strategy_id;
+                        *lat = execution_time as u64;
+                    }
+                    Ok(report)
+                },
+                Err(e) => {
+                    error!("[IEL] Execution failed: {}", e);
+                    // Return failure report
+                    Ok(CerebellumReport::OrderUpdate {
+                        symbol, strategy_id, status: "FAILED".to_string(), avg_price: 0.0, executed_qty: 0.0,
+                        latency_ms: execution_time as u64, error_message: Some(e.to_string()),
+                    })
+                }
+            }
+        } else {
+            Err(anyhow!("Invalid command type received by IEL"))
+        }
+    }
+
+    async fn execute_aggressive(&self, symbol: &str, side: &str, quantity: f64, books: &GlobalBooks) -> Result<CerebellumReport> {
+        let (best_bid, best_ask) = self.get_bbo(symbol, books).await?;
+
+        // Price aggressively (5 bps through the book)
+        let price = if side == "Buy" { best_ask * 1.0005 } else { best_bid * 0.9995 };
+
+        // TODO: Implement actual API call (Limit IOC or Market)
+        info!("[IEL Aggressive] Executing {} @ {:.4}", side, price);
+        sleep(Duration::from_millis(50)).await; // Simulate latency
+
+        // Placeholder success response
+        Ok(CerebellumReport::OrderUpdate {
+            symbol: symbol.to_string(), strategy_id: String::new(), status: "FILLED".to_string(),
+            avg_price: price, executed_qty: quantity, latency_ms: 0, error_message: None,
+        })
+    }
+
+    // TWAP Strategy
+    async fn execute_twap(&self, symbol: &str, side: &str, quantity: f64, duration_secs: u64) -> Result<CerebellumReport> {
+        let num_slices = (duration_secs / 15).max(1); // Aim for ~15s slices
+        let slice_qty = quantity / num_slices as f64;
+        let base_interval = Duration::from_secs(duration_secs / num_slices);
+
+        let mut total_executed_qty = 0.0;
+        let mut total_cost = 0.0;
+
+        for i in 0..num_slices {
+            // Execute slice (Placeholder implementation)
+            let execution_price = 1000.0; // Placeholder price
+            info!("[IEL TWAP] Executing slice {}/{}", i + 1, num_slices);
+
+            total_executed_qty += slice_qty;
+            total_cost += slice_qty * execution_price;
+
+            if i < num_slices - 1 {
+                // Randomize interval (+/- 20%)
+                let randomization = rand::thread_rng().gen_range(0.8..1.2);
+                sleep(base_interval.mul_f64(randomization)).await;
+            }
+        }
+
+        let avg_price = if total_executed_qty > 0.0 { total_cost / total_executed_qty } else { 0.0 };
+
+        Ok(CerebellumReport::OrderUpdate {
+            symbol: symbol.to_string(), strategy_id: String::new(), status: "FILLED".to_string(),
+            avg_price, executed_qty: total_executed_qty, latency_ms: 0, error_message: None,
+        })
+    }
+    
+    // Adaptive (SOR) Strategy: Switches based on spread
+    async fn execute_adaptive(&self, symbol: &str, side: &str, quantity: f64, books: &GlobalBooks) -> Result<CerebellumReport> {
+        let (best_bid, best_ask) = self.get_bbo(symbol, books).await?;
+        let spread = best_ask - best_bid;
+        let mid_price = (best_ask + best_bid) / 2.0;
+        let spread_pct = spread / mid_price;
+
+        // Threshold: 0.05% spread
+        if spread_pct < 0.0005 {
+            info!("[IEL Adaptive] Spread tight ({:.4}%). Executing Aggressively.", spread_pct * 100.0);
+            self.execute_aggressive(symbol, side, quantity, books).await
+        } else {
+            info!("[IEL Adaptive] Spread wide ({:.4}%). Executing Passively.", spread_pct * 100.0);
+            // Placeholder for Passive (Post-Only) execution
+            let price = if side == "Buy" { best_bid } else { best_ask };
+             Ok(CerebellumReport::OrderUpdate {
+                symbol: symbol.to_string(), strategy_id: String::new(), status: "NEW".to_string(),
+                avg_price: price, executed_qty: 0.0, latency_ms: 0, error_message: None,
+            })
+        }
+    }
+}
+```
+
+#### 5\. `src/microstructure.rs` (High-Frequency Features) - NEW FILE
+
+```rust
+// src/microstructure.rs
+use crate::lob::{OrderBook, GlobalBooks};
+use std::collections::HashMap;
+use std::sync::Arc;
+use tokio::sync::RwLock;
+
+#[derive(Debug, Clone)]
+pub struct MicrostructureFeatures {
+    pub symbol: String,
+    pub voi_depth: f64, // Volume Order Imbalance over depth
+    pub book_pressure_l1: f64, // Imbalance at L1
+    pub spread: f64,
+    pub mid_price: f64,
+}
+
+// Global structure to hold the latest features
+pub type GlobalMicrostructure = Arc<RwLock<HashMap<String, MicrostructureFeatures>>>;
+
+// Function to calculate features for a single OrderBook
+pub fn calculate_features(book: &OrderBook) -> Option<MicrostructureFeatures> {
+    let (best_bid_data, best_ask_data) = book.get_bbo();
+
+    let (bid_p, bid_q_l1, ask_p, ask_q_l1) = match (best_bid_data, best_ask_data) {
+        (Some((bp, bq)), Some((ap, aq))) => (bp, bq, ap, aq),
+        _ => return None, // Insufficient data
+    };
+
+    let mid_price = (bid_p + ask_p) / 2.0;
+    let spread = ask_p - bid_p;
+
+    // 1. Book Pressure (L1 Imbalance)
+    let book_pressure_l1 = if bid_q_l1 + ask_q_l1 > 0.0 {
+        (bid_q_l1 - ask_q_l1) / (bid_q_l1 + ask_q_l1)
+    } else { 0.0 };
+
+    // 2. Volume Order Imbalance (VOI over depth)
+    let depth = 10;
+    // Use rev() for bids to iterate from highest price downwards
+    let bid_volume: f64 = book.bids.iter().rev().take(depth).map(|(_, size)| size).sum();
+    let ask_volume: f64 = book.asks.iter().take(depth).map(|(_, size)| size).sum();
+
+    let voi_depth = if bid_volume + ask_volume > 0.0 {
+        (bid_volume - ask_volume) / (bid_volume + ask_volume)
+    } else {
+        0.0
+    };
+
+    Some(MicrostructureFeatures {
+        symbol: book.symbol.clone(),
+        voi_depth,
+        book_pressure_l1,
+        spread,
+        mid_price,
+    })
+}
+
+// Helper function to update the global state (to be called periodically)
+pub async fn compute_and_update_microstructure(books: &GlobalBooks, global_micro: &GlobalMicrostructure) {
+    let books_read = books.read().await;
+    let mut features_map = HashMap::new();
+
+    // Iterate over the Arcs holding the RwLocks for each book
+    for (symbol, book_lock) in books_read.iter() {
+        let book = book_lock.read().await; // Acquire read lock on the specific book
+        if let Some(feats) = calculate_features(&book) {
+             features_map.insert(symbol.clone(), feats);
+        }
+    }
+    
+    // Update the global state in one write operation
+    let mut micro_write = global_micro.write().await;
+    *micro_write = features_map;
+}
+```
+
+#### 6\. `src/storage.rs` (Tick Data Persistence) - NEW FILE
+
+```rust
+// src/storage.rs
+use std::fs::File;
+use std::sync::Arc;
+use parquet::arrow::arrow_writer::ArrowWriter;
+use parquet::file::properties::WriterProperties;
+use arrow::array::{Float64Array, Int64Array, StringArray, RecordBatch};
+use arrow::datatypes::{Schema, Field, DataType};
+use chrono::Utc;
+use anyhow::Result;
+use log::info;
+
+// Simplified structure for storing ticks/executions
+#[derive(Debug, Clone)]
+pub struct StoredData {
+    pub timestamp: i64,
+    pub symbol: String,
+    pub event_type: String, // e.g., "trade", "execution", "l2_update"
+    pub price: f64,
+    pub quantity: f64,
+}
+
+pub struct DataStorage {
+    schema: Arc<Schema>,
+}
+
+impl DataStorage {
+    pub fn new() -> Self {
+        let schema = Arc::new(Schema::new(vec![
+            Field::new("timestamp", DataType::Int64, false),
+            Field::new("symbol", DataType::Utf8, false),
+            Field::new("event_type", DataType::Utf8, false),
+            Field::new("price", DataType::Float64, false),
+            Field::new("quantity", DataType::Float64, false),
+        ]));
+        // Ensure the directory exists
+        std::fs::create_dir_all("data/cerebellum_store").ok();
+        Self { schema }
+    }
+
+    // Writes a batch of data. This should be called by a dedicated background task.
+    pub fn write_batch(&self, data_batch: Vec<StoredData>) -> Result<()> {
+        if data_batch.is_empty() {
+            return Ok(());
+        }
+
+        // Prepare Arrow arrays
+        let timestamp_array = Int64Array::from(data_batch.iter().map(|t| t.timestamp).collect::<Vec<_>>());
+        let symbol_array = StringArray::from(data_batch.iter().map(|t| t.symbol.clone()).collect::<Vec<_>>());
+        let event_type_array = StringArray::from(data_batch.iter().map(|t| t.event_type.clone()).collect::<Vec<_>>());
+        let price_array = Float64Array::from(data_batch.iter().map(|t| t.price).collect::<Vec<_>>());
+        let quantity_array = Float64Array::from(data_batch.iter().map(|t| t.quantity).collect::<Vec<_>>());
+
+        let batch = RecordBatch::try_new(
+            self.schema.clone(),
+            vec![
+                Arc::new(timestamp_array),
+                Arc::new(symbol_array),
+                Arc::new(event_type_array),
+                Arc::new(price_array),
+                Arc::new(quantity_array),
+            ],
+        )?;
+
+        // Generate filename (partitioned by hour for efficiency)
+        let datetime_str = Utc::now().format("%Y%m%d_%H").to_string();
+        let batch_id = Utc::now().timestamp_subsec_millis();
+        let filename = format!("data/cerebellum_store/data_{}_{}.parquet", datetime_str, batch_id);
+
+        let file = File::create(&filename)?;
+        
+        let props = WriterProperties::builder().build();
+        let mut writer = ArrowWriter::try_new(file, self.schema.clone(), Some(props))?;
+
+        writer.write(&batch)?;
+        writer.close()?;
+
+        info!("[Storage] Wrote batch of {} records to {}", data_batch.len(), filename);
+        Ok(())
+    }
+}
+```
+
+#### 7\. `src/main.rs` (Integration and Heartbeat/Failsafe)
+
+```rust
+// src/main.rs
+mod protocol;
+mod lob;
+mod exchange;
+// NEW Modules
+mod matching_engine;
+mod microstructure;
+mod storage;
+
+use protocol::{CortexCommand, CerebellumReport};
+use lob::{GlobalBooks, market_data_handler};
+use exchange::ExchangeClient;
+// NEW Imports
+use microstructure::{GlobalMicrostructure, compute_and_update_microstructure};
+use storage::DataStorage;
+
+use log::{info, error, warn};
+use std::sync::Arc;
+use tokio::sync::{RwLock, Mutex};
+use std::collections::{HashMap, HashSet};
+use std::time::Duration as StdDuration;
+
+// ZMQ Endpoints
+const ZMQ_COMMAND_ENDPOINT: &str = "tcp://127.0.0.1:5555";
+const ZMQ_REPORT_ENDPOINT: &str = "tcp://127.0.0.1:5556";
+
+/// Handles the ZMQ communication in dedicated blocking threads.
+fn start_ipc_threads(
+    cmd_tx: tokio::sync::mpsc::Sender<CortexCommand>,
+    report_rx: Arc<tokio::sync::Mutex<tokio::sync::mpsc::Receiver<CerebellumReport>>>,
+) {
+    // Thread 1: Command Receiver (PULL) - (Implementation remains the same as original file)
+    // ...
+
+    // Thread 2: Report Sender (PUSH) with Heartbeat
+    std::thread::spawn(move || {
+        let context = zmq::Context::new();
+        let sender = context.socket(zmq::PUSH).unwrap();
+        sender.connect(ZMQ_REPORT_ENDPOINT).expect("Failed to connect PUSH socket");
+        info!("[IPC] Reporting to {}", ZMQ_REPORT_ENDPOINT);
+
+        let mut last_heartbeat = std::time::Instant::now();
+        const HEARTBEAT_INTERVAL: StdDuration = StdDuration::from_secs(5);
+
+        // We need a runtime to handle the async lock inside the sync thread
+        let runtime = tokio::runtime::Runtime::new().unwrap();
+
+        loop {
+            // Sleep briefly
+            std::thread::sleep(StdDuration::from_millis(50));
+
+            runtime.block_on(async {
+                let mut report_rx_guard = report_rx.lock().await;
+                
+                // 1. Process pending reports
+                while let Ok(report) = report_rx_guard.try_recv() {
+                     match serde_json::to_string(&report) {
+                        Ok(msg) => {
+                            if sender.send(msg.as_bytes(), zmq::DONTWAIT).is_err() {
+                                error!("[IPC] Failed to send report.");
+                            }
+                        },
+                        Err(e) => error!("[IPC] Serialization error: {}", e),
+                    }
+                }
+
+                // 2. Send Heartbeat
+                if last_heartbeat.elapsed() >= HEARTBEAT_INTERVAL {
+                    let heartbeat = CerebellumReport::Heartbeat {
+                        timestamp: chrono::Utc::now().timestamp_millis() as u64,
+                        status: "Healthy".to_string(), // Should reflect actual system health
+                    };
+                    if let Ok(msg) = serde_json::to_string(&heartbeat) {
+                        if sender.send(msg.as_bytes(), zmq::DONTWAIT).is_err() {
+                            warn!("[IPC] Failed to send heartbeat.");
+                        }
+                    }
+                    last_heartbeat = std::time::Instant::now();
+                }
+            });
+        }
+    });
+}
+
+#[tokio::main]
+async fn main() {
+    env_logger::init();
+    info!("[Cerebellum] Initializing...");
+
+    // Initialize shared state and components
+    let global_books: GlobalBooks = Arc::new(RwLock::new(HashMap::new()));
+    let global_micro: GlobalMicrostructure = Arc::new(RwLock::new(HashMap::new()));
+    let data_storage = Arc::new(DataStorage::new());
+
+    // Initialize Exchange Client (Load keys from env vars)
+    // let api_key = std::env::var("BYBIT_API_KEY").expect("BYBIT_API_KEY not set");
+    // let client = ExchangeClient::new(api_key, api_secret, false);
+
+    // IPC Channels and Threads Setup
+    let (cmd_tx, mut cmd_rx) = tokio::sync::mpsc::channel::<CortexCommand>(100);
+    let (report_tx, report_rx) = tokio::sync::mpsc::channel::<CerebellumReport>(100);
+    let report_rx_arc = Arc::new(Mutex::new(report_rx));
+
+    start_ipc_threads(cmd_tx, report_rx_arc);
+
+    let mut mdh_handle: Option<tokio::task::JoinHandle<()>> = None;
+
+    // Main application loop
+    loop {
+        tokio::select! {
+            Some(cmd) = cmd_rx.recv() => {
+                 match cmd {
+                    CortexCommand::Initialize { assets } => {
+                        info!("[Main] Initialize command received.");
+                        if let Some(handle) = mdh_handle.take() {
+                            handle.abort(); // Stop existing MDH
+                        }
+                        let books_clone = global_books.clone();
+                        let assets_vec: Vec<String> = assets.into_iter().collect();
+                        
+                        mdh_handle = Some(tokio::spawn(async move {
+                            market_data_handler(books_clone, assets_vec).await;
+                        }));
+                    },
+                    CortexCommand::ExecuteOrder { .. } => {
+                        // Spawn task to handle execution via IEL
+                        // let client_clone = client.clone();
+                        // ... (Execution handling logic using execute_iel)
+                    },
+                    CortexCommand::Halt => {
+                        warn!("[FAILSAFE] HALT command received. Shutting down.");
+                        // TODO: Implement graceful shutdown (cancel all open orders)
+                        break;
+                    }
+                }
+            }
+            // Periodic Microstructure Computation (e.g., every 500ms)
+            _ = tokio::time::sleep(tokio::time::Duration::from_millis(500)) => {
+                compute_and_update_microstructure(&global_books, &global_micro).await;
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Detailed Implementation To-Do List
+
+#### 1\. Setup and Dependencies
+
+1.  **Update `Cargo.toml`:** Modify your `Cargo.toml` with the provided dependencies (`ordered-float`, `rand`, `arrow`, `parquet`). Ensure `tokio-tungstenite` uses the secure `rustls-tls-webpki-roots` feature.
+
+#### 2\. Create New Modules
+
+Create the following new files in the `src/` directory:
+
+1.  **`src/matching_engine.rs`:** Paste the provided code for the `MatchingEngineSimulator`.
+2.  **`src/microstructure.rs`:** Paste the provided code for `MicrostructureFeatures` and calculation logic.
+3.  **`src/storage.rs`:** Paste the provided code for `DataStorage` using Arrow/Parquet.
+
+#### 3\. Update Existing Modules
+
+Replace or update the contents of the following files:
+
+1.  **`src/protocol.rs`:** Update with the provided definitions for `IelMode`, `CortexCommand`, and `CerebellumReport`.
+2.  **`src/lob.rs`:** **CRITICAL:** Replace the existing content with the provided L2 implementation. This fixes the security vulnerability and implements L2 depth management with fine-grained locking.
+3.  **`src/exchange.rs`:** Update the `ExchangeClient` with the provided IEL implementation (TWAP, Aggressive, Adaptive).
+      * **ACTION REQUIRED:** Implement the actual Bybit API calls where the `// TODO: Implement actual API call` placeholders are located.
+4.  **`src/main.rs`:**
+      * Declare the new modules at the top.
+      * Integrate the initialization of `GlobalMicrostructure` and `DataStorage`.
+      * Implement the `tokio::select!` loop to handle commands and periodic microstructure updates concurrently.
+      * Implement the `Halt` command handling (Failsafe).
+      * Ensure the `start_ipc_threads` function includes the Heartbeat mechanism.
+
+#### 4\. Compile and Verify
+
+1.  **Compile:** Run `cargo build --release`.
+2.  **Permissions:** Ensure the directory `data/cerebellum_store` can be created by the application.
+3.  **Test Integration:** Run the binary and verify secure WebSocket connection, L2 subscription logs, and the reception of Heartbeats by the Python system.

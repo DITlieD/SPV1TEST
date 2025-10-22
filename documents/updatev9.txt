@@ -1,0 +1,121 @@
+Okay, now that I have all the files, including `pit_crew.py` and `watchtower.py`, I can perform the comprehensive bug hunt.
+
+Here is the second part of the comprehensive bug hunt TODO list:
+
+-----
+
+## 🐞 Comprehensive Bug Hunt TODO List (Part 2/2)
+
+### 6\. Refine Agent `decide_and_execute` Logic (`agent.py`)
+
+  * **Issue 1:** The ensemble voting logic uses prediction probabilities as weights (`weight = probabilities[model_id][pred]`), but `HedgeEnsembleManager` calculates dynamic weights based on historical performance. These Hedge weights are broadcast but seemingly not used in the voting.
+  * **Issue 2:** Exit logic checks `ensemble_signal == 2`. If multiple models vote to exit, but one strong model votes to hold (or enter), the ensemble might still signal HOLD (0) or ENTRY (1), preventing an exit even if the majority of *models* suggest it.
+  * **Issue 3:** The `_finalize_position` and `_finalize_exit` methods are called after `_execute_trade`, which only *sends* the order to Cerebellum. The agent's state (`self.in_position`, `self.current_trade`) is updated immediately, but the actual trade confirmation/fill details come back asynchronously via `CerebellumLink._listen_for_reports`. This means the logged entry/exit price and PnL calculations might be based on the intended price, not the actual fill price reported by Cerebellum.
+  * **Location:** `agent.py`, method `decide_and_execute`, `_finalize_position`, `_finalize_exit`. `cerebellum_link.py`, `crucible_engine.py`.
+  * **Task:**
+    1.  **Use Hedge Weights:**
+          * Modify `V3Agent` to store the latest weights received from `update_hedge_weights`.
+          * In `decide_and_execute`, fetch the current Hedge weight for `model_id` (defaulting to equal weight if missing) and use *that* weight in the voting logic instead of prediction probability.
+    2.  **Refine Exit Signal:** Consider adding a condition: if a significant portion (e.g., \> 50%) of the *weighted* votes are for EXIT (2), trigger an exit even if the final `ensemble_signal` isn't 2.
+    3.  **Refactor State/Logging Based on Cerebellum Reports:**
+          * **Modify `CerebellumLink._listen_for_reports`**: When an `OrderUpdate` report with status "FILLED" is received, parse the `symbol`, `strategy_id` (agent ID), `avg_price`, `executed_qty`, etc.
+          * **Callback/Queue:** Implement a mechanism (e.g., a callback function passed during agent initialization, or a shared queue) for `CerebellumLink` to send this fill information back to the correct `V3Agent` instance (likely managed by `CrucibleEngine` or `ArenaManager`).
+          * **Modify `V3Agent`:** Add a method like `handle_fill_report(report_data)`. This method should:
+              * Update `self.in_position`, `self.current_trade` (with actual fill price, quantity, timestamp).
+              * Call `_finalize_position` or `_finalize_exit` *here*, using the actual fill data from the report, instead of calling them immediately after `_execute_trade`.
+              * Update `self.virtual_balance` based on the fill.
+              * Call `_save_current_state()`.
+          * Remove the immediate state updates and logging calls from `_execute_trade`.
+
+-----
+
+### 7\. Add Timeout/Error Handling to `forge_worker` Subprocess
+
+  * **Issue:** `CrucibleEngine._forge_processing_loop` awaits `loop.run_in_executor` to run `run_forge_process`. If the subprocess hangs indefinitely due to an unexpected error or deadlock within `run_single_forge_cycle`, the `CrucibleEngine` might wait forever, blocking new forge tasks.
+  * **Location:** `crucible_engine.py` (`_forge_processing_loop`), `forge_worker.py`.
+  * **Task:**
+    1.  Wrap the `await loop.run_in_executor(...)` call in `CrucibleEngine._forge_processing_loop` with `asyncio.wait_for(..., timeout=TIMEOUT_SECONDS)`. Define a reasonable timeout (e.g., 1-2 hours).
+    2.  Add a `try...except asyncio.TimeoutError:` block around the `wait_for`.
+    3.  If a timeout occurs:
+          * Log a critical error indicating the forge task for the specific `model_instance_id` timed out.
+          * Ensure the `task_id` is removed from `self.active_forge_tasks`.
+          * Call `self.forge_queue.task_done()`.
+          * Consider mechanisms to terminate the hung subprocess if possible (this can be platform-dependent and complex).
+
+-----
+
+### 8\. Potential Infinite Loop in `prepare_all_data.py`
+
+  * **Issue:** The `while True:` loop fetching paginated OHLCV data lacks a condition to break if the exchange repeatedly returns the *same* last timestamp but doesn't return an empty list (e.g., due to an API bug or rate limiting issue). This could cause the script to hang.
+  * **Location:** `prepare_all_data.py`, function `download_one_symbol`.
+  * **Task:** Inside the `while True:` loop:
+      * Store the `since` value before the `await exchange.fetch_ohlcv(...)` call.
+      * After the call, if `ohlcv` is *not* empty, check if `ohlcv[-1][0] + 1` is strictly greater than the stored `since` value.
+      * If the timestamp hasn't advanced after a successful fetch, log a warning and `break` the loop to prevent getting stuck.
+
+-----
+
+### 9\. Improve Multiprocessing Stability (`models_v2.py`, `chimera_trainer.py`, etc.)
+
+  * **Issue:** While `app.py` forces the 'spawn' context, other scripts that use `multiprocessing.Pool` (like `chimera_trainer.py`, `train_aux_models.py`, `train_online_model.py`) might inherit the default context ('fork' on Linux/macOS) which can cause deadlocks, especially with libraries like LightGBM/XGBoost or CUDA. The check for `is_subprocess` in `LGBMWrapper` and `XGBWrapper` helps but isn't foolproof.
+  * **Location:** Any script using `multiprocessing.Pool` (`if __name__ == "__main__":` blocks).
+  * **Task:** Explicitly set the start method to 'spawn' at the beginning of the `if __name__ == "__main__":` block in scripts using `Pool`:
+    ```python
+    import multiprocessing as mp
+
+    if __name__ == "__main__":
+        # Force spawn context for stability, especially with CUDA/LightGBM
+        try:
+            if mp.get_start_method(allow_none=True) != 'spawn':
+                mp.set_start_method('spawn', force=True)
+                print("[Multiprocessing] Start method forced to 'spawn'.")
+        except RuntimeError:
+            print("[Multiprocessing] Warning: Start method already set.")
+            pass # Ignore if already set
+
+        # ... rest of the script's main execution ...
+        # Example:
+        # with Pool(processes=num_processes) as pool:
+        #     pool.map(...)
+    ```
+    Apply this pattern to `chimera_trainer.py`, `train_aux_models.py`, `train_online_model.py`.
+
+-----
+
+### 10\. Resource Cleanup in `CrucibleEngine.stop`
+
+  * **Issue:** The `CrucibleEngine.stop` method is currently just a placeholder (`pass`). It doesn't properly shut down the `ProcessPoolExecutor` or close network connections.
+  * **Location:** `crucible_engine.py`, method `stop`.
+  * **Task:** Implement the `stop` method:
+    ```python
+    async def stop(self):
+        self.logger.info("CrucibleEngine stopping...")
+        self.stop_event.set() # Signal all async loops to stop
+
+        # Close the main exchange connection used for data fetching
+        if self.exchange:
+            try:
+                await self.exchange.close()
+                self.logger.info("Main exchange connection closed.")
+            except Exception as e:
+                self.logger.error(f"Error closing main exchange connection: {e}")
+
+        # Shutdown the process pool executor gracefully
+        if self.executor:
+            self.logger.info("Shutting down ProcessPoolExecutor...")
+            # Run shutdown in a separate thread as it's blocking
+            await asyncio.get_running_loop().run_in_executor(
+                None, self.executor.shutdown, True # wait=True
+            )
+            self.logger.info("ProcessPoolExecutor shut down.")
+
+        # Add any other necessary cleanup (e.g., closing CerebellumLink sockets if needed)
+        # if self.cerebellum_link:
+        #     # self.cerebellum_link.close() # Assuming a close method exists
+
+        self.logger.info("CrucibleEngine stopped.")
+    ```
+    Ensure `ServiceManager.stop_main_loop` in `app.py` correctly calls this `CrucibleEngine.stop` coroutine using `asyncio.run_coroutine_threadsafe` and waits for it.
+
+-----
+

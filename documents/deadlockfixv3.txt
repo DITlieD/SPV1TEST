@@ -1,0 +1,251 @@
+This persistent deadlock, characterized by the system hanging with low CPU usage when the background Forge worker starts, is a classic symptom of conflicts between Python's `multiprocessing`, `asyncio`, and optimized numerical libraries.
+
+The logs confirm the worker process starts (`Worker 142748`) and begins the `FeatureFactory` execution, but then freezes. This occurs because of two fundamental structural issues:
+
+1.  **Multiprocessing Start Method ("Fork" vs "Spawn"):** If the system uses "fork" (default on Linux/macOS), the worker inherits the parent's entire memory state, including active asyncio loops and locks, leading to immediate deadlocks. We must enforce the safer "spawn" method, which starts a fresh interpreter.
+2.  **Import Timing and Threading Initialization:** Numerical libraries (NumPy, Pandas, Scikit-learn) initialize their internal thread pools upon import. If they are imported globally in modules used by the worker, they ignore the single-threading enforcement (`OMP_NUM_THREADS=1`) set in the worker's entry point, causing conflicts.
+
+Here is the comprehensive solution to resolve these structural conflicts.
+
+### 1\. Enforce "Spawn" Globally (Critical)
+
+We must set the multiprocessing start method to `spawn` at the very beginning of the application lifecycle.
+
+**File:** `app.py` (Main folder files)
+
+```python
+# app.py (V5.12 - Automated Startup)
+
+# CRITICAL FIX: Must be at the very top
+import os
+import warnings
+import multiprocessing # Import multiprocessing
+
+# Force OpenMP/MKL/OpenBLAS libraries globally
+os.environ['OMP_NUM_THREADS'] = '1'
+os.environ['MKL_NUM_THREADS'] = '1'
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+os.environ['VECLIB_MAXIMUM_THREADS'] = '1'
+os.environ['NUMEXPR_NUM_THREADS'] = '1'
+
+# CRITICAL FIX: Force the 'spawn' start method for stability
+# 'spawn' starts a fresh interpreter, avoiding deadlocks caused by inheriting locks/states when using 'fork'.
+try:
+    # Check if the start method has already been set
+    current_method = multiprocessing.get_start_method(allow_none=True)
+    if current_method != 'spawn':
+        print(f"[Multiprocessing] Start method is '{current_method}'. Forcing to 'spawn'.")
+        # Use force=True to ensure it's set, even if previously set incorrectly
+        multiprocessing.set_start_method('spawn', force=True)
+    else:
+        print(f"[Multiprocessing] Start method confirmed as 'spawn'.")
+
+except RuntimeError as e:
+    # This error occurs if set_start_method is called too late (after processes have already been created or modules imported).
+    print(f"[Multiprocessing] CRITICAL WARNING: Could not enforce 'spawn' start method: {e}. Ensure this is at the absolute top of app.py.")
+
+
+# --- Suppress pkg_resources deprecation warning ---
+warnings.filterwarnings("ignore", category=UserWarning, module='pandas_ta')
+
+# ... (The rest of app.py follows the structure defined in previous fixes, 
+# ensuring initialization happens inside the if __name__ == '__main__': block)
+```
+
+### 2\. Enforce "Spawn" Context in the Executor
+
+We explicitly configure the `ProcessPoolExecutor` in the `CrucibleEngine` to use the context we just defined.
+
+**File:** `crucible_engine.py` (Main folder files)
+
+```python
+# crucible_engine.py
+import os
+import logging
+# ... other imports
+from concurrent.futures import ProcessPoolExecutor
+import multiprocessing # Ensure multiprocessing is imported
+
+# ... (_initialize_regime_worker function) ...
+
+class CrucibleEngine:
+    def __init__(self, app_config, is_main_instance: bool = False):
+        # ... (other initializations)
+        
+        # Ensure logger is initialized before using it
+        if not hasattr(self, 'logger') or self.logger is None:
+            self.logger = self._setup_logger()
+
+        # --- CRITICAL DEADLOCK FIX: Initialize ProcessPoolExecutor Safely ---
+        if self.is_main_instance:
+            try:
+                # Get the context configured globally (should be 'spawn' if app.py is correct)
+                # Using get_context() without arguments respects the global setting.
+                mp_context = multiprocessing.get_context() 
+                max_workers = max(1, os.cpu_count() - 1)
+                
+                # Initialize the executor using the safe context
+                self.executor = ProcessPoolExecutor(max_workers=max_workers, mp_context=mp_context)
+                
+                self.logger.info(f"ProcessPoolExecutor initialized using '{mp_context.get_start_method()}' context with {max_workers} workers.")
+            except Exception as e:
+                self.logger.error(f"Failed to initialize ProcessPoolExecutor with specific context. Falling back to default (RISK OF DEADLOCK). Error: {e}")
+                self.executor = ProcessPoolExecutor(max_workers=max(1, os.cpu_count() - 1))
+        else:
+            self.executor = None
+
+        # ... (SingularityEngine initialization)
+```
+
+### 3\. Implement Delayed Imports in `task_scheduler.py` (Critical)
+
+To ensure the single-threading environment variables set by the worker initialization (in `forge_worker.py`) are respected, we must delay the import of numerical libraries until inside the `run_single_forge_cycle` function.
+
+**File:** `forge/overlord/task_scheduler.py` (Forge folder files)
+
+Restructure the file significantly:
+
+```python
+# forge/overlord/task_scheduler.py
+
+# Keep only essential, non-numerical imports at the global level
+import os
+import asyncio
+import traceback
+import logging
+
+# Import utility classes that don't rely heavily on numerical libraries
+from forge.utils.pipeline_status import PipelineStatus
+
+# (Remove pandas, numpy, sklearn, LGBMWrapper, FeatureFactory, etc. from global scope)
+
+# Define the main function
+def run_single_forge_cycle(raw_data_path: str, asset_symbol: str, reporter: PipelineStatus, app_config, exchange, device: str = "cpu", logger=None):
+    """Orchestrates a single, complete, hyper-adaptive model evolution cycle."""
+    
+    # --- DELAYED IMPORTS (CRITICAL FIX) ---
+    # Import numerical and ML libraries here. This ensures they are imported 
+    # AFTER the worker process has started (via 'spawn') and AFTER the 
+    # OMP_NUM_THREADS=1 environment variable has been set by the worker.
+    try:
+        import pandas as pd
+        import numpy as np
+        # Import all necessary components that were previously global
+        from forge.data_processing.feature_factory import FeatureFactory
+        from forge.data_processing.labeling import create_categorical_labels
+        from forge.evolution.strategy_synthesizer import StrategySynthesizer
+        from deap import gp 
+        # Ensure imports match file locations (assuming validation_gauntlet is in the main folder)
+        from validation_gauntlet import run_full_gauntlet, EvolvedStrategyWrapper
+        from forge.armory.model_registry import ModelRegistry
+        # Assuming models_v2 is in the main folder based on context
+        from models_v2 import LGBMWrapper 
+        # TransformerWrapper might also need delayed import if it imports torch/numpy globally
+        from forge.models.transformer_wrapper import TransformerWrapper
+        from forge.crucible.backtester import VectorizedBacktester
+        from forge.monitoring.ai_analyst import get_strategy_explanation
+        from forge.strategy.environment_classifier import EnvironmentClassifier
+
+    except ImportError as e:
+        error_msg = f"Failed to import necessary modules inside Forge cycle: {e}"
+        reporter.set_status("Error", error_msg)
+        if logger:
+            logger.error(error_msg)
+        print(error_msg)
+        return
+
+    # Ensure logger is configured if not passed
+    if logger is None:
+        logger = logging.getLogger(__name__)
+
+    try:
+        reporter.start()
+        
+        # --- 1. Data Preparation & Feature Engineering ---
+        reporter.set_status("Data Loading", f"Loading raw data for {asset_symbol}...")
+        
+        # (Robust data loading logic for df_raw and all_raw_data)
+        if not os.path.exists(raw_data_path):
+            raise FileNotFoundError(f"Raw data file not found: {raw_data_path}")
+        df_raw = pd.read_csv(raw_data_path, index_col='timestamp', parse_dates=True).tail(5000)
+
+        all_raw_data = {}
+        try:
+            # (Logic to load context data for all assets...)
+            for asset in app_config.ASSET_UNIVERSE:
+                 base_symbol = asset.split(':')[0].replace('/', '')
+                 timeframe = app_config.TIMEFRAMES['tactical']
+                 path = f"data/{base_symbol}_{timeframe}_raw.csv"
+                 if os.path.exists(path):
+                    all_raw_data[asset] = pd.read_csv(path, index_col='timestamp', parse_dates=True).tail(5000)
+        except Exception as e:
+            logger.warning(f"Error loading context data, falling back to target asset only: {e}")
+            all_raw_data = {asset_symbol: df_raw.copy()}
+
+        
+        logger.info("Starting FeatureFactory initialization...")
+        feature_factory = FeatureFactory(all_raw_data, logger=logger)
+        
+        # The exchange object is None when called from the worker, which FeatureFactory handles.
+        logger.info("Running FeatureFactory.create_all_features...")
+        processed_universe = feature_factory.create_all_features(app_config, exchange)
+        logger.info("FeatureFactory execution complete.")
+        
+        # ... (Continue with the rest of the function logic: Labeling, Splitting, Bake-Off, Gauntlet) ...
+
+    except Exception as e:
+        error_msg = f"Forge cycle failed: {e}\n{traceback.format_exc()}"
+        reporter.set_status("Error", error_msg)
+        if logger:
+            logger.error(error_msg)
+        else:
+            print(error_msg)
+```
+
+### 4\. Add Granular Diagnostics to `FeatureFactory`
+
+To identify which specific computation is hanging if the structural fixes are insufficient.
+
+**File:** `forge/data_processing/feature_factory.py` (Forge folder files)
+
+```python
+# In forge/data_processing/feature_factory.py
+# (Ensure imports like numpy, logging are present)
+
+class FeatureFactory:
+    # ... (__init__)
+
+    def _process_single_asset(self, df: pd.DataFrame) -> pd.DataFrame:
+        symbol = df.attrs.get('symbol', 'unknown')
+
+        if 'close' not in df.columns:
+            self.log(f"  -> [{symbol}] WARNING: 'close' column not found. Skipping.")
+            return df
+
+        # Keep original OHLCV columns
+        ohlcv_cols = df[['open', 'high', 'low', 'close', 'volume']]
+        
+        # --- DIAGNOSTIC LOGGING ---
+        self.log(f"  -> [DIAGNOSTIC] [{symbol}] 1. Calculating Technical Indicators...")
+        df = self._calculate_technical_indicators(df)
+        
+        # Note: CEEMDAN is computationally intensive and a common source of deadlocks/hangs
+        self.log(f"  -> [DIAGNOSTIC] [{symbol}] 2. Generating CEEMDAN Features (Potential Hang Point)...")
+        df = self._generate_ceemdan_features(df)
+        self.log(f"  -> [DIAGNOSTIC] [{symbol}] 2. CEEMDAN Complete.")
+        
+        # Note: Particle Filter can also be intensive
+        self.log(f"  -> [DIAGNOSTIC] [{symbol}] 3. Generating Particle Filter Features (Potential Hang Point)...")
+        df = self._generate_particle_filter_features(df)
+        self.log(f"  -> [DIAGNOSTIC] [{symbol}] 3. Particle Filter Complete.")
+        # --------------------------
+
+        # Select only numeric columns for the feature set
+        # Ensure numpy is imported if using np.number
+        import numpy as np 
+        numeric_df = df.select_dtypes(include=np.number)
+        
+        # Add back the OHLCV columns
+        final_df = pd.concat([ohlcv_cols, numeric_df], axis=1)
+        return final_df.loc[:,~final_df.columns.duplicated()]
+```

@@ -1,0 +1,13 @@
+Update Forge cycle (task_scheduler.py) to load and process MTFA data
+
+Verify data preparation scripts fetch all timeframes (1m, 15m, 1h)
+
+Test MTFA feature alignment and causality preservation
+Now I'll integrate MTFA into the Forge cycle. Let me find where data is currently loaded:
+Read C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\overlord\task_scheduler.py (lines 51-90)
+Edit C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\overlord\task_scheduler.py
+⎿
+Added 35 lines
+Senpai, I see the IDE diagnostics. Let me clean up the unused imports and variables:
+Read C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\overlord\task_scheduler.py
+Session limit reached ∙ resets 2pm

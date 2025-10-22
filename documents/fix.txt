@@ -1,0 +1,106 @@
+File to Modify: crucible_engine.py
+
+✅ To-Do:
+
+    Replace the _setup_exchange function: Use the definitive configuration that explicitly tells the library how to handle both REST and WebSocket connections for the paper trading environment.
+
+    Replace the _trade_watcher_and_resampler function: Use the robust version that correctly handles all possible message types from the now-working stream.
+
+Please replace the two functions in crucible_engine.py with the code below.
+Python
+
+# In crucible_engine.py
+
+# ... (keep the rest of your class definition) ...
+
+    def _setup_exchange(self):
+        try:
+            exchange_class = getattr(ccxt, self.config.ACTIVE_EXCHANGE)
+            
+            if self.config.ACTIVE_EXCHANGE == 'alpaca':
+                # --- THIS IS THE DEFINITIVE CONFIGURATION FIX ---
+                # This structure correctly configures both the REST API and the WebSocket
+                # stream for Alpaca's paper trading environment.
+                exchange_config = {
+                    'apiKey': self.config.ALPACA_API_KEY,
+                    'secret': self.config.ALPACA_SECRET_KEY,
+                    'paper': True,
+                    'options': {
+                        'urls': {
+                            'api': 'https://paper-api.alpaca.markets', # Explicitly set REST API URL
+                            'ws': {
+                                'crypto': 'wss://paper-api.alpaca.markets/stream' # Explicitly set WebSocket URL
+                            }
+                        }
+                    }
+                }
+                return exchange_class(exchange_config)
+                # --- END OF FIX ---
+            else:
+                return exchange_class({'enableRateLimit': True})
+        except Exception as e:
+            self.logger.critical(f"Failed to setup exchange: {e}")
+            raise
+
+# ... (keep other methods like _sentiment_analysis_loop) ...
+
+    async def _trade_watcher_and_resampler(self):
+        """
+        Watches for individual trades, reconstructs OHLCV candles, and
+        triggers feature engineering. This is a robust replacement for watch_ohlcv.
+        """
+        self.logger.info("Starting Trade Watcher and Resampler loop...")
+        trade_cache = {symbol: [] for symbol in self.config.ASSET_UNIVERSE}
+        
+        async def watch_trades_for_symbol(symbol):
+            # Alpaca uses 'BTC/USD', not 'BTC/USDT'. This correctly replaces it.
+            execution_symbol = symbol.replace('USDT', 'USD') if self.config.ACTIVE_EXCHANGE == 'alpaca' else symbol
+            while not self.stop_event.is_set():
+                try:
+                    trades = await self.exchange.watch_trades(execution_symbol)
+                    
+                    # --- ROBUST HANDLING FOR ALL MESSAGE TYPES ---
+                    # Ensure the message is always a list for uniform processing
+                    if trades and not isinstance(trades, list):
+                        trades = [trades]
+
+                    if trades:
+                        # Filter out non-trade messages (like subscription confirmations)
+                        valid_trades = [t for t in trades if isinstance(t, dict) and 'price' in t and 'amount' in t]
+                        if valid_trades:
+                            trade_cache[symbol].extend(valid_trades)
+                    # --- END OF ROBUST HANDLING ---
+
+                except Exception as e:
+                    self.logger.error(f"[{symbol}] Error in trade watcher: {e}. Retrying...")
+                    await asyncio.sleep(10)
+
+        # Start a trade watcher for each symbol
+        watcher_tasks = [watch_trades_for_symbol(s) for s in self.config.ASSET_UNIVERSE]
+        asyncio.gather(*watcher_tasks)
+
+        # Main resampling loop
+        while not self.stop_event.is_set():
+            await asyncio.sleep(5) 
+            for symbol in self.config.ASSET_UNIVERSE:
+                if not trade_cache[symbol]:
+                    continue
+
+                trades = trade_cache[symbol]
+                trade_cache[symbol] = []
+
+                df_trades = pd.DataFrame(trades)
+                df_trades['datetime'] = pd.to_datetime(df_trades['timestamp'], unit='ms')
+                df_trades.set_index('datetime', inplace=True)
+
+                resampler = df_trades['price'].resample(self.config.TIMEFRAMES['tactical'])
+                df_ohlcv = resampler.ohlc()
+                df_ohlcv['volume'] = df_trades['amount'].resample(self.config.TIMEFRAMES['tactical']).sum()
+                df_ohlcv.dropna(inplace=True)
+
+                if not df_ohlcv.empty:
+                    self.logger.info(f"[{symbol}] Resampled new {self.config.TIMEFRAMES['tactical']} candle(s).")
+                    df_ohlcv.attrs['symbol'] = symbol
+                    await self.raw_data_queue.put(df_ohlcv)
+
+# ... (keep the rest of your class definition) ...

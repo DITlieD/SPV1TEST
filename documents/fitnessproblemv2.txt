@@ -1,0 +1,135 @@
+read those logs, and analyse if this model fitness and evaluation are not unrealistic or incorrect
+
+first generation;
+
+
+============================================================
+[Bake-Off] Prioritizing Reversion-based challengers.
+
+[Bake-Off] Training Challenger: GP 2.0 (Pop: 2001, Gen: 100, Type: reversion)...
+2025-10-21 22:23:10,005 - [Wkr 17200] - ForgeWorkerMain - [GP 2.0] No elite DNA provided for BTCUSDTUSDT_Model_1. Starting from scratch.
+2025-10-21 22:23:10,049 - [Wkr 17200] - ForgeWorkerMain - Implicit Brain for BTC/USDT:USDT (SDE - LightGBM) loaded successfully from models/sde_implicit_brain_BTCUSDT_USDT.pkl.
+2025-10-21 22:23:10,066 - [Wkr 17200] - forge.evolution.surrogate_manager - Oracle: Model loaded from models/fitness_oracle.pkl (8447 samples)
+2025-10-21 22:23:10,066 - [Wkr 17200] - ForgeWorkerMain - [VELOCITY UPGRADE] Surrogate-Assisted Evolution ENABLED
+2025-10-21 22:23:10,066 - [Wkr 17200] - ForgeWorkerMain - [GP 2.0] Running StrategySynthesizer (SAE/Loky Optimized)...
+2025-10-21 22:23:10,066 - [Wkr 17200] - ForgeWorkerMain - [GP 2.0] Detected execution within a subprocess (Forge Worker). Disabling Loky to prevent deadlock...
+2025-10-21 22:23:10,080 - [Wkr 17200] - ForgeWorkerMain - [GP 2.0] Starting evolution for 100 generations, Pop: 2001...
+2025-10-21 22:23:10,080 - [Wkr 17200] - ForgeWorkerMain - [SAE] Generation 0: Evaluating initial population...
+2025-10-21 22:23:10,080 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Oracle screening 2001 individuals...
+2025-10-21 22:23:11,316 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Oracle selected top 40 candidates (2.0%)
+2025-10-21 22:23:11,316 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Evaluating 40 individuals with actual backtests...
+2025-10-21 22:23:13,251 - [Wkr 17200] - ForgeWorkerMain - [GP Eval FIRST] Adaptive Fitness=-10.0000, Sharpe=0.00, Profit Factor=0.00, Trades=1
+2025-10-21 22:23:13,251 - [Wkr 17200] - forge.evolution.strategy_synthesizer - SDE mimicry disabled: Missing features in fitness context: {'IM_Predicted_Entropy_Delta', 'IM_PE_Target', 'IM_TE_Incoming_Proxy'}
+2025-10-21 22:23:13,869 - [Wkr 17200] - forge.evolution.surrogate_manager - Oracle: Training on 8487 samples...
+2025-10-21 22:23:13,899 - [Wkr 17200] - forge.evolution.surrogate_manager - Oracle: Model saved to models/fitness_oracle.pkl
+2025-10-21 22:23:13,903 - [Wkr 17200] - forge.evolution.surrogate_manager - Oracle: Training complete. MAE: 49324357.1296, R²: 0.6478
+2025-10-21 22:23:13,903 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Evaluation complete. 40 individuals evaluated.
+2025-10-21 22:23:14,250 - [Wkr 17200] - ForgeWorkerMain - [SAE] Gen 0: {'avg': -980009995.3235985, 'std': 139965724.61977726, 'min': -1000000000.0, 'max': -7.688854006148711}
+2025-10-21 22:23:14,250 - [Wkr 17200] - ForgeWorkerMain - [SAE] Generation 1/100...
+2025-10-21 22:23:14,270 - [Wkr 17200] - ForgeWorkerMain - [SAE] Gen 1: 1199 individuals need evaluation...
+2025-10-21 22:23:14,270 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Oracle screening 1199 individuals...
+2025-10-21 22:23:14,286 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Oracle selected top 23 candidates (2.0%)
+2025-10-21 22:23:14,286 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Evaluating 23 individuals with actual backtests...
+2025-10-21 22:23:14,686 - [Wkr 17200] - forge.evolution.surrogate_manager - Oracle: Training on 8510 samples...
+2025-10-21 22:23:14,714 - [Wkr 17200] - forge.evolution.surrogate_manager - Oracle: Model saved to models/fitness_oracle.pkl
+2025-10-21 22:23:14,718 - [Wkr 17200] - forge.evolution.surrogate_manager - Oracle: Training complete. MAE: 49313353.0661, R²: 0.6476
+2025-10-21 22:23:14,718 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Evaluation complete. 23 individuals evaluated.
+2025-10-21 22:23:14,856 - [Wkr 17200] - ForgeWorkerMain - [SAE] Gen 1: {'avg': -963518241.4374788, 'std': 187485570.9029061, 'min': -1000000000.0, 'max': -7.688854006148711}
+
+
+
+
+last generation;
+
+
+
+
+2025-10-21 22:24:17,663 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Evaluation complete. 24 individuals evaluated.
+2025-10-21 22:24:17,754 - [Wkr 17200] - ForgeWorkerMain - [SAE] Gen 99: {'avg': -775112395.2215115, 'std': 417508345.48796207, 'min': -1000000000.0, 'max': 309.30097966753635}
+2025-10-21 22:24:17,754 - [Wkr 17200] - ForgeWorkerMain - [SAE] Generation 100/100...
+2025-10-21 22:24:17,771 - [Wkr 17200] - ForgeWorkerMain - [SAE] Gen 100: 1220 individuals need evaluation...
+2025-10-21 22:24:17,771 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Oracle screening 1220 individuals...
+2025-10-21 22:24:17,791 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Oracle selected top 24 candidates (2.0%)
+2025-10-21 22:24:17,791 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Evaluating 24 individuals with actual backtests...
+2025-10-21 22:24:17,808 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS FITNESS] Fitness=228.21, PnL=9.89%, Trades=8, Sharpe=0.58, WinRate=87.50
+2025-10-21 22:24:17,808 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS] Signal pattern (first 20): [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+2025-10-21 22:24:17,826 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS FITNESS] Fitness=23.45, PnL=8.64%, Trades=14, Sharpe=0.37, WinRate=50.00
+2025-10-21 22:24:17,826 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS] Signal pattern (first 20): [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0]
+2025-10-21 22:24:17,842 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS FITNESS] Fitness=320.05, PnL=13.89%, Trades=8, Sharpe=0.67, WinRate=87.50
+2025-10-21 22:24:17,842 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS] Signal pattern (first 20): [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+2025-10-21 22:24:17,858 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS FITNESS] Fitness=294.88, PnL=12.79%, Trades=8, Sharpe=0.73, WinRate=87.50
+2025-10-21 22:24:17,858 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS] Signal pattern (first 20): [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+2025-10-21 22:24:17,890 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS FITNESS] Fitness=320.05, PnL=13.89%, Trades=8, Sharpe=0.67, WinRate=87.50
+2025-10-21 22:24:17,890 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS] Signal pattern (first 20): [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+2025-10-21 22:24:17,938 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS FITNESS] Fitness=320.05, PnL=13.89%, Trades=8, Sharpe=0.67, WinRate=87.50
+2025-10-21 22:24:17,938 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS] Signal pattern (first 20): [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+2025-10-21 22:24:17,958 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS FITNESS] Fitness=228.21, PnL=9.89%, Trades=8, Sharpe=0.58, WinRate=87.50
+2025-10-21 22:24:17,958 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS] Signal pattern (first 20): [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+2025-10-21 22:24:17,971 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS FITNESS] Fitness=184.18, PnL=7.98%, Trades=7, Sharpe=0.48, WinRate=85.71
+2025-10-21 22:24:17,971 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS] Signal pattern (first 20): [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+2025-10-21 22:24:17,987 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS FITNESS] Fitness=228.21, PnL=9.89%, Trades=8, Sharpe=0.58, WinRate=87.50
+2025-10-21 22:24:17,987 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS] Signal pattern (first 20): [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+2025-10-21 22:24:18,038 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS FITNESS] Fitness=184.18, PnL=7.98%, Trades=7, Sharpe=0.48, WinRate=85.71
+2025-10-21 22:24:18,038 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS] Signal pattern (first 20): [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+2025-10-21 22:24:18,054 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS FITNESS] Fitness=23.45, PnL=8.64%, Trades=14, Sharpe=0.37, WinRate=50.00
+2025-10-21 22:24:18,054 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS] Signal pattern (first 20): [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0]
+2025-10-21 22:24:18,087 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS FITNESS] Fitness=228.21, PnL=9.89%, Trades=8, Sharpe=0.58, WinRate=87.50
+2025-10-21 22:24:18,087 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS] Signal pattern (first 20): [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+2025-10-21 22:24:18,134 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS FITNESS] Fitness=184.18, PnL=7.98%, Trades=7, Sharpe=0.48, WinRate=85.71
+2025-10-21 22:24:18,134 - [Wkr 17200] - ForgeWorkerMain - [SUSPICIOUS] Signal pattern (first 20): [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+2025-10-21 22:24:18,186 - [Wkr 17200] - forge.evolution.surrogate_manager - Oracle: Training on 10842 samples...
+2025-10-21 22:24:18,222 - [Wkr 17200] - forge.evolution.surrogate_manager - Oracle: Model saved to models/fitness_oracle.pkl
+2025-10-21 22:24:18,226 - [Wkr 17200] - forge.evolution.surrogate_manager - Oracle: Training complete. MAE: 39217305.3541, R²: 0.6503
+2025-10-21 22:24:18,226 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Evaluation complete. 24 individuals evaluated.
+2025-10-21 22:24:18,371 - [Wkr 17200] - ForgeWorkerMain - [SAE] Gen 100: {'avg': -782608646.613406, 'std': 412471092.1969204, 'min': -1000000000.0, 'max': 309.30097966753635}
+2025-10-21 22:24:18,371 - [Wkr 17200] - ForgeWorkerMain - [GP 2.0] Evolution complete.
+[Bake-Off] GP 2.0 training complete. Best Fitness: 403.9951
+
+[Bake-Off] Training Challenger: Meta-Learner...
+2025-10-21 22:24:18,379 - [Wkr 17200] - forge.models.meta_learner - Starting Reptile meta-training for 10 epochs...
+2025-10-21 22:24:20,426 - [Wkr 17200] - forge.models.meta_learner - Epoch [10/10] Meta-update complete.
+2025-10-21 22:24:20,426 - [Wkr 17200] - forge.models.meta_learner - Reptile meta-training finished.
+[Bake-Off] Meta-Learner training complete.
+
+------------------------------------------------------------
+| FORGE: Entering Validation Gauntlet
+------------------------------------------------------------
+
+--- Validating Challenger: GP 2.0 ---
+
+[Gauntlet] STARTING FULL GAUNTLET FOR: EvolvedStrategyWrapper on BTC/USDT:USDT
+
+[Gauntlet] STEP 1: RUNNING IN-SAMPLE SANITY CHECK
+[Gauntlet]   -> ✅ PASSED: In-sample Sharpe: 0.78, PnL: 1708.61%
+
+[Gauntlet] STEP 2: RUNNING WALK-FORWARD ANALYSIS
+
+
+
+walkfoward analysis result;
+
+
+
+2025-10-21 22:24:37,791 - [Wkr 17200] - forge.evolution.strategy_synthesizer - [SAE] Generation 30/30...
+2025-10-21 22:24:37,797 - [Wkr 17200] - forge.evolution.strategy_synthesizer - [SAE] Gen 30: 330 individuals need evaluation...
+2025-10-21 22:24:37,797 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Oracle screening 330 individuals...
+2025-10-21 22:24:37,805 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Oracle selected top 10 candidates (2.0%)
+2025-10-21 22:24:37,805 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Evaluating 10 individuals with actual backtests...
+2025-10-21 22:24:37,846 - [Wkr 17200] - forge.evolution.surrogate_manager - Oracle: Training on 11462 samples...
+2025-10-21 22:24:37,887 - [Wkr 17200] - forge.evolution.surrogate_manager - Oracle: Model saved to models/fitness_oracle.pkl
+2025-10-21 22:24:37,891 - [Wkr 17200] - forge.evolution.surrogate_manager - Oracle: Training complete. MAE: 37124512.9354, R²: 0.6495
+2025-10-21 22:24:37,891 - [Wkr 17200] - forge.evolution.surrogate_manager - SAE: Evaluation complete. 10 individuals evaluated.
+2025-10-21 22:24:37,922 - [Wkr 17200] - forge.evolution.strategy_synthesizer - [SAE] Gen 30: {'avg': -802000008.741126, 'std': 398492140.42341757, 'min': -1000000000.0, 'max': -20.75}
+2025-10-21 22:24:37,926 - [Wkr 17200] - forge.evolution.strategy_synthesizer - [GP 2.0] Evolution complete.
+[Gauntlet]   -> Fold 2: Evolution complete (fitness: -20.25)
+[Gauntlet]   -> Fold 2: Testing on bars 320-384...
+[Gauntlet]   -> Fold 2: Test Sharpe = 0.00
+[Gauntlet]   -> ❌ FAILED: WFA Avg Sharpe: -0.53, Min: -1.06, Negative folds: 1
+
+--- Validating Challenger: Meta-Learner ---
+
+[Gauntlet] STARTING FULL GAUNTLET FOR: MetaLearnerWrapper on BTC/USDT:USDT
+
+[Gauntlet] STEP 1: RUNNING IN-SAMPLE SANITY CHECK
+[Gauntlet]   -> ❌ FAILED: Model is not profitable on its training data. Sharpe: 0.00, PnL: 0.00%
+[GNN Pipeline] GNN feature generation complete.

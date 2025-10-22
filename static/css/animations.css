@@ -1,0 +1,77 @@
+/* static/css/animations.css */
+
+.asset-price {
+    transition: color 0.4s ease-in-out, text-shadow 0.4s ease-in-out, transform 0.2s ease-in-out;
+    display: inline-block;
+    will-change: color, text-shadow;
+}
+
+/* Green (Price Up) Animation */
+.price-up {
+    color: #28a745 !important; /* Vibrant Green */
+    animation: pulse-up 0.5s ease-in-out;
+}
+
+/* Red (Price Down) Animation */
+.price-down {
+    color: #dc3545 !important; /* Vibrant Red */
+    animation: pulse-down 0.5s ease-in-out;
+}
+
+/* Pulse animation for price increase (green glow) */
+@keyframes pulse-up {
+    0% {
+        color: #28a745;
+        text-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+        transform: scale(1);
+    }
+    25% {
+        color: #34d058;
+        text-shadow: 0 0 15px rgba(40, 167, 69, 0.8),
+                     0 0 25px rgba(40, 167, 69, 0.5);
+        transform: scale(1.05);
+    }
+    50% {
+        color: #28a745;
+        text-shadow: 0 0 20px rgba(40, 167, 69, 0.9),
+                     0 0 30px rgba(40, 167, 69, 0.6);
+        transform: scale(1.03);
+    }
+    100% {
+        color: #28a745;
+        text-shadow: 0 0 8px rgba(40, 167, 69, 0.4);
+        transform: scale(1);
+    }
+}
+
+/* Pulse animation for price decrease (red glow) */
+@keyframes pulse-down {
+    0% {
+        color: #dc3545;
+        text-shadow: 0 0 5px rgba(220, 53, 69, 0.3);
+        transform: scale(1);
+    }
+    25% {
+        color: #f85149;
+        text-shadow: 0 0 15px rgba(220, 53, 69, 0.8),
+                     0 0 25px rgba(220, 53, 69, 0.5);
+        transform: scale(1.05);
+    }
+    50% {
+        color: #dc3545;
+        text-shadow: 0 0 20px rgba(220, 53, 69, 0.9),
+                     0 0 30px rgba(220, 53, 69, 0.6);
+        transform: scale(1.03);
+    }
+    100% {
+        color: #dc3545;
+        text-shadow: 0 0 8px rgba(220, 53, 69, 0.4);
+        transform: scale(1);
+    }
+}
+
+/* Smooth return to neutral color after animation ends */
+.asset-price:not(.price-up):not(.price-down) {
+    color: inherit;
+    text-shadow: none;
+}

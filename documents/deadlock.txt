@@ -1,0 +1,353 @@
+This persistent deadlock, evidenced by the repeated initialization messages in your logs (`[App.py] Initializing ServiceManager...`) and the system hanging when background processes start, stems from a combination of structural issues in the application entry point and conflicts between Python's `multiprocessing` and optimized numerical libraries.
+
+Even though you implemented the previous fixes (forcing `n_jobs=1` in the wrappers), the deadlock persists because of two deeper issues:
+
+1.  **Global Initialization on Import:** When `ProcessPoolExecutor` starts a worker process (for the Forge or Regime models), that worker re-imports `app.py`. Because `ServiceManager` and the Flask app are initialized globally in `app.py`, the worker tries to re-initialize the entire application, causing severe conflicts and deadlocks.
+2.  **Low-Level Library Threading:** Libraries like NumPy, Scikit-learn, and HDBSCAN use underlying optimized libraries (MKL/OpenBLAS/OpenMP) for threading. This threading conflicts with `ProcessPoolExecutor`, even if the high-level Python code requests a single job.
+
+Here is the comprehensive solution to resolve these structural and low-level conflicts.
+
+### 1\. Restructure `app.py` (Critical: Fix Re-Initialization)
+
+We must ensure initialization only happens in the main process by moving the instantiation inside the `if __name__ == '__main__':` block. We also enforce single-threading globally as a safeguard.
+
+**File:** `app.py` (Main folder files)
+
+```python
+# app.py (V5.12 - Automated Startup)
+
+# CRITICAL FIX: Must be at the very top
+import os
+import warnings
+
+# Force OpenMP/MKL/OpenBLAS libraries globally to use a single thread 
+# to prevent deadlocks when multiprocessing is active.
+os.environ['OMP_NUM_THREADS'] = '1'
+os.environ['MKL_NUM_THREADS'] = '1'
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+
+# --- Suppress pkg_resources deprecation warning ---
+warnings.filterwarnings("ignore", category=UserWarning, module='pandas_ta')
+
+# --- Centralized Imports ---
+import json
+import asyncio
+import threading
+import subprocess
+import time
+import sys
+import webbrowser
+# Import config and rename it for clarity
+import config as app_config 
+from crucible_engine import CrucibleEngine
+import logging
+from flask import Flask, render_template, jsonify
+import pandas as pd # Ensure pandas is imported globally for the routes
+
+# --- Silence the default Flask web server logger ---
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
+# (Helper functions: open_browser_after_delay, run_weekly_data_refresh remain the same)
+
+class ServiceManager:
+    # Keep the ServiceManager class definition exactly as it is.
+    # Ensure the __init__ defers initialization:
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        # ... (singleton implementation)
+        if cls._instance is None:
+            cls._instance = super(ServiceManager, cls).__new__(cls)
+        return cls._instance
+    
+    def __init__(self, app_config):
+       # ... (Initialization logic)
+        if hasattr(self, '_initialized'):
+            return
+        self._initialized = True
+        self.config = app_config
+        self.crucible_engine = None
+        self.loop_thread = None
+        self.stop_event = asyncio.Event()
+        # self._initialize_services() # Ensure this is deferred (commented out)
+    
+    # ... (rest of the class definition: _are_models_missing, _initialize_services, etc.)
+
+
+# --- Flask App Setup (Moved into functions/main block) ---
+
+# Define Flask routes in a setup function
+def setup_routes(app, service_manager):
+    @app.route('/api/performance/summary', methods=['GET'])
+    def get_performance_summary():
+        # (implementation remains the same, ensure it uses pandas correctly)
+        default_response = {"champion": None, "contenders": None, "most_adaptable": None}
+        try:
+            with open("performance_log.jsonl", "r") as f:
+                lines = f.readlines()[-2000:] 
+                trade_logs = [json.loads(line) for line in lines if "TRADE_CLOSE" in line]
+        except (FileNotFoundError, json.JSONDecodeError):
+            return jsonify(default_response)
+        if not trade_logs:
+            return jsonify(default_response)
+        
+        df = pd.DataFrame(trade_logs)
+         # Ensure 'pnl_usd' column exists and is numeric
+        if 'pnl_usd' not in df.columns:
+            return jsonify(default_response)
+        df['pnl_usd'] = pd.to_numeric(df['pnl_usd'], errors='coerce')
+        df.dropna(subset=['pnl_usd'], inplace=True)
+
+        # (Rest of the performance summary logic)
+        model_performance = df.groupby('model_id')['pnl_usd'].sum().sort_values(ascending=False)
+        if model_performance.empty:
+            return jsonify(default_response)
+        
+        # (Calculate champion_stats and contenders_stats)
+        # ...
+        
+        # Ensure a valid JSON response is returned at the end
+        return jsonify({"champion": champion_stats, "contenders": contenders_stats, "most_adaptable": None})
+
+
+    @app.route('/')
+    def index(): return render_template('dashboard.html')
+    @app.route('/dashboard')
+    def dashboard(): return render_template('dashboard.html')
+
+    @app.route('/api/system/status_all', methods=['GET'])
+    def get_system_status():
+        # This now uses the service_manager passed into setup_routes
+        statuses = service_manager.get_all_service_statuses()
+        try:
+            with open("singularity_log.txt", "r") as f:
+                statuses['singularity']['logs'] = f.readlines()[-20:]
+        except FileNotFoundError:
+            statuses['singularity']['logs'] = ["Log file not found."]
+        return jsonify(statuses)
+
+    # ... (Define other routes: get_decisions_log, start_main_loop, stop_main_loop)
+
+# --- Main Execution Block ---
+# The initialization previously at the global scope is now moved here.
+if __name__ == '__main__':
+    from multiprocessing import freeze_support
+    freeze_support() # Essential for Windows multiprocessing
+
+    # CRITICAL FIX: Initialize globally scoped objects ONLY here
+    print("[App.py] Initializing ServiceManager (Main Process)...")
+    # Use the imported app_config
+    service_manager = ServiceManager(app_config=app_config)
+    print("[App.py] ServiceManager initialized.")
+    
+    app = Flask(__name__)
+    setup_routes(app, service_manager) # Configure the routes
+
+    # Initialize services only in the main process
+    # We must call _initialize_services() explicitly as it was deferred
+    service_manager._initialize_services()
+
+    print("[App.py] Main execution block started.")
+    try:
+        # (Keep the browser thread logic if the helper function exists)
+        # browser_thread = threading.Thread(target=open_browser_after_delay, daemon=True)
+        # browser_thread.start()
+        
+        app.run(host='0.0.0.0', port=5001, debug=False)
+    except Exception as e:
+        print(f"\n\n--- UNCAUGHT EXCEPTION IN MAIN BLOCK ---\n{e}\n")
+    finally:
+        print("[App.py] Main execution block finished.")
+        # Ensure cleanup happens correctly
+        if 'service_manager' in locals() and service_manager:
+           service_manager.stop_main_loop()
+```
+
+### 2\. Enforce Single-Threading and Delayed Imports in Workers
+
+We must ensure the environment variables are set in the worker process *before* numerical libraries (like NumPy/Scikit-learn) are imported.
+
+#### A. Forge Worker
+
+**File:** `forge_worker.py` (Main folder files)
+
+```python
+# forge_worker.py
+
+import os
+import logging
+import asyncio
+import sys # Import sys
+
+# Delay imports of modules that might import numpy/sklearn until inside the function.
+
+def run_forge_process(symbol, agent_id, generation):
+    
+    # --- CRITICAL DEADLOCK FIX: Enforce Single Threading ---
+    # This must be done BEFORE importing libraries like numpy, sklearn, lightgbm.
+    os.environ['OMP_NUM_THREADS'] = '1'
+    os.environ['MKL_NUM_THREADS'] = '1'
+    os.environ['OPENBLAS_NUM_THREADS'] = '1'
+    os.environ['VECLIB_MAXIMUM_THREADS'] = '1'
+    os.environ['NUMEXPR_NUM_THREADS'] = '1'
+    
+    # Ensure the print statement is immediately visible
+    print(f"[Forge Worker {os.getpid()}] Subprocess started. Enforcing single-threading (OMP_NUM_THREADS=1).")
+    sys.stdout.flush()
+
+    # Now safely import modules (Delayed Imports)
+    try:
+        import ccxt.pro as ccxt
+        import config as app_config
+        from forge.overlord.task_scheduler import run_single_forge_cycle
+        from forge.utils.pipeline_status import PipelineStatus
+    except ImportError as e:
+        print(f"[Forge Worker {os.getpid()}] CRITICAL: Failed to import modules: {e}")
+        sys.stdout.flush()
+        return None
+
+    # ... (Logger setup for subprocess) ...
+
+    exchange = None
+    try:
+        # ... (Exchange setup and data path setup) ...
+
+        # Recommended: Force CPU for background processes to avoid potential GPU context conflicts
+        enforced_device = "cpu"
+        logger.info(f"Starting run_single_forge_cycle. Enforcing DEVICE={enforced_device}.")
+
+        run_single_forge_cycle(
+            raw_data_path=raw_data_path, asset_symbol=symbol, reporter=reporter,
+            app_config=app_config, exchange=exchange, device=enforced_device, # Use enforced device
+            logger=logger
+        )
+        
+        logger.info(f"✅ Forge cycle for {agent_id} completed successfully.")
+        return symbol, agent_id
+        
+    except Exception as e:
+        logger.error(f"Error in subprocess forge for {agent_id}: {e}", exc_info=True)
+        return None
+        
+    finally:
+        # ... (Exchange cleanup logic remains the same) ...
+```
+
+#### B. Regime Initialization Worker
+
+**File:** `crucible_engine.py` (Main folder files)
+
+```python
+# In crucible_engine.py
+
+def _initialize_regime_worker(symbol: str) -> tuple:
+    # CRITICAL FIX: Enforce single thread for numerical libraries (HDBSCAN/Numpy) in the worker process
+    import os
+    os.environ['OMP_NUM_THREADS'] = '1'
+    os.environ['MKL_NUM_THREADS'] = '1'
+    os.environ['OPENBLAS_NUM_THREADS'] = '1'
+
+    # (Ensure necessary imports are inside the function as required for Pool workers)
+    import asyncio
+    import ccxt.pro as ccxt
+    import config
+    from data_fetcher import get_market_data
+    from forge.data_processing.feature_factory import FeatureFactory
+    from forge.strategy.dynamic_regimes import DynamicRegimeModel
+
+    print(f"[{symbol}] Starting initial regime model training (Worker Forced Single Thread)...")
+
+    # ... (rest of the function remains the same)
+```
+
+### 3\. Ensure Scikit-learn Calibration is Sequential
+
+We must explicitly ensure `CalibratedClassifierCV` runs sequentially in the subprocess, in addition to the base model.
+
+**File:** `models_v2.py` (Main folder files)
+
+Update `LGBMWrapper` and `XGBWrapper` (Assuming the previous fixes for the base model `n_jobs` are already applied):
+
+```python
+# models_v2.py
+import multiprocessing
+from sklearn.calibration import CalibratedClassifierCV
+import lightgbm as lgb
+import xgboost as xgb
+# ... (other imports and BaseBatchModel)
+
+class LGBMWrapper(BaseBatchModel):
+    def fit(self, df_train, df_val=None, device='cpu', generation=0):
+        X_train, y_train = self._prepare_data(df_train)
+        
+        is_subprocess = multiprocessing.current_process().name != 'MainProcess'
+        
+        # Determine n_jobs for CalibrationCV AND the base model
+        n_jobs_subprocess = 1 if is_subprocess else -1
+        # Sklearn uses None for default behavior, 1 for sequential
+        calibration_n_jobs = 1 if is_subprocess else None 
+        
+        # ... (Existing logic for default_params and base model n_jobs setup) ...
+
+        final_params = {**default_params, **self.model_params}
+        base_model = lgb.LGBMClassifier(**final_params)
+        
+        if df_val is not None:
+            # ...
+            # CRITICAL FIX: Apply n_jobs to CalibratedClassifierCV
+            self.model = CalibratedClassifierCV(base_model, method='isotonic', cv='prefit', n_jobs=calibration_n_jobs)
+            self.model.fit(X_val, y_val)
+        else:
+            # CRITICAL FIX: Apply n_jobs to CalibratedClassifierCV
+            self.model = CalibratedClassifierCV(base_model, method='isotonic', cv=3, n_jobs=calibration_n_jobs)
+            self.model.fit(X_train, y_train)
+            
+        self.is_trained = True
+        return self
+
+# Apply the identical logic to XGBWrapper.fit()
+class XGBWrapper(BaseBatchModel):
+     def fit(self, df_train, df_val=None, device='cpu', generation=0):
+        # ... (Apply the same logic for calibration_n_jobs and pass it to CalibratedClassifierCV)
+```
+
+### 4\. Offload CPU-Bound Tasks in ArenaManager (Asyncio Blocking)
+
+The `HDBSCAN.predict` function is CPU-intensive and can block the main asyncio loop. It must be offloaded.
+
+**File:** `forge/crucible/arena_manager.py` (Inferred location, Main folder files)
+
+Locate the `ArenaManager` class and modify its `process_data` method.
+
+```python
+# In forge/crucible/arena_manager.py (or wherever ArenaManager is defined)
+import asyncio
+import functools # Import functools
+
+class ArenaManager:
+    # ... (__init__ and other methods) ...
+
+    async def process_data(self, symbol, data, sentiment_score, strategic_bias, forecasted_volatility):
+        # ...
+        
+        # --- 1. Regime Classification ---
+        current_regime = -1 # Default to noise/unknown
+        regime_model = self.asset_specific_models.get(symbol, {}).get('regime_model')
+        
+        if regime_model and not data.empty:
+            # CRITICAL FIX: Offload CPU-bound HDBSCAN prediction to a thread pool
+            loop = asyncio.get_running_loop()
+            try:
+                # Use functools.partial to pass arguments to the function run in the executor
+                predict_func = functools.partial(regime_model.predict, data)
+                # Run in the default thread pool executor (None)
+                current_regime_array = await loop.run_in_executor(None, predict_func)
+                
+                if len(current_regime_array) > 0:
+                    current_regime = current_regime_array[-1] # Get the latest prediction
+            except Exception as e:
+                print(f"[{symbol}] Error during regime prediction offloading: {e}")
+
+        # ... (rest of the method) ...
+```

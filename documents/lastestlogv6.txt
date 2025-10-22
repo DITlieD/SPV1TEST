@@ -1,0 +1,265 @@
+##################################
+#     The Singularity Protocol   #
+#         Cortex Startup         #
+##################################
+
+[1/2] Activating Python Environment...
+[1/2] Environment activated.
+
+[2/2] Launching Cortex (Python Core)....
+--------------------------------------------------------------------
+System Startup Initiated.
+Monitor this window for Cortex logs (Python).
+Press CTRL+C in THIS WINDOW to stop the Python application.
+--------------------------------------------------------------------
+
+[Multiprocessing] Start method is 'None'. Forcing to 'spawn'.
+[Config] Exchange Mode: TESTNET
+[Config] Deployment Strategy: 8 models across 3 assets
+[Config] Active Assets: ['BTC/USDT:USDT', 'ETH/USDT:USDT', 'SOL/USDT:USDT']
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+[App.py] Initializing ServiceManager (Main Process)...
+[App.py] ServiceManager initialized.
+[App.py] ServiceManager: Initializing services...
+2025-10-21 13:34:55,345 - [CrucibleEngine] - INFO - Basic exchange 'bybit' setup complete.
+[Watchtower] Initialized with Elite Preservation System.
+[Watchtower] Current Elites: 0 | Best Profit: +0.00%
+2025-10-21 13:34:55,345 - [CrucibleEngine] - INFO - [PIT CREW] Initialized - Continuous shadow evaluation active
+[Hedge] Initializing weights uniformly.
+2025-10-21 13:34:56,359 - [CrucibleEngine] - INFO - [Crucible] IEL agent loaded successfully.
+2025-10-21 13:34:56,359 - [SingularityEngine] - INFO - Singularity Engine initialized.
+2025-10-21 13:34:56,359 - [SingularityEngine] - INFO - Asset universe order: ['BTC/USDT:USDT', 'ETH/USDT:USDT', 'SOL/USDT:USDT']
+[Model Check] ❌ Missing essential model type 'Specialist'.
+
+============================================================
+===============   MISSING MODELS - MANUAL START REQUIRED   ===============
+============================================================
+Models are missing. Please run '3_Start_Initial_Script.bat' to train them.
+The application will not function correctly until all models are trained.
+============================================================
+
+[App.py] Starting main loop thread...
+[App.py] Main execution block started.
+2025-10-21 13:34:56,363 - [CrucibleEngine] - INFO - Starting Hyper-Evolutionary Engine...
+2025-10-21 13:34:56,363 - [CrucibleEngine] - INFO - ProcessPoolExecutor initialized in run() using 'spawn' context with 15 workers.
+2025-10-21 13:34:56,363 - [CrucibleEngine] - INFO - --- Phase 1: Initializing Core Systems (Waiting for completion)... ---
+2025-10-21 13:34:56,367 - [CrucibleEngine] - INFO - Initializing HMM regime models for market state detection...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-10-21 13:34:56,383 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for BTC/USDT:USDT
+2025-10-21 13:34:56,383 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for ETH/USDT:USDT
+2025-10-21 13:34:56,383 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for SOL/USDT:USDT
+2025-10-21 13:34:56,383 - [CrucibleEngine] - INFO - Loaded 3 existing HMM regime models
+2025-10-21 13:34:56,387 - [CrucibleEngine] - INFO - HMM Regime model initialization complete
+2025-10-21 13:34:56,387 - [CrucibleEngine] - INFO - Initializing immune system for risk monitoring...
+2025-10-21 13:34:56,387 - [CrucibleEngine] - INFO - Immune system initialized successfully
+2025-10-21 13:34:56,387 - [CrucibleEngine] - INFO - Scanning for and loading all existing models from model directories...
+2025-10-21 13:34:56,387 - [CrucibleEngine] - INFO - --- Finished loading existing agents. Total loaded: 0 ---
+2025-10-21 13:34:56,387 - [CrucibleEngine] - INFO - --- Phase 1: Complete. ---
+2025-10-21 13:34:56,387 - [CrucibleEngine] - INFO - --- Phase 2: Starting Main Operational Loops (Concurrent)... ---
+2025-10-21 13:34:56,387 - [CrucibleEngine] - INFO - Starting centralized Forge processing loop (Update V5)...
+2025-10-21 13:34:56,387 - [CrucibleEngine] - INFO - Forge processing loop waiting for a task...
+2025-10-21 13:34:56,387 - [CrucibleEngine] - INFO - [PIT CREW] Shadow evaluation loop started
+2025-10-21 13:34:56,391 - [CrucibleEngine] - INFO - Trade watcher started - monitoring live market data...
+[Data Fetcher] Fetching 200 candles for BTC/USDT:USDT from Bybit...
+2025-10-21 13:34:56,391 - [CrucibleEngine] - INFO - Arena loop started - agents ready for battle...
+2025-10-21 13:34:56,391 - [SingularityEngine] - INFO - Singularity Engine starting its operational loops.
+2025-10-21 13:34:56,391 - [SingularityEngine] - INFO - Starting reactive drift monitoring loop...
+2025-10-21 13:34:56,391 - [SingularityEngine] - INFO - Running reactive drift check...
+2025-10-21 13:34:56,391 - [SingularityEngine] - INFO - Monitoring for concept drift...
+2025-10-21 13:34:56,391 - [SingularityEngine] - INFO - Starting continuous, multi-model Forge loop (Update V5)...
+2025-10-21 13:34:56,391 - [SingularityEngine] - INFO - Deployment Strategy: 8 models across 3 assets
+2025-10-21 13:34:56,391 - [SingularityEngine] - INFO - Starting a new forging cycle for 8 model instances...
+2025-10-21 13:34:56,391 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for BTC/USDT:USDT (Instance 1/4). ID: BTCUSDTUSDT_Model_1
+2025-10-21 13:34:56,391 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:34:56,391 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for BTC/USDT:USDT (Instance 2/4). ID: BTCUSDTUSDT_Model_2
+2025-10-21 13:34:56,391 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:34:56,391 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for BTC/USDT:USDT (Instance 3/4). ID: BTCUSDTUSDT_Model_3
+2025-10-21 13:34:56,391 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:34:56,395 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for BTC/USDT:USDT (Instance 4/4). ID: BTCUSDTUSDT_Model_4
+2025-10-21 13:34:56,395 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:34:56,395 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for ETH/USDT:USDT (Instance 1/2). ID: ETHUSDTUSDT_Model_1
+2025-10-21 13:34:56,395 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:34:56,395 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for ETH/USDT:USDT (Instance 2/2). ID: ETHUSDTUSDT_Model_2
+2025-10-21 13:34:56,395 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:34:56,395 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for SOL/USDT:USDT (Instance 1/2). ID: SOLUSDTUSDT_Model_1
+2025-10-21 13:34:56,395 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:34:56,395 - [SingularityEngine] - INFO - [Proactive Forge] Submitting task for SOL/USDT:USDT (Instance 2/2). ID: SOLUSDTUSDT_Model_2
+2025-10-21 13:34:56,395 - [SingularityEngine] - INFO - Calling self.submit_forge_task
+2025-10-21 13:34:56,395 - [SingularityEngine] - INFO - Submitted 8 forge tasks for this cycle. Now waiting for completion...
+2025-10-21 13:34:56,399 - [SingularityEngine] - INFO - Updating ensemble weights based on performance log...
+2025-10-21 13:34:56,407 - [SingularityEngine] - INFO - Reactive check complete. Sleeping for 60s.
+[Data Fetcher] Fetching 200 candles for ETH/USDT:USDT from Bybit...
+2025-10-21 13:34:57,569 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-21 13:34:57,573 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-21 13:34:57,577 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:34:57,623 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. VMD Complete.
+2025-10-21 13:34:57,623 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:34:57,637 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Particle Filter Complete.
+2025-10-21 13:34:57,637 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for BTC/USDT:USDT...
+[Data Fetcher] Fetching 200 candles for SOL/USDT:USDT from Bybit...
+2025-10-21 13:34:59,170 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 4. Order Flow Features Complete.
+2025-10-21 13:34:59,171 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0    10.26         0.154983        5         0.556017         0.619441     20.83s
+   1     6.28         0.343288       15         0.589307         0.389605      8.22s
+   2     5.32          0.41755        3         0.609479         0.156099      9.68s
+   3     4.26         0.493078        7         0.611491        0.0403101      9.11s
+   4     3.16         0.499267        3         0.613497         0.129225      8.50s
+   5     3.08         0.507157        3          0.61424        0.0982789      8.96s
+   6     2.97         0.500379        3         0.614937         0.145736      8.54s
+   7     3.02         0.504549        3         0.614995         0.238132      7.65s
+   8     2.99         0.498375        3          0.60476         0.105977      7.22s
+   9     3.04         0.502549        3         0.616646        0.0248811      6.49s
+  10     3.07         0.507529        3         0.616264         0.232165      5.78s
+  11     2.98         0.500419        3         0.612147        0.0605342      7.70s
+  12     3.02         0.501786        3         0.618147         0.257291      5.25s
+  13     3.02         0.505393        3         0.612194        0.0544094      4.87s
+  14     2.99         0.499084        3         0.605228        0.0692948      4.21s
+  15     2.99         0.498155        3         0.614219          0.14963      3.70s
+  16     3.02          0.50205        3         0.619507         0.127832      3.23s
+  17     2.99         0.497758        3         0.615611         0.140403      2.90s
+  18     3.08         0.494091        3         0.617455         0.144412      2.51s
+  19     2.94         0.490309        3         0.613342        0.0976653      2.17s
+  20     2.99         0.503228        3         0.606052          0.05252      1.71s
+  21     2.93         0.496705        3         0.607341         0.174093      1.29s
+  22     3.07         0.497482        3         0.622851         0.103908      0.82s
+  23     3.06         0.496858        3         0.626626        0.0521284      0.41s
+  24     2.99         0.508563        3         0.617943       0.00682099      0.00s
+2025-10-21 13:35:10,494 - [CrucibleEngine] - INFO -   -> [BTC/USDT:USDT] Injecting 5 evolved features...
+2025-10-21 13:35:10,494 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object present. Attempting GNN generation (Main context). ---
+2025-10-21 13:35:10,494 - [CrucibleEngine] - INFO -   -> Generating GNN features for the entire market...
+[GNN Pipeline] Starting feature generation...
+[Data Fetcher] Fetching 500 candles for BTC/USDT:USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for ETH/USDT:USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for SOL/USDT:USDT from Bybit...
+[GNN Pipeline] GNN feature generation complete.
+2025-10-21 13:35:12,547 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:35:12,552 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-21 13:35:12,552 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-21 13:35:12,552 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:35:12,598 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 2. VMD Complete.
+2025-10-21 13:35:12,598 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:35:12,612 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 3. Particle Filter Complete.
+2025-10-21 13:35:12,612 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for ETH/USDT:USDT...
+2025-10-21 13:35:14,192 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 4. Order Flow Features Complete.
+2025-10-21 13:35:14,192 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0    10.26        0.0959911       43         0.363166         0.161617      1.92s
+   1     4.95         0.180788       14         0.380456        0.0954692      7.90s
+   2     4.41         0.222064       11         0.396655        0.0980235     10.24s
+   3     4.85         0.240709       13         0.429787         0.360629      8.95s
+   4     5.46          0.26084        9         0.412266        0.0992684      8.91s
+   5     6.41         0.289401       18         0.415182        0.0833265      8.17s
+   6     6.87         0.300679       13         0.423176         0.148616      7.86s
+   7     7.59         0.308874        9         0.440814         0.386495      7.78s
+   8     7.65         0.311533       14         0.447465         0.495683      7.33s
+   9     7.43         0.315663        7         0.415385        0.0455443      6.62s
+  10     7.68         0.319833       11         0.436295        0.0994683      6.23s
+  11     7.53          0.31784        9         0.443784         0.229086      5.74s
+  12     7.73         0.322396       13         0.446475        0.0672012      5.61s
+  13     7.56         0.323331        7         0.460853         0.547462      5.08s
+  14     7.65         0.327305        9          0.45948         0.309859      4.74s
+  15     8.35         0.332688       17         0.474352        0.0227627      5.64s
+  16     8.37         0.340813       13         0.452569        0.0829835      3.40s
+  17     8.67         0.345302       13         0.469506         0.258377      3.27s
+  18     9.58         0.352195       15         0.494615         0.278034      2.59s
+  19     9.67         0.353735       21         0.464736         0.122571      2.22s
+  20     9.33         0.351934       17         0.462541        0.0413454      1.76s
+  21     9.22         0.350031       17         0.469082         0.135803      1.47s
+  22    10.33         0.357894       15         0.472457        0.0243435      0.88s
+  23    10.63          0.35285       17         0.491388         0.275466      0.44s
+  24    10.67         0.359352       13         0.466666         0.182292      0.00s
+2025-10-21 13:35:25,159 - [CrucibleEngine] - INFO -   -> [ETH/USDT:USDT] Injecting 5 evolved features...
+2025-10-21 13:35:25,159 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object present. Attempting GNN generation (Main context). ---
+2025-10-21 13:35:25,163 - [CrucibleEngine] - INFO -   -> Generating GNN features for the entire market...
+[GNN Pipeline] Starting feature generation...
+[Data Fetcher] Fetching 500 candles for BTC/USDT:USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for ETH/USDT:USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for SOL/USDT:USDT from Bybit...
+[GNN Pipeline] GNN feature generation complete.
+2025-10-21 13:35:26,805 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:35:26,807 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-21 13:35:26,811 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-21 13:35:26,811 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:35:26,825 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 2. VMD Complete.
+2025-10-21 13:35:26,825 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:35:26,837 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 3. Particle Filter Complete.
+2025-10-21 13:35:26,837 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for SOL/USDT:USDT...
+2025-10-21 13:35:28,443 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 4. Order Flow Features Complete.
+2025-10-21 13:35:28,443 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0    10.26        0.0779886        5         0.438811        0.0447189      2.02s
+   1     5.67         0.182886        7         0.464334          0.14748      8.40s
+   2     3.76         0.328462        4          0.47955         0.417729      9.64s
+   3     2.28         0.372656        1         0.484838         0.522868      8.97s
+   4     1.95            0.368        1         0.489875         0.363674      8.21s
+   5     1.72         0.382634        1         0.486294         0.372697      7.83s
+   6     1.51         0.385186        3         0.489224         0.302924      7.43s
+   7     1.45         0.388744        1         0.481662         0.582413      6.89s
+   8     1.36         0.389345        3         0.488861         0.168047      6.31s
+   9     1.58         0.388819        3         0.492942         0.346344      6.37s
+  10     1.69         0.392615        1         0.508426         0.404253      5.71s
+  11     2.05         0.381236        3         0.485761         0.230053      5.46s
+  12     2.34         0.375235        3         0.505976         0.182084      4.98s
+  13     2.43         0.380094        5         0.495207         0.153785      4.72s
+  14     2.89         0.368551        3         0.498036         0.311164      4.07s
+  15     2.91         0.368308        3         0.499064         0.465998      3.76s
+  16     3.02         0.373002        5         0.500518         0.248853      3.44s
+  17     3.16         0.368648        5          0.51214         0.406709      2.97s
+  18     3.26         0.363705        3         0.503995         0.227335      3.68s
+  19     3.20         0.365409        3         0.500234         0.217331      2.08s
+  20     3.27         0.372646        3         0.498439         0.309755      1.64s
+  21     3.23         0.368388        3         0.514699         0.598322      1.25s
+  22     3.16         0.365139        5         0.492537         0.164999      0.87s
+  23     3.23         0.367241        3         0.530802          0.19689      0.42s
+  24     3.15         0.371199        5          0.51765         0.425256      0.00s
+2025-10-21 13:35:38,725 - [CrucibleEngine] - INFO -   -> [SOL/USDT:USDT] Injecting 5 evolved features...
+2025-10-21 13:35:38,725 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object present. Attempting GNN generation (Main context). ---
+2025-10-21 13:35:38,725 - [CrucibleEngine] - INFO -   -> Generating GNN features for the entire market...
+[GNN Pipeline] Starting feature generation...
+[Data Fetcher] Fetching 500 candles for BTC/USDT:USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for ETH/USDT:USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for SOL/USDT:USDT from Bybit...
+[GNN Pipeline] GNN feature generation complete.
+2025-10-21 13:35:40,385 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+2025-10-21 13:35:56,420 - [SingularityEngine] - INFO - Running reactive drift check...
+2025-10-21 13:35:56,420 - [SingularityEngine] - INFO - Monitoring for concept drift...
+2025-10-21 13:35:56,420 - [SingularityEngine] - INFO - Updating ensemble weights based on performance log...
+2025-10-21 13:35:56,420 - [SingularityEngine] - INFO - Reactive check complete. Sleeping for 60s.
+[Data Fetcher] Fetching 200 candles for BTC/USDT:USDT from Bybit...
+[Data Fetcher] Fetching 200 candles for ETH/USDT:USDT from Bybit...
+2025-10-21 13:35:58,335 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-21 13:35:58,339 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-21 13:35:58,340 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-21 13:35:58,390 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. VMD Complete.
+2025-10-21 13:35:58,390 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-21 13:35:58,404 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Particle Filter Complete.
+2025-10-21 13:35:58,404 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for BTC/USDT:USDT...
+[Data Fetcher] Fetching 200 candles for SOL/USDT:USDT from Bybit...
+2025-10-21 13:35:59,784 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 4. Order Flow Features Complete.
+2025-10-21 13:35:59,784 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0    10.26         0.161531        5         0.521487         0.407825      1.87s
+   1     5.72         0.360567       13         0.551228         0.122818      7.97s
+   2     4.20          0.41029        3         0.581382        0.0663296      9.66s
+   3     4.06         0.455157        3         0.584111        0.0338552      8.94s
+   4     3.44         0.463497        3         0.572094         0.282327      8.64s
+   5     3.59         0.475517        5         0.599099       0.00267694      8.06s
+   6     4.03          0.47605        5         0.603644        0.0526864     11.46s
+   7     4.59         0.473409        9         0.596886          0.14262      7.32s

@@ -1,0 +1,288 @@
+This comprehensive update addresses your priorities by restructuring the asset deployment strategy to focus computational resources on core assets (BTC, ETH, SOL) with multiple, distinct models running concurrently, and significantly optimizing the Feature Synthesizer for speed and stability.
+
+This solution involves modifications across the pipeline to ensure the unique identity of each model instance (4 BTC, 2 ETH, 2 SOL) is maintained from evolution through execution.
+
+### 1\. Asset Universe and Multi-Model Deployment
+
+We are implementing the 8-bot strategy by ensuring the system evolves and manages these models independently.
+
+#### A. `config.py` (Update Configuration)
+
+Update your `config.py` (or create it if it doesn't exist) to define the new strategy.
+
+```python
+# config.py
+import os
+# ... (other existing imports)
+
+# ==============================================================================
+# CORE ASSET UNIVERSE & DEPLOYMENT STRATEGY
+# ==============================================================================
+
+# Define the deployment strategy: How many distinct models (bots) per asset
+DEPLOYMENT_STRATEGY = {
+    'BTC/USDT:USDT': 4,
+    'ETH/USDT:USDT': 2,
+    'SOL/USDT:USDT': 2,
+}
+
+# The ASSET_UNIVERSE is the list of unique assets involved (used for data fetching etc.)
+ASSET_UNIVERSE = list(DEPLOYMENT_STRATEGY.keys())
+
+# ==============================================================================
+# SYSTEM CONFIGURATION (Example - keep your existing settings)
+# ==============================================================================
+
+# ... (rest of your configuration settings) ...
+```
+
+#### B. `singularity_engine.py` (Update Scheduling Logic)
+
+The `SingularityEngine` must schedule evolution tasks for each specific model instance, rather than just the asset symbol.
+
+```python
+# In singularity_engine.py
+
+# Ensure asyncio is imported. Assuming config is accessed via self.config object.
+import asyncio
+
+class SingularityEngine:
+    # ... (keep existing __init__ method, ensure self.config is loaded) ...
+
+    # Update the continuous_forge_loop method
+    async def continuous_forge_loop(self):
+        """
+        Schedules evolution for each specific model instance defined in DEPLOYMENT_STRATEGY.
+        """
+        self.logger.info("Starting continuous, multi-model Forge loop...")
+        
+        # Access strategy from the configuration object
+        deployment_strategy = getattr(self.config, 'DEPLOYMENT_STRATEGY', {})
+
+        if not deployment_strategy:
+            self.logger.error("DEPLOYMENT_STRATEGY is empty or missing in config. Halting Forge loop.")
+            return
+
+        # Assuming self.is_running controls the loop
+        while getattr(self, 'is_running', True):
+            self.logger.info("Starting a new forging cycle...")
+            
+            tasks = []
+            # Iterate through the deployment strategy
+            for symbol, count in deployment_strategy.items():
+                
+                # Basic validation
+                if symbol not in self.config.ASSET_UNIVERSE:
+                    continue
+
+                for i in range(count):
+                    # Create a unique identifier for this specific model instance
+                    # Example: BTCUSDT_Model_1
+                    sanitized_symbol = symbol.replace('/', '').replace(':', '')
+                    model_instance_id = f"{sanitized_symbol}_Model_{i+1}"
+                    
+                    self.logger.info(f"[Proactive Forge] Submitting task for {symbol} (Instance {i+1}/{count}). ID: {model_instance_id}")
+                    
+                    # Submit the task, passing the unique model_instance_id
+                    task_future = self.crucible_engine.submit_forge_task(
+                        symbol, 
+                        priority=10, 
+                        source="Proactive", 
+                        inherit_dna=False,
+                        model_instance_id=model_instance_id # Pass the unique ID
+                    )
+                    tasks.append(task_future)
+
+            self.logger.info(f"Submitted {len(tasks)} forge tasks for this cycle. Now waiting for completion...")
+            
+            # Wait for all tasks in this cycle to complete
+            if tasks:
+                try:
+                    # Use asyncio.gather to wait for results concurrently
+                    results = await asyncio.gather(*tasks, return_exceptions=True)
+                    # ... (Process results logic remains the same) ...
+                except Exception as e:
+                    self.logger.error(f"Error during asyncio.gather in forge loop: {e}")
+
+            # Pacing sleep
+            await asyncio.sleep(10)
+```
+
+#### C. `crucible_engine.py` (Update Task Handling and Initialization)
+
+The `CrucibleEngine` must pass the `model_instance_id` to the Forge worker and initialize the correct number of agents during startup.
+
+```python
+# In crucible_engine.py
+
+import time
+# Ensure necessary imports are present
+from forge.core.agent import V3Agent
+from forge.crucible.arena_manager import CrucibleAgent
+# ... (other imports like asyncio, uuid)
+
+class CrucibleEngine:
+    # ... (existing methods) ...
+
+    # Update the signature of submit_forge_task
+    async def submit_forge_task(self, symbol: str, priority: int, source: str, inherit_dna: bool = False, model_instance_id: str = None):
+        # ... (existing logic for future and task_id) ...
+
+        # CRITICAL: Ensure model_instance_id is present
+        if model_instance_id is None:
+            raise ValueError("model_instance_id must be provided for Forge task submission.")
+
+        task = {
+            'symbol': symbol,
+            # ... (other task fields, e.g., 'task_id', 'inherit_dna', 'source')
+            'model_instance_id': model_instance_id # Add this to the task payload
+        }
+        
+        # Assuming self.forge_queue is an asyncio.Queue
+        await self.forge_queue.put((priority, time.time(), task))
+        self.logger.info(f"[{source}] Submitting Forge task (P{priority}): {symbol}. Instance ID: {model_instance_id}")
+        # return future 
+
+    # Update the forge_processing_loop
+    async def forge_processing_loop(self):
+        # ...
+        while getattr(self, 'is_running', True):
+            try:
+                # ... (get task from queue) ...
+                priority, timestamp, task = await self.forge_queue.get()
+                symbol = task['symbol']
+                source = task.get('source', 'Unknown')
+                model_instance_id = task.get('model_instance_id') # Retrieve the ID
+
+                self.logger.info(f"--- Processing Forge task from {source} (P{priority}): {symbol}. Instance: {model_instance_id} ---")
+
+                # Prepare arguments for the worker process
+                # The second argument MUST be the model_instance_id
+                oos_periods = getattr(self.config, 'FORGE_OOS_PERIODS', 0)
+                args = (symbol, model_instance_id, oos_periods)
+
+                # ... (Submit to ProcessPoolExecutor using run_forge_process and handle results) ...
+            
+            except Exception as e:
+                self.logger.error(f"Error in forge_processing_loop: {e}", exc_info=True)
+
+    # Update the load_existing_models method (Initialization at Startup)
+    async def load_existing_models(self):
+        self.logger.info("Initializing agents based on DEPLOYMENT_STRATEGY...")
+
+        # Use the deployment strategy from the config
+        deployment_strategy = getattr(self.config, 'DEPLOYMENT_STRATEGY', {})
+
+        if not deployment_strategy:
+             self.logger.error("DEPLOYMENT_STRATEGY not found in config. Cannot initialize agents.")
+             return
+
+        for symbol, count in deployment_strategy.items():
+            self.logger.info(f"Initializing {count} agent(s) for {symbol}.")
+
+            for i in range(count):
+                # Use the same naming convention as the SingularityEngine
+                sanitized_symbol = symbol.replace('/', '').replace(':', '')
+                agent_id = f"{sanitized_symbol}_Model_{i+1}"
+
+                try:
+                    # Initialize V3Agent. It uses the unique agent_id for its internal state management 
+                    # and logging, ensuring distinct behavior.
+                    v3_agent = V3Agent(
+                        symbol=symbol,
+                        agent_id=agent_id,
+                        # ... Ensure V3Agent constructor parameters match your implementation
+                    )
+                    
+                    # Wrap in CrucibleAgent
+                    new_crucible_agent = CrucibleAgent(
+                        agent=v3_agent,
+                        agent_id=agent_id,
+                        symbol=symbol,
+                        is_active=True
+                    )
+                    
+                    # Add to the Arena (Must be awaited)
+                    await self.arena.add_agent(symbol, new_crucible_agent)
+                    self.logger.info(f"✅ AGENT {agent_id} for {symbol} is LIVE.")
+
+                except Exception as e:
+                    self.logger.error(f"Failed to initialize V3Agent {agent_id} for {symbol}: {e}", exc_info=True)
+
+        self.logger.info("--- Finished initializing agents based on deployment strategy. ---")
+```
+
+#### D. `forge_worker.py` (Update Worker Entry Point)
+
+The worker process must accept the `model_instance_id` instead of a generic index.
+
+```python
+# In forge_worker.py
+
+from forge.overlord.task_scheduler import TaskScheduler
+import logging
+# ... (other imports)
+
+# Update the function signature: The second argument is now model_instance_id
+def run_forge_process(symbol, model_instance_id, oos_periods):
+    
+    # Setup logging using the specific instance ID
+    logger = logging.getLogger(f"ForgeWorker_{model_instance_id}")
+    
+    # ... (Initialization: config loading, status_reporter setup) ...
+
+    try:
+        logger.info(f"--- Forge Worker Started for {symbol} (Instance: {model_instance_id}) ---")
+        
+        # ... (Data loading, MTFA processing - assume df_aligned is the result) ...
+
+        # Initialize Task Scheduler, passing the unique ID
+        # Assuming df_aligned and status_reporter are initialized
+        scheduler = TaskScheduler(
+            df_aligned, 
+            symbol, 
+            logger=logger, 
+            reporter=status_reporter, 
+            model_instance_id=model_instance_id # Pass the ID
+        )
+
+        # ... (Run the evolution cycle) ...
+        # result = scheduler.run_evolutionary_cycle(oos_periods)
+        # logger.info(f"--- Forge Worker Finished for {model_instance_id} ---")
+
+    except Exception as e:
+        logger.error(f"💥 Forge worker crashed for {symbol} (Instance: {model_instance_id}): {e}", exc_info=True)
+        return None
+```
+
+#### E. `forge/overlord/task_scheduler.py` (Update Scheduler)
+
+The `TaskScheduler` must use the instance ID to ensure unique model saving.
+
+```python
+# In forge/overlord/task_scheduler.py
+
+class TaskScheduler:
+    # Update the signature
+    def __init__(self, data, symbol, logger, reporter=None, model_instance_id=None):
+        # ... (existing init) ...
+        self.symbol = symbol
+        self.logger = logger
+        
+        # Store the specific instance ID
+        if model_instance_id is None:
+             raise ValueError("model_instance_id must be provided to TaskScheduler.")
+             
+        self.model_instance_id = model_instance_id
+        
+        # ... (rest of init) ...
+
+    # IMPORTANT: Ensure that when models are finalized and saved (e.g., at the end of 
+    # train_gp_islands), the unique ID (self.model_instance_id) is used for naming 
+    # the saved file (e.g., models/BTCUSDT_Model_1/...) and registering the model.
+    
+    # Example (integrate this logic where you finalize the model):
+    def _finalize_model(self, model_artifact, fitness_score):
+        self.logger.info(f"Finalizing model. Instance ID: {self.model_instance_id}. Fitness: {fitness_score:.4f}")
+        # The ModelRegistry must use this ID for saving.
+```

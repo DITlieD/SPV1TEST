@@ -1,0 +1,11 @@
+{
+    "BTCUSDTUSDT_Model_3": {
+        "agent_id": "BTCUSDTUSDT_Model_3",
+        "symbol": "BTC/USDT:USDT",
+        "in_position": false,
+        "current_trade": {},
+        "virtual_balance": 200,
+        "is_active": true,
+        "timestamp": "2025-10-21T18:55:47.081581"
+    }
+}

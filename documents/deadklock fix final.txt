@@ -1,0 +1,251 @@
+The logs reveal that the system architecture is now functioning correctly (deadlocks resolved, sequential processing working), but the individual processes are failing due to specific coding errors.
+
+There are three main issues identified:
+
+1.  **`NameError: name 'numeric_df' is not defined`**: This occurs globally wherever `FeatureFactory` is used (Immune System initialization, Regime initialization, and Forge workers) because the variable was used before it was defined.
+2.  **`TypeError: V3Agent() takes no arguments`**: This occurs when the `CrucibleEngine` tries to instantiate a new agent, indicating the `V3Agent` definition lacks the required `__init__` parameters.
+3.  **Data Fetching/Connection Errors**: Transient errors connecting to the exchange API during parallel initialization of regime models.
+
+Here is the comprehensive implementation to fix these issues.
+
+### 1\. Fix `FeatureFactory` (`NameError`)
+
+We must ensure `numeric_df` is defined before the sanitization steps in `_process_single_asset`.
+
+**File:** `forge/data_processing/feature_factory.py` (Forge folder files)
+
+```python
+# In forge/data_processing/feature_factory.py
+import pandas as pd
+import numpy as np
+import logging
+# ... other necessary imports (CEEMDAN, MarketStateTracker)
+
+class FeatureFactory:
+    # ... (__init__ and helper methods) ...
+
+    def _process_single_asset(self, df: pd.DataFrame) -> pd.DataFrame:
+        symbol = df.attrs.get('symbol', 'unknown')
+        
+        if 'close' not in df.columns or df.empty:
+            self.log(f"  -> [{symbol}] WARNING: 'close' column not found or DataFrame empty. Skipping.")
+            return df
+
+        # Keep original OHLCV columns (use .copy() for safety)
+        ohlcv_cols = df[['open', 'high', 'low', 'close', 'volume']].copy()
+        
+        # Run feature generation steps
+        self.log(f"  -> [DIAGNOSTIC] [{symbol}] 1. Calculating Technical Indicators...")
+        df = self._calculate_technical_indicators(df)
+        
+        self.log(f"  -> [DIAGNOSTIC] [{symbol}] 2. Generating CEEMDAN Features (Potential Hang Point)...")
+        df = self._generate_ceemdan_features(df)
+        self.log(f"  -> [DIAGNOSTIC] [{symbol}] 2. CEEMDAN Complete.")
+        
+        self.log(f"  -> [DIAGNOSTIC] [{symbol}] 3. Generating Particle Filter Features (Potential Hang Point)...")
+        df = self._generate_particle_filter_features(df)
+        self.log(f"  -> [DIAGNOSTIC] [{symbol}] 3. Particle Filter Complete.")
+
+        
+        # CRITICAL FIX: Define numeric_df BEFORE sanitization
+        # Select only numeric columns and create a copy
+        numeric_df = df.select_dtypes(include=np.number).copy()
+        
+        # --- FINAL SANITIZATION ---
+        # Now numeric_df exists, and we can sanitize it.
+        numeric_df.replace([np.inf, -np.inf], np.nan, inplace=True)
+        
+        # Interpolate internal NaNs
+        interpolation_method = 'time' if isinstance(df.index, pd.DatetimeIndex) else 'linear'
+        try:
+            numeric_df.interpolate(method=interpolation_method, limit_direction='both', axis=0, inplace=True)
+        except Exception as e:
+            self.log(f"  -> [{symbol}] WARNING: Interpolation failed. Error: {e}. Falling back.")
+
+        # Final fill for edges
+        numeric_df.fillna(method='ffill', inplace=True)
+        numeric_df.fillna(method='bfill', inplace=True)
+        numeric_df.fillna(0, inplace=True) # Absolute fallback
+        # ---------------------------------------
+
+        # Add back the OHLCV columns
+        final_df = pd.concat([ohlcv_cols, numeric_df], axis=1)
+        # Remove duplicate columns
+        return final_df.loc[:,~final_df.columns.duplicated()]
+
+    # ... (rest of FeatureFactory) ...
+```
+
+### 2\. Fix `V3Agent` Initialization (`TypeError`)
+
+We must update the `V3Agent` class definition to accept the necessary arguments (`symbol`, `exchange`, `app_config`) in its constructor.
+
+**File:** `forge/core/agent.py` (Inferred location, Forge folder files)
+
+```python
+# In forge/core/agent.py
+import asyncio
+import pandas as pd
+import logging
+# Ensure other necessary components are imported (e.g., RLGovernor, RiskManagement, Models)
+
+class V3Agent:
+    """
+    The core autonomous trading agent.
+    """
+    # CRITICAL FIX: Define __init__ to accept necessary parameters
+    def __init__(self, symbol: str, exchange, app_config):
+        """
+        Initializes the V3Agent.
+
+        Args:
+            symbol (str): The asset symbol (e.g., 'BTC/USDT:USDT').
+            exchange: The initialized exchange object (e.g., ccxt.pro instance).
+            app_config: The application configuration module/object.
+        """
+        self.symbol = symbol
+        self.exchange = exchange
+        self.config = app_config
+        self.sanitized_symbol = symbol.split(':')[0].replace('/', '')
+        
+        # Initialize state variables
+        self.position = 0
+        self.entry_price = 0.0
+        self.virtual_balance = getattr(self.config, 'AGENT_VIRTUAL_BALANCE', 1000) 
+        self.is_active = True
+        
+        # Setup isolated logger
+        self.logger = logging.getLogger(f"V3Agent_{self.sanitized_symbol}")
+        self.logger.setLevel(logging.INFO)
+        self.logger.propagate = False
+
+        # Initialize components (RL Governor, Risk Management, Models)
+        # Placeholder: Ensure these components are initialized correctly in your system.
+        # self.rl_governor = RLGovernor(...)
+        # self.risk_manager = RiskManagementSystem(...)
+        
+        self.logger.info(f"V3Agent initialized for {self.symbol}.")
+
+    # ... (rest of V3Agent definition) ...
+```
+
+### 3\. Stabilize Regime Initialization (Connection Errors)
+
+To fix the connection errors during parallel initialization, we will explicitly pass the configuration to the worker function rather than relying on module imports, which is more robust in a multiprocessing context.
+
+**File:** `crucible_engine.py` (Main folder files)
+
+```python
+# In crucible_engine.py
+import numpy as np # Ensure numpy is imported globally for the worker
+
+# Modify the worker function definition to accept configuration
+def _initialize_regime_worker(symbol: str, exchange_name: str, sandbox_mode: bool) -> tuple:
+    # (Ensure single-threading enforcement OMP_NUM_THREADS=1 is present)
+    import os
+    os.environ['OMP_NUM_THREADS'] = '1'
+    # ... (other OMP settings)
+
+    # (Ensure necessary imports are inside the function)
+    import asyncio
+    import ccxt.pro as ccxt
+    import pandas as pd
+    from data_fetcher import get_market_data
+    from forge.data_processing.feature_factory import FeatureFactory
+    from forge.strategy.dynamic_regimes import DynamicRegimeModel
+
+    print(f"[{symbol}] Starting initial regime model training (Worker Forced Single Thread)...")
+
+    exchange = None
+    loop = None
+    try:
+        # Initialize exchange using the passed parameters
+        try:
+            exchange_class = getattr(ccxt, exchange_name)
+            exchange = exchange_class({'options': {'defaultType': 'spot'}, 'enableRateLimit': True})
+            if sandbox_mode:
+                exchange.set_sandbox_mode(True)
+        except Exception as e:
+            print(f"[{symbol}] CRITICAL: Failed to initialize exchange {exchange_name}: {e}")
+            return symbol, None
+
+        # Setup asyncio loop for the worker
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
+        # Fetch data
+        df = loop.run_until_complete(get_market_data(symbol, '1h', 1000, exchange=exchange))
+
+        if df is None or df.empty:
+            print(f"[{symbol}] WARNING: Could not fetch data for regime model initialization.")
+            return symbol, None
+        
+        # FeatureFactory processing
+        # Initialize FeatureFactory with a logger to capture internal messages
+        worker_logger = logging.getLogger(f"RegimeWorker_{os.getpid()}")
+        ff = FeatureFactory({symbol: df.copy()}, logger=worker_logger)
+        
+        # Use create_all_features (passing None for exchange/config as they aren't needed for this context)
+        processed_data = ff.create_all_features(app_config=None, exchange=None)
+        df_features = processed_data[symbol]
+
+        # DynamicRegimeModel fitting
+        regime_model = DynamicRegimeModel(min_cluster_size=50)
+        features_for_regime = df_features.select_dtypes(include=np.number).drop(columns=['open', 'high', 'low', 'close', 'volume'], errors='ignore')
+        
+        if features_for_regime.empty:
+             print(f"[{symbol}] WARNING: No suitable features for regime model.")
+             return symbol, None
+
+        regime_model.fit(features_for_regime)
+        print(f"[{symbol}] Regime model fitted successfully.")
+        return symbol, regime_model
+
+    except Exception as e:
+        print(f"[{symbol}] ERROR: Failed to initialize regime model: {e}")
+        # Print traceback for better debugging in the worker
+        import traceback
+        traceback.print_exc()
+        return symbol, None
+    finally:
+        # (Cleanup exchange connection)
+        if exchange and loop:
+            try:
+                loop.run_until_complete(exchange.close())
+            except Exception:
+                pass
+
+
+# Modify the CrucibleEngine method that calls the worker
+class CrucibleEngine:
+    # ... (rest of the class)
+
+    async def _initialize_regime_models(self):
+        self.logger.info("Initializing Dynamic Regime Models in parallel...")
+        if not self.executor:
+            self.logger.error("Executor not available for regime initialization.")
+            return
+
+        # Determine parameters to pass
+        exchange_name = self.config.ACTIVE_EXCHANGE
+        # Determine sandbox mode (Adjust this logic if your sandbox detection is different)
+        # Assuming Bybit requires sandbox mode based on previous context
+        sandbox_mode = True if exchange_name == 'bybit' else False 
+
+        futures = []
+        for symbol in self.config.ASSET_UNIVERSE:
+            # Submit the task with the explicit parameters
+            future = self.executor.submit(
+                _initialize_regime_worker, 
+                symbol, 
+                exchange_name, 
+                sandbox_mode
+            )
+            futures.append(future)
+
+        # (Wait for futures and process results - rest of the method remains the same)
+        # ...
+```

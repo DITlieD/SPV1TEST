@@ -1,0 +1,1047 @@
+##################################
+#     The Singularity Protocol   #
+#         Cortex Startup         #
+##################################
+
+[1/2] Activating Python Environment...
+[1/2] Environment activated.
+
+[2/2] Launching Cortex (Python Core)....
+--------------------------------------------------------------------
+System Startup Initiated.
+Monitor this window for Cortex logs (Python).
+Press CTRL+C in THIS WINDOW to stop the Python application.
+--------------------------------------------------------------------
+
+[Multiprocessing] Start method is 'None'. Forcing to 'spawn'.
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+[App.py] Initializing ServiceManager (Main Process)...
+[App.py] ServiceManager initialized.
+[App.py] ServiceManager: Initializing services...
+2025-10-20 17:06:40,595 - [CrucibleEngine] - INFO - Basic exchange 'bybit' setup complete.
+[Watchtower] Initialized with Elite Preservation System.
+[Watchtower] Current Elites: 0 | Best Profit: +0.00%
+2025-10-20 17:06:40,596 - [CrucibleEngine] - INFO - [PIT CREW] Initialized - Continuous shadow evaluation active
+[Hedge] Initializing weights uniformly.
+2025-10-20 17:06:41,615 - [CrucibleEngine] - INFO - [Crucible] IEL agent loaded successfully.
+2025-10-20 17:06:41,616 - [SingularityEngine] - INFO - Singularity Engine initialized.
+2025-10-20 17:06:41,616 - [SingularityEngine] - INFO - Asset universe order: ['BTC/USDT:USDT', 'ETH/USDT:USDT', 'SOL/USDT:USDT', 'XRP/USDT:USDT', 'DOGE/USDT:USDT', 'BNB/USDT:USDT', 'ASTER/USDT:USDT', 'ENA/USDT:USDT', 'SUI/USDT:USDT', 'ADA/USDT:USDT']
+[Model Check] ❌ Missing essential model type 'Specialist'.
+
+============================================================
+===============   MISSING MODELS - MANUAL START REQUIRED   ===============
+============================================================
+Models are missing. Please run '3_Start_Initial_Script.bat' to train them.
+The application will not function correctly until all models are trained.
+============================================================
+
+[App.py] Starting main loop thread...
+[ServiceManager] Starting main loop thread...
+2025-10-20 17:06:41,618 - [CrucibleEngine] - INFO - Starting Hyper-Evolutionary Engine...
+[ServiceManager] Main loop thread started.
+[App.py] Main execution block started.
+2025-10-20 17:06:41,618 - [CrucibleEngine] - INFO - ProcessPoolExecutor initialized in run() using 'spawn' context with 15 workers.
+2025-10-20 17:06:41,618 - [CrucibleEngine] - INFO - --- Phase 1: Initializing Core Systems (Waiting for completion)... ---
+2025-10-20 17:06:41,618 - [CrucibleEngine] - INFO - Initializing HMM regime models for market state detection...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-10-20 17:06:41,641 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for BTC/USDT:USDT
+2025-10-20 17:06:41,642 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for ETH/USDT:USDT
+2025-10-20 17:06:41,642 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for SOL/USDT:USDT
+2025-10-20 17:06:41,643 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for XRP/USDT:USDT
+2025-10-20 17:06:41,644 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for DOGE/USDT:USDT
+2025-10-20 17:06:41,644 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for BNB/USDT:USDT
+2025-10-20 17:06:41,645 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for ENA/USDT:USDT
+2025-10-20 17:06:41,646 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for SUI/USDT:USDT
+2025-10-20 17:06:41,646 - [CrucibleEngine] - INFO - Loaded existing HMM regime model for ADA/USDT:USDT
+2025-10-20 17:06:41,646 - [CrucibleEngine] - INFO - Loaded 9 existing HMM regime models
+2025-10-20 17:06:41,647 - [CrucibleEngine] - INFO - HMM Regime model initialization complete
+2025-10-20 17:06:41,647 - [CrucibleEngine] - INFO - Initializing immune system for risk monitoring...
+2025-10-20 17:06:41,648 - [CrucibleEngine] - INFO - Immune system initialized successfully
+2025-10-20 17:06:41,648 - [CrucibleEngine] - INFO - Scanning for and loading all existing models from model directories...
+2025-10-20 17:06:41,651 - [CrucibleEngine] - INFO - Found 1 model(s) for BTC/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 17:06:41,652 - [V3Agent_BTCUSDT] - INFO - Restoring agent BTCUSDT_ensemble_agent from saved state.
+INFO:V3Agent_BTCUSDT:Restoring agent BTCUSDT_ensemble_agent from saved state.
+2025-10-20 17:06:41,653 - [V3Agent_BTCUSDT] - INFO - V3Agent initialized for BTC/USDT:USDT with balance: $200.00
+INFO:V3Agent_BTCUSDT:V3Agent initialized for BTC/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: BTCUSDT_ensemble_agent to BTC/USDT:USDT arena.
+2025-10-20 17:06:41,655 - [V3Agent_BTCUSDT] - INFO - Scanning for model directories in models for symbol BTC/USDT:USDT
+INFO:V3Agent_BTCUSDT:Scanning for model directories in models for symbol BTC/USDT:USDT
+2025-10-20 17:06:41,698 - [V3Agent_BTCUSDT] - INFO - Successfully loaded joblib model: BTCUSDT-USDT_15m_unified
+INFO:V3Agent_BTCUSDT:Successfully loaded joblib model: BTCUSDT-USDT_15m_unified
+2025-10-20 17:06:41,700 - [CrucibleEngine] - INFO - ✅ AGENT BTCUSDT_ensemble_agent for BTC/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 17:06:41,700 - [CrucibleEngine] - INFO - Found 1 model(s) for ETH/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 17:06:41,701 - [V3Agent_ETHUSDT] - INFO - Restoring agent ETHUSDT_ensemble_agent from saved state.
+INFO:V3Agent_ETHUSDT:Restoring agent ETHUSDT_ensemble_agent from saved state.
+2025-10-20 17:06:41,702 - [V3Agent_ETHUSDT] - INFO - V3Agent initialized for ETH/USDT:USDT with balance: $200.00
+INFO:V3Agent_ETHUSDT:V3Agent initialized for ETH/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: ETHUSDT_ensemble_agent to ETH/USDT:USDT arena.
+2025-10-20 17:06:41,702 - [V3Agent_ETHUSDT] - INFO - Scanning for model directories in models for symbol ETH/USDT:USDT
+INFO:V3Agent_ETHUSDT:Scanning for model directories in models for symbol ETH/USDT:USDT
+2025-10-20 17:06:41,745 - [V3Agent_ETHUSDT] - INFO - Successfully loaded joblib model: ETHUSDT-USDT_15m_unified
+INFO:V3Agent_ETHUSDT:Successfully loaded joblib model: ETHUSDT-USDT_15m_unified
+2025-10-20 17:06:41,748 - [CrucibleEngine] - INFO - ✅ AGENT ETHUSDT_ensemble_agent for ETH/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 17:06:41,748 - [CrucibleEngine] - INFO - Found 1 model(s) for SOL/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 17:06:41,748 - [V3Agent_SOLUSDT] - INFO - Restoring agent SOLUSDT_ensemble_agent from saved state.
+INFO:V3Agent_SOLUSDT:Restoring agent SOLUSDT_ensemble_agent from saved state.
+2025-10-20 17:06:41,750 - [V3Agent_SOLUSDT] - INFO - V3Agent initialized for SOL/USDT:USDT with balance: $200.00
+INFO:V3Agent_SOLUSDT:V3Agent initialized for SOL/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: SOLUSDT_ensemble_agent to SOL/USDT:USDT arena.
+2025-10-20 17:06:41,751 - [V3Agent_SOLUSDT] - INFO - Scanning for model directories in models for symbol SOL/USDT:USDT
+INFO:V3Agent_SOLUSDT:Scanning for model directories in models for symbol SOL/USDT:USDT
+2025-10-20 17:06:41,793 - [V3Agent_SOLUSDT] - INFO - Successfully loaded joblib model: SOLUSDT-USDT_15m_unified
+INFO:V3Agent_SOLUSDT:Successfully loaded joblib model: SOLUSDT-USDT_15m_unified
+2025-10-20 17:06:41,794 - [CrucibleEngine] - INFO - ✅ AGENT SOLUSDT_ensemble_agent for SOL/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 17:06:41,795 - [CrucibleEngine] - INFO - Found 1 model(s) for XRP/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 17:06:41,795 - [V3Agent_XRPUSDT] - INFO - Restoring agent XRPUSDT_ensemble_agent from saved state.
+INFO:V3Agent_XRPUSDT:Restoring agent XRPUSDT_ensemble_agent from saved state.
+2025-10-20 17:06:41,796 - [V3Agent_XRPUSDT] - INFO - V3Agent initialized for XRP/USDT:USDT with balance: $200.00
+INFO:V3Agent_XRPUSDT:V3Agent initialized for XRP/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: XRPUSDT_ensemble_agent to XRP/USDT:USDT arena.
+2025-10-20 17:06:41,797 - [V3Agent_XRPUSDT] - INFO - Scanning for model directories in models for symbol XRP/USDT:USDT
+INFO:V3Agent_XRPUSDT:Scanning for model directories in models for symbol XRP/USDT:USDT
+2025-10-20 17:06:41,835 - [V3Agent_XRPUSDT] - INFO - Successfully loaded joblib model: XRPUSDT-USDT_15m_unified
+INFO:V3Agent_XRPUSDT:Successfully loaded joblib model: XRPUSDT-USDT_15m_unified
+2025-10-20 17:06:41,844 - [CrucibleEngine] - INFO - ✅ AGENT XRPUSDT_ensemble_agent for XRP/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 17:06:41,845 - [CrucibleEngine] - INFO - Found 1 model(s) for DOGE/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 17:06:41,845 - [V3Agent_DOGEUSDT] - INFO - Restoring agent DOGEUSDT_ensemble_agent from saved state.
+INFO:V3Agent_DOGEUSDT:Restoring agent DOGEUSDT_ensemble_agent from saved state.
+2025-10-20 17:06:41,846 - [V3Agent_DOGEUSDT] - INFO - V3Agent initialized for DOGE/USDT:USDT with balance: $200.00
+INFO:V3Agent_DOGEUSDT:V3Agent initialized for DOGE/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: DOGEUSDT_ensemble_agent to DOGE/USDT:USDT arena.
+2025-10-20 17:06:41,849 - [V3Agent_DOGEUSDT] - INFO - Scanning for model directories in models for symbol DOGE/USDT:USDT
+INFO:V3Agent_DOGEUSDT:Scanning for model directories in models for symbol DOGE/USDT:USDT
+2025-10-20 17:06:41,895 - [V3Agent_DOGEUSDT] - INFO - Successfully loaded joblib model: DOGEUSDT-USDT_15m_unified
+INFO:V3Agent_DOGEUSDT:Successfully loaded joblib model: DOGEUSDT-USDT_15m_unified
+2025-10-20 17:06:41,897 - [CrucibleEngine] - INFO - ✅ AGENT DOGEUSDT_ensemble_agent for DOGE/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 17:06:41,897 - [CrucibleEngine] - INFO - Found 1 model(s) for BNB/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 17:06:41,898 - [V3Agent_BNBUSDT] - INFO - Restoring agent BNBUSDT_ensemble_agent from saved state.
+INFO:V3Agent_BNBUSDT:Restoring agent BNBUSDT_ensemble_agent from saved state.
+2025-10-20 17:06:41,900 - [V3Agent_BNBUSDT] - INFO - V3Agent initialized for BNB/USDT:USDT with balance: $200.00
+INFO:V3Agent_BNBUSDT:V3Agent initialized for BNB/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: BNBUSDT_ensemble_agent to BNB/USDT:USDT arena.
+2025-10-20 17:06:41,901 - [V3Agent_BNBUSDT] - INFO - Scanning for model directories in models for symbol BNB/USDT:USDT
+INFO:V3Agent_BNBUSDT:Scanning for model directories in models for symbol BNB/USDT:USDT
+2025-10-20 17:06:41,937 - [V3Agent_BNBUSDT] - INFO - Successfully loaded joblib model: BNBUSDT-USDT_15m_unified
+INFO:V3Agent_BNBUSDT:Successfully loaded joblib model: BNBUSDT-USDT_15m_unified
+2025-10-20 17:06:41,940 - [CrucibleEngine] - INFO - ✅ AGENT BNBUSDT_ensemble_agent for BNB/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 17:06:41,940 - [CrucibleEngine] - INFO - Found 1 model(s) for ASTER/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 17:06:41,941 - [V3Agent_ASTERUSDT] - INFO - Restoring agent ASTERUSDT_ensemble_agent from saved state.
+INFO:V3Agent_ASTERUSDT:Restoring agent ASTERUSDT_ensemble_agent from saved state.
+2025-10-20 17:06:41,941 - [V3Agent_ASTERUSDT] - INFO - V3Agent initialized for ASTER/USDT:USDT with balance: $200.00
+INFO:V3Agent_ASTERUSDT:V3Agent initialized for ASTER/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: ASTERUSDT_ensemble_agent to ASTER/USDT:USDT arena.
+2025-10-20 17:06:41,944 - [V3Agent_ASTERUSDT] - INFO - Scanning for model directories in models for symbol ASTER/USDT:USDT
+INFO:V3Agent_ASTERUSDT:Scanning for model directories in models for symbol ASTER/USDT:USDT
+2025-10-20 17:06:41,984 - [V3Agent_ASTERUSDT] - INFO - Successfully loaded joblib model: ASTERUSDT-USDT_15m_unified
+INFO:V3Agent_ASTERUSDT:Successfully loaded joblib model: ASTERUSDT-USDT_15m_unified
+2025-10-20 17:06:41,987 - [CrucibleEngine] - INFO - ✅ AGENT ASTERUSDT_ensemble_agent for ASTER/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 17:06:41,987 - [CrucibleEngine] - INFO - Found 1 model(s) for ENA/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 17:06:41,988 - [V3Agent_ENAUSDT] - INFO - Restoring agent ENAUSDT_ensemble_agent from saved state.
+INFO:V3Agent_ENAUSDT:Restoring agent ENAUSDT_ensemble_agent from saved state.
+2025-10-20 17:06:41,989 - [V3Agent_ENAUSDT] - INFO - V3Agent initialized for ENA/USDT:USDT with balance: $200.00
+INFO:V3Agent_ENAUSDT:V3Agent initialized for ENA/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: ENAUSDT_ensemble_agent to ENA/USDT:USDT arena.
+2025-10-20 17:06:41,990 - [V3Agent_ENAUSDT] - INFO - Scanning for model directories in models for symbol ENA/USDT:USDT
+INFO:V3Agent_ENAUSDT:Scanning for model directories in models for symbol ENA/USDT:USDT
+2025-10-20 17:06:42,032 - [V3Agent_ENAUSDT] - INFO - Successfully loaded joblib model: ENAUSDT-USDT_15m_unified
+INFO:V3Agent_ENAUSDT:Successfully loaded joblib model: ENAUSDT-USDT_15m_unified
+2025-10-20 17:06:42,034 - [CrucibleEngine] - INFO - ✅ AGENT ENAUSDT_ensemble_agent for ENA/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 17:06:42,034 - [CrucibleEngine] - INFO - Found 1 model(s) for SUI/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 17:06:42,035 - [V3Agent_SUIUSDT] - INFO - Restoring agent SUIUSDT_ensemble_agent from saved state.
+INFO:V3Agent_SUIUSDT:Restoring agent SUIUSDT_ensemble_agent from saved state.
+2025-10-20 17:06:42,036 - [V3Agent_SUIUSDT] - INFO - V3Agent initialized for SUI/USDT:USDT with balance: $200.00
+INFO:V3Agent_SUIUSDT:V3Agent initialized for SUI/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: SUIUSDT_ensemble_agent to SUI/USDT:USDT arena.
+2025-10-20 17:06:42,037 - [V3Agent_SUIUSDT] - INFO - Scanning for model directories in models for symbol SUI/USDT:USDT
+INFO:V3Agent_SUIUSDT:Scanning for model directories in models for symbol SUI/USDT:USDT
+2025-10-20 17:06:42,076 - [V3Agent_SUIUSDT] - INFO - Successfully loaded joblib model: SUIUSDT-USDT_15m_unified
+INFO:V3Agent_SUIUSDT:Successfully loaded joblib model: SUIUSDT-USDT_15m_unified
+2025-10-20 17:06:42,077 - [CrucibleEngine] - INFO - ✅ AGENT SUIUSDT_ensemble_agent for SUI/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 17:06:42,078 - [CrucibleEngine] - INFO - Found 1 model(s) for ADA/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 17:06:42,078 - [V3Agent_ADAUSDT] - INFO - Restoring agent ADAUSDT_ensemble_agent from saved state.
+INFO:V3Agent_ADAUSDT:Restoring agent ADAUSDT_ensemble_agent from saved state.
+2025-10-20 17:06:42,079 - [V3Agent_ADAUSDT] - INFO - V3Agent initialized for ADA/USDT:USDT with balance: $200.00
+INFO:V3Agent_ADAUSDT:V3Agent initialized for ADA/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: ADAUSDT_ensemble_agent to ADA/USDT:USDT arena.
+2025-10-20 17:06:42,080 - [V3Agent_ADAUSDT] - INFO - Scanning for model directories in models for symbol ADA/USDT:USDT
+INFO:V3Agent_ADAUSDT:Scanning for model directories in models for symbol ADA/USDT:USDT
+2025-10-20 17:06:42,117 - [V3Agent_ADAUSDT] - INFO - Successfully loaded joblib model: ADAUSDT-USDT_15m_unified
+INFO:V3Agent_ADAUSDT:Successfully loaded joblib model: ADAUSDT-USDT_15m_unified
+2025-10-20 17:06:42,120 - [CrucibleEngine] - INFO - ✅ AGENT ADAUSDT_ensemble_agent for ADA/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 17:06:42,120 - [CrucibleEngine] - INFO - --- Finished loading existing agents. ---
+2025-10-20 17:06:42,120 - [CrucibleEngine] - INFO - --- Phase 1: Complete. ---
+2025-10-20 17:06:42,121 - [CrucibleEngine] - INFO - --- Phase 2: Starting Main Operational Loops (Concurrent)... ---
+2025-10-20 17:06:42,122 - [CrucibleEngine] - INFO - Starting centralized Forge processing loop...
+2025-10-20 17:06:42,122 - [CrucibleEngine] - INFO - [PIT CREW] Shadow evaluation loop started
+2025-10-20 17:06:42,123 - [CrucibleEngine] - INFO - Trade watcher started - monitoring live market data...
+[Data Fetcher] Fetching 200 candles for BTC/USDT from Binance...
+2025-10-20 17:06:42,123 - [CrucibleEngine] - INFO - Arena loop started - agents ready for battle...
+2025-10-20 17:06:42,124 - [SingularityEngine] - INFO - Singularity Engine starting its operational loops.
+2025-10-20 17:06:42,124 - [SingularityEngine] - INFO - Starting reactive drift monitoring loop...
+2025-10-20 17:06:42,124 - [SingularityEngine] - INFO - Running reactive drift check...
+2025-10-20 17:06:42,125 - [SingularityEngine] - INFO - Monitoring for concept drift...
+2025-10-20 17:06:42,125 - [SingularityEngine] - INFO - Starting continuous, round-robin Forge loop...
+2025-10-20 17:06:42,125 - [SingularityEngine] - INFO - Starting a new round-robin forging cycle...
+2025-10-20 17:06:42,126 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for BTC/USDT:USDT.
+2025-10-20 17:06:42,126 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): BTC/USDT:USDT. Inheritance: False
+2025-10-20 17:06:42,128 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for ETH/USDT:USDT.
+2025-10-20 17:06:42,128 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): ETH/USDT:USDT. Inheritance: False
+2025-10-20 17:06:42,128 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for SOL/USDT:USDT.
+2025-10-20 17:06:42,129 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): SOL/USDT:USDT. Inheritance: False
+2025-10-20 17:06:42,129 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for XRP/USDT:USDT.
+2025-10-20 17:06:42,129 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): XRP/USDT:USDT. Inheritance: False
+2025-10-20 17:06:42,129 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for DOGE/USDT:USDT.
+2025-10-20 17:06:42,130 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): DOGE/USDT:USDT. Inheritance: False
+2025-10-20 17:06:42,130 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for BNB/USDT:USDT.
+2025-10-20 17:06:42,130 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): BNB/USDT:USDT. Inheritance: False
+2025-10-20 17:06:42,131 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for ASTER/USDT:USDT.
+2025-10-20 17:06:42,133 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): ASTER/USDT:USDT. Inheritance: False
+2025-10-20 17:06:42,134 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for ENA/USDT:USDT.
+2025-10-20 17:06:42,134 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): ENA/USDT:USDT. Inheritance: False
+2025-10-20 17:06:42,134 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for SUI/USDT:USDT.
+2025-10-20 17:06:42,134 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): SUI/USDT:USDT. Inheritance: False
+2025-10-20 17:06:42,135 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for ADA/USDT:USDT.
+2025-10-20 17:06:42,135 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): ADA/USDT:USDT. Inheritance: False
+2025-10-20 17:06:42,135 - [SingularityEngine] - INFO - Submitted 10 forge tasks for this cycle. Now waiting for completion...
+2025-10-20 17:06:42,136 - [SingularityEngine] - INFO - Updating ensemble weights based on performance log...
+2025-10-20 17:06:42,136 - [CrucibleEngine] - INFO - --- Processing Forge task from Proactive (P10): BTC/USDT:USDT ---
+2025-10-20 17:06:42,150 - [SingularityEngine] - INFO - Reactive check complete. Sleeping for 60s.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Data Fetcher] Fetching 200 candles for ETH/USDT from Binance...
+Error fetching price for BTC/USDT:USDT:
+2025-10-20 17:06:54,985 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+Error fetching price for BTC/USDT:USDT:
+2025-10-20 17:06:54,991 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 1. Calculating Technical Indicators...
+Error fetching price for BTC/USDT:USDT:
+Error fetching price for BTC/USDT:USDT:
+Error fetching price for BTC/USDT:USDT:
+Error fetching price for BTC/USDT:USDT:
+Error fetching price for BTC/USDT:USDT:
+2025-10-20 17:06:54,997 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+Error fetching price for BTC/USDT:USDT:
+Error fetching price for BTC/USDT:USDT:
+2025-10-20 17:06:55,010 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. VMD Complete.
+2025-10-20 17:06:55,010 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-20 17:06:55,031 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Particle Filter Complete.
+2025-10-20 17:06:55,031 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for BTC/USDT...
+[Data Fetcher] Fetching 200 candles for SOL/USDT from Binance...
+2025-10-20 17:06:56,469 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 4. Order Flow Features Complete.
+2025-10-20 17:06:56,471 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+Error fetching price for ETH/USDT:USDT:
+Error fetching price for ETH/USDT:USDT:
+[Data Fetcher] Fetching 200 candles for XRP/USDT from Binance...
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+[Data Fetcher] Fetching 200 candles for DOGE/USDT from Binance...
+2025-10-20 17:06:58,216 - [Wkr 204352] - ForgeWorkerMain - Forge worker for BTC/USDT:USDT will use device: cpu
+   0     8.10        0.0938645        3          0.21959          0.21959      1.71m
+   1     5.32         0.147405        6         0.225467         0.225467     32.04s
+[Data Fetcher] Fetching 200 candles for BNB/USDT from Binance...
+2025-10-20 17:06:59,598 - [Wkr 204352] - ForgeWorkerMain - [MTFA] Loading timeframes: ['1h', '15m', '1m']
+2025-10-20 17:06:59,606 - [Wkr 204352] - ForgeWorkerMain - [MTFA] Loaded 1h: 500 bars from data/BTCUSDT_1h_raw.csv
+2025-10-20 17:06:59,621 - [Wkr 204352] - ForgeWorkerMain - [MTFA] Loaded 15m: 500 bars from data/BTCUSDT_15m_raw.csv
+2025-10-20 17:06:59,790 - [Wkr 204352] - ForgeWorkerMain - [MTFA] Loaded 1m: 2500 bars from data/BTCUSDT_1m_raw.csv
+2025-10-20 17:06:59,790 - [Wkr 204352] - ForgeWorkerMain - [MTFA] Starting multi-timeframe processing and alignment...
+2025-10-20 17:06:59,791 - [Wkr 204352] - MTFA - [MTFA] LTF identified: 1m
+2025-10-20 17:06:59,791 - [Wkr 204352] - MTFA - [MTFA] Processing features for timeframe: 1h (500 bars)
+2025-10-20 17:06:59,791 - [Wkr 204352] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-20 17:06:59,791 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-20 17:06:59,796 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-20 17:06:59,972 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-20 17:06:59,973 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+   2     3.87         0.165213        6         0.241104         0.241104     36.54s
+2025-10-20 17:07:00,030 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-20 17:07:00,030 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-20 17:07:00,031 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-20 17:07:00,033 - [Wkr 204352] - MTFA - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+2025-10-20 17:07:00,034 - [Wkr 204352] - forge.evolution.feature_synthesizer - [Feature Synthesizer] Starting feature evolution...
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+[Data Fetcher] Fetching 200 candles for ASTER/USDT from Binance...
+--- Symbol not available on current exchange, trying Binance...
+   3     4.27         0.185477        9         0.283326         0.283326      1.34m
+Error fetching price for BNB/USDT:USDT:
+--- Successfully fetched from Binance
+[Data Fetcher] Fetching 200 candles for ENA/USDT from Binance...
+--- Symbol not available on current exchange, trying Binance...
+   0     8.10        0.0822666        5         0.202514         0.202514      2.32m
+   1     5.65         0.131031        7         0.212393         0.212393     35.04s
+   4     5.88         0.185371        9         0.283326         0.283326      1.46m
+--- Successfully fetched from Binance
+[Data Fetcher] Fetching 200 candles for SUI/USDT from Binance...
+   2     3.66           0.1665        7         0.212393         0.212393     40.82s
+   5     6.89         0.189157        9         0.283326         0.283326     48.64s
+[Data Fetcher] Fetching 200 candles for ADA/USDT from Binance...
+   3     4.54         0.165703        7         0.212393         0.212393     42.04s
+   6     7.80         0.195976        8         0.286163         0.286163     42.63s
+   4     3.15         0.184116        7         0.212393         0.212393     44.71s
+   7     8.99         0.208976        9         0.292754         0.292754     48.91s
+   5     3.15         0.185913        3         0.211673         0.211673     46.29s
+   8     8.51         0.208637       12         0.302628         0.302628     49.59s
+   6     3.06         0.185036        3         0.211673         0.211673     47.43s
+   9     8.57         0.205247        7         0.316806         0.316806     46.44s
+   7     3.13         0.185958        3         0.211673         0.211673     44.29s
+  10    10.28         0.218601        7         0.316806         0.316806     46.53s
+   8     3.06         0.186434        3         0.211673         0.211673     41.88s
+   9     3.16         0.183236        3         0.211673         0.211673     35.96s
+  11    10.68         0.219399       10         0.316806         0.316806     36.48s
+  10     3.18         0.187599        3         0.211673         0.211673     33.33s
+  12     9.41         0.222215       10         0.316806         0.316806     34.98s
+  11     3.10         0.185852        3         0.211673         0.211673     32.41s
+  13     7.70         0.227624       25         0.317314         0.317314     35.24s
+  12     3.06         0.185452        3         0.211673         0.211673     33.28s
+  14     6.82         0.225877        9         0.316806         0.316806     35.77s
+  13     3.13         0.188047        8         0.222834         0.222834     32.36s
+  15     6.92         0.227594        7         0.316806         0.316806     42.09s
+  14     3.16         0.186595        8         0.222834         0.222834     30.33s
+  16     6.91          0.22397        7         0.316806         0.316806     29.67s
+  15     3.92         0.178178        8         0.222834         0.222834     41.16s
+  17     6.90         0.223955        9         0.316806         0.316806     30.37s
+  16     6.34         0.164448       13         0.223478         0.223478     29.17s
+  18     6.94         0.222051        9         0.316806         0.316806     30.72s
+  17     7.47         0.169502        8         0.225994         0.225994     28.91s
+  19     6.74         0.221192        9         0.316806         0.316806     29.24s
+  18     6.61         0.168554        8         0.225994         0.225994     29.67s
+  20     6.81         0.224559        7         0.316806         0.316806     27.45s
+  19     5.97         0.162412       10         0.225994         0.225994     27.42s
+  21     6.68         0.225287        7         0.316806         0.316806     26.89s
+  20     6.05         0.165507        9         0.228233         0.228233     27.04s
+  22     6.98         0.225083        7         0.316806         0.316806     26.39s
+  21     6.44         0.170697       11         0.230523         0.230523     25.97s
+  23     7.00          0.22774        7         0.316806         0.316806     24.21s
+  22     6.11         0.168292       11         0.230523         0.230523     25.11s
+  24     6.76           0.2254        7         0.316806         0.316806     24.38s
+  23     6.03         0.172659        6         0.225994         0.225994     24.97s
+  25     6.64         0.221662        7         0.316806         0.316806     24.20s
+  24     5.82         0.169403        6         0.225994         0.225994     25.60s
+  26     6.86         0.223989        7         0.316806         0.316806     24.54s
+  25     5.77         0.166766        6         0.225994         0.225994     24.13s
+  26     5.94         0.171477        6         0.225994         0.225994     21.38s
+  27     7.00         0.226836        7         0.316806         0.316806     25.59s
+  27     6.00         0.169101        6         0.225994         0.225994     21.86s
+  28     6.80         0.224832        7         0.316806         0.316806     20.51s
+  28     5.84         0.169896        6         0.225994         0.225994     19.83s
+  29     7.02          0.22566        7         0.316806         0.316806     18.59s
+  29     5.98         0.169272        6         0.225994         0.225994     19.23s
+  30     6.88         0.223061        7         0.316806         0.316806     19.44s
+  30     5.89         0.167009        6         0.225994         0.225994     18.58s
+  31     6.90         0.225925        7         0.316806         0.316806     17.86s
+  31     5.95         0.171066        6         0.225994         0.225994     17.59s
+  32     6.85         0.226568        7         0.316806         0.316806     16.60s
+  33     7.01         0.225824        7         0.316806         0.316806     15.65s
+  32     5.92         0.172506        6         0.225994         0.225994     21.09s
+  34     6.97         0.228103        7         0.316806         0.316806     15.77s
+  33     6.03         0.168386        6         0.225994         0.225994     16.34s
+  35     6.89         0.232121        7         0.316806         0.316806     13.68s
+  34     5.99         0.169031        6         0.225994         0.225994     14.68s
+  36     6.92         0.225792        7         0.316806         0.316806     12.30s
+  35     5.92          0.17108        6         0.225994         0.225994     13.46s
+  37     7.11          0.23078        7         0.316806         0.316806     11.93s
+  36     5.99         0.174111        6         0.225994         0.225994     13.29s
+  38     6.83         0.227575        7         0.316806         0.316806     11.59s
+  37     6.08         0.168957        6         0.225994         0.225994     12.26s
+  38     5.91         0.169418        6         0.225994         0.225994     11.09s
+  39     6.86         0.230253        7         0.316806         0.316806     13.02s
+  39     5.91         0.168813        6         0.225994         0.225994      9.78s
+  40     6.90         0.228201        9         0.316806         0.316806      8.93s
+  40     5.90         0.168761        6         0.225994         0.225994      8.51s
+  41     6.87         0.220899        7         0.316806         0.316806      7.70s
+2025-10-20 17:07:42,131 - [SingularityEngine] - INFO - Running reactive drift check...
+2025-10-20 17:07:42,132 - [SingularityEngine] - INFO - Monitoring for concept drift...
+2025-10-20 17:07:42,184 - [SingularityEngine] - INFO - Updating ensemble weights based on performance log...
+2025-10-20 17:07:42,235 - [SingularityEngine] - INFO - Reactive check complete. Sleeping for 60s.
+  41     5.92         0.170105        6         0.225994         0.225994      8.18s
+  42     6.92         0.223894        7         0.316806         0.316806      6.71s
+  42     5.98         0.168567        6         0.225994         0.225994      7.05s
+  43     6.94          0.22296        7         0.316806         0.316806      6.35s
+  43     5.97         0.167456        6         0.225994         0.225994      5.77s
+  44     6.85         0.222496        7         0.316806         0.316806      5.11s
+  44     5.92         0.168268        6         0.225994         0.225994      4.88s
+  45     6.89         0.227578        7         0.316806         0.316806      3.85s
+  45     5.96          0.16771        6         0.225994         0.225994      4.09s
+  46     6.96         0.231507       13         0.316806         0.316806      2.87s
+  46     5.99         0.169047        6         0.225994         0.225994      2.98s
+  47     6.91          0.22487        7         0.316806         0.316806      2.02s
+  47     5.96         0.169139        6         0.225994         0.225994      1.89s
+  48     6.81         0.222991        9         0.316806         0.316806      0.94s
+  48     5.88          0.16867        6         0.225994         0.225994      0.96s
+  49     7.02         0.224771        7         0.316806         0.316806      0.00s
+2025-10-20 17:07:49,585 - [CrucibleEngine] - INFO -   -> [BTC/USDT:USDT] Injecting 5 evolved features...
+2025-10-20 17:07:49,587 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object present. Attempting GNN generation (Main context). ---
+2025-10-20 17:07:49,587 - [CrucibleEngine] - INFO -   -> Generating GNN features for the entire market...
+[GNN Pipeline] Starting feature generation...
+[Data Fetcher] Fetching 500 candles for BTC/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ETH/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for SOL/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for XRP/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for DOGE/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for BNB/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ASTER/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ENA/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for SUI/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ADA/USDT from Binance...
+  49     6.08         0.171123        6         0.225994         0.225994      0.00s
+2025-10-20 17:07:50,519 - [Wkr 204352] - forge.evolution.feature_synthesizer - [Feature Synthesizer] Feature evolution complete. Found 1000 features.
+2025-10-20 17:07:50,548 - [Wkr 204352] - MTFA -   -> [MTFA_TEMP] Injecting 5 evolved features...
+2025-10-20 17:07:50,550 - [Wkr 204352] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-20 17:07:50,550 - [Wkr 204352] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-20 17:07:50,551 - [Wkr 204352] - MTFA - [MTFA] Renamed 21 features for 1h
+2025-10-20 17:07:50,551 - [Wkr 204352] - MTFA - [MTFA] Processing features for timeframe: 15m (500 bars)
+2025-10-20 17:07:50,551 - [Wkr 204352] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-20 17:07:50,552 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-20 17:07:50,555 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-20 17:07:50,615 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-20 17:07:50,615 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-20 17:07:50,660 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-20 17:07:50,660 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-20 17:07:50,661 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-20 17:07:50,663 - [Wkr 204352] - MTFA - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+2025-10-20 17:07:50,663 - [Wkr 204352] - forge.evolution.feature_synthesizer - [Feature Synthesizer] Starting feature evolution...
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0     8.10        0.0960935        3         0.237754         0.237754     17.13s
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+   1     5.73         0.158054        6         0.271267         0.271267     32.06s
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+   2     4.14         0.202277        6         0.275879         0.275879     37.20s
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+   3     5.57         0.209601        6         0.280916         0.280916     34.94s
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[GNN Pipeline] GNN feature generation complete.
+2025-10-20 17:07:53,450 - [CrucibleEngine] - INFO -   -> GNN feature generation returned no data. Skipping merge.
+2025-10-20 17:07:53,451 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+2025-10-20 17:07:53,456 - [V3Agent_BTCUSDT] - ERROR - Error getting prediction from model BTCUSDT-USDT_15m_unified: name 'latest_features' is not defined
+ERROR:V3Agent_BTCUSDT:Error getting prediction from model BTCUSDT-USDT_15m_unified: name 'latest_features' is not defined
+2025-10-20 17:07:53,456 - [V3Agent_BTCUSDT] - WARNING - No valid predictions from any specialist model.
+WARNING:V3Agent_BTCUSDT:No valid predictions from any specialist model.
+2025-10-20 17:07:53,456 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-20 17:07:53,457 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-20 17:07:53,460 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-20 17:07:53,478 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 2. VMD Complete.
+2025-10-20 17:07:53,478 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-20 17:07:53,498 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 3. Particle Filter Complete.
+2025-10-20 17:07:53,498 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for ETH/USDT...
+   4     4.30          0.23013        8         0.286279         0.286279     35.59s
+   5     5.63          0.23516       12         0.302671         0.302671     33.40s
+2025-10-20 17:07:54,830 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 4. Order Flow Features Complete.
+2025-10-20 17:07:54,832 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0     8.10        0.0224565        3        0.0493144        0.0493144     19.38s
+   6     7.60         0.234191       10         0.306035         0.306035     47.36s
+   1     4.24        0.0367716        7        0.0594033        0.0594033     37.27s
+   7     9.78         0.243574       10         0.306035         0.306035     44.29s
+   2     2.79         0.045067        5        0.0707765        0.0707765     46.65s
+   3     3.79        0.0461195        5        0.0707765        0.0707765     40.66s
+   8    10.37         0.244273       15         0.311042         0.311042     38.77s
+   4     3.59        0.0515354       10        0.0836966        0.0836966     38.32s
+   9     9.71         0.238957       17          0.31117          0.31117     38.42s
+  10     9.87         0.244771       17          0.31117          0.31117     39.29s
+   5     3.63        0.0617787       10        0.0836966        0.0836966     49.76s
+   6     3.89        0.0599353       10        0.0836966        0.0836966     38.70s
+  11     9.03         0.239393       15         0.311042         0.311042     38.27s
+   7     6.39        0.0571506       10        0.0836966        0.0836966     36.48s
+  12     8.97         0.242489       13          0.30923          0.30923     35.06s
+   8     9.52        0.0612275       10        0.0836966        0.0836966     38.87s
+  13     9.04            0.244       13          0.30923          0.30923     36.81s
+   9     9.19         0.060565       10        0.0836966        0.0836966     41.54s
+  14     8.73         0.241887       13          0.30923          0.30923     38.10s
+  10     8.43         0.063097        8        0.0836966        0.0836966     38.65s
+  15     8.85         0.239517       13          0.30923          0.30923     34.75s
+  11     7.43         0.063017        8        0.0836966        0.0836966     35.91s
+  16     8.95         0.241809       13          0.30923          0.30923     42.87s
+[Data Fetcher] Fetching 200 candles for BTC/USDT from Binance...
+  12     7.04        0.0628292        7        0.0836966        0.0836966     33.86s
+[Data Fetcher] Fetching 200 candles for ETH/USDT from Binance...
+  17     8.89         0.238368       11         0.309291         0.309291     35.25s
+  13     6.89        0.0628078        7        0.0836966        0.0836966     37.40s
+[Data Fetcher] Fetching 200 candles for SOL/USDT from Binance...
+  18     8.92         0.236698       11         0.309291         0.309291     34.53s
+  14     6.73        0.0611842        7        0.0836966        0.0836966     35.19s
+[Data Fetcher] Fetching 200 candles for XRP/USDT from Binance...
+[Data Fetcher] Fetching 200 candles for DOGE/USDT from Binance...
+  19     8.98          0.23778       11         0.309291         0.309291     31.62s
+  15     6.91         0.063313        8        0.0869698        0.0869698     34.80s
+[Data Fetcher] Fetching 200 candles for BNB/USDT from Binance...
+  16     6.97        0.0621042       12        0.0869698        0.0869698     32.69s
+  20     9.14         0.239735       11         0.309291         0.309291     30.10s
+[Data Fetcher] Fetching 200 candles for ASTER/USDT from Binance...
+--- Symbol not available on current exchange, trying Binance...
+  21     9.78         0.238972       13         0.315569         0.315569     29.95s
+  17     7.13        0.0619742        8        0.0869698        0.0869698     37.73s
+  22    10.80         0.240847       13         0.315569         0.315569     26.78s
+  18     7.83        0.0643497        9        0.0869698        0.0869698     42.76s
+--- Successfully fetched from Binance
+[Data Fetcher] Fetching 200 candles for ENA/USDT from Binance...
+--- Symbol not available on current exchange, trying Binance...
+  23    11.10         0.242679       13         0.315569         0.315569     25.43s
+  19     7.76        0.0662492        9        0.0869698        0.0869698     32.10s
+  24    11.36         0.243095       13         0.315569         0.315569     23.57s
+--- Successfully fetched from Binance
+[Data Fetcher] Fetching 200 candles for SUI/USDT from Binance...
+  20     7.15        0.0666128        8        0.0869698        0.0869698     41.59s
+  25    12.21         0.245822       13         0.315569         0.315569     26.08s
+[Data Fetcher] Fetching 200 candles for ADA/USDT from Binance...
+  26    12.70         0.246907       17          0.31629          0.31629     23.55s
+  21     6.73        0.0652678        9        0.0869698        0.0869698     34.37s
+  27    12.89         0.249801       17          0.31629          0.31629     22.48s
+  22     7.00        0.0660937        7        0.0869698        0.0869698     25.02s
+  23     7.04        0.0666463        7        0.0869698        0.0869698     26.97s
+  28    12.67         0.249465       17          0.31629          0.31629     24.07s
+  24     6.76        0.0651555        7        0.0869698        0.0869698     22.89s
+  29    12.87         0.249168       17          0.31629          0.31629     26.68s
+  25     6.74        0.0652902        7        0.0869698        0.0869698     22.70s
+  30    12.80         0.245517       17          0.31629          0.31629     20.04s
+  26     6.91        0.0664104        7        0.0869698        0.0869698     22.51s
+  31    12.65         0.250586       17          0.31629          0.31629     18.42s
+  27     7.01        0.0668937        7        0.0869698        0.0869698     20.79s
+  32    12.64         0.246306       13         0.315569         0.315569     18.17s
+  28     6.93        0.0665899        7        0.0869698        0.0869698     19.81s
+  33    12.81          0.24553       17          0.31629          0.31629     17.08s
+  29     7.06        0.0664252       10        0.0869698        0.0869698     19.62s
+  34    12.63          0.24837       13         0.315569         0.315569     16.98s
+  30     6.95        0.0655167        7        0.0869698        0.0869698     19.93s
+  31     6.95         0.066238        7        0.0869698        0.0869698     17.85s
+  35    12.80         0.249657       17          0.31629          0.31629     15.18s
+  32     6.81        0.0661994        9        0.0869698        0.0869698     15.81s
+  36    12.62         0.247973       17          0.31629          0.31629     13.51s
+  37    13.11         0.246246       17          0.31629          0.31629     12.26s
+  33     7.02        0.0647201        7        0.0869698        0.0869698     19.10s
+  34     6.91        0.0647934        7        0.0869698        0.0869698     15.35s
+  38    12.54         0.248345       17          0.31629          0.31629     12.11s
+  35     6.93        0.0641725       11        0.0869698        0.0869698     13.46s
+  39    12.76         0.249006       17          0.31629          0.31629     10.70s
+  36     6.97        0.0644429        7        0.0869698        0.0869698     12.34s
+  40    12.85         0.248321       17          0.31629          0.31629     13.26s
+  37     7.08        0.0639584        7        0.0869698        0.0869698     11.50s
+  41    12.61         0.245002       13         0.315569         0.315569      8.56s
+  38     6.85        0.0629608       11        0.0869698        0.0869698     10.93s
+  42    12.57         0.248299       17          0.31629          0.31629      7.37s
+  39     6.88        0.0632967        7        0.0869698        0.0869698      9.44s
+  43    12.81         0.246061       13         0.315569         0.315569      6.05s
+  40     6.92        0.0624762        9        0.0869698        0.0869698      8.51s
+  41     6.86        0.0625396        7        0.0869698        0.0869698      7.68s
+  44    12.57         0.245483       17          0.31629          0.31629      5.25s
+  42     6.99        0.0638324        7        0.0869698        0.0869698      6.95s
+  45    12.73          0.24869       13         0.315569         0.315569      4.22s
+  43     6.98        0.0616914       11        0.0869698        0.0869698      5.77s
+  46    12.96         0.251641       17          0.31629          0.31629      3.12s
+  44     6.82        0.0625797       11        0.0869698        0.0869698      4.66s
+  47    12.78         0.248085       17          0.31629          0.31629      2.08s
+  45     6.90        0.0639928        7        0.0869698        0.0869698      4.82s
+  48    12.71         0.246963       17          0.31629          0.31629      0.97s
+  46     7.06        0.0645437        7        0.0869698        0.0869698      2.97s
+  49    12.95         0.249715       13         0.315569         0.315569      0.00s
+2025-10-20 17:08:41,620 - [Wkr 204352] - forge.evolution.feature_synthesizer - [Feature Synthesizer] Feature evolution complete. Found 1000 features.
+2025-10-20 17:08:41,640 - [Wkr 204352] - MTFA -   -> [MTFA_TEMP] Injecting 5 evolved features...
+2025-10-20 17:08:41,642 - [Wkr 204352] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-20 17:08:41,642 - [Wkr 204352] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-20 17:08:41,643 - [Wkr 204352] - MTFA - [MTFA] Renamed 21 features for 15m
+2025-10-20 17:08:41,644 - [Wkr 204352] - MTFA - [MTFA] Processing features for timeframe: 1m (2500 bars)
+2025-10-20 17:08:41,644 - [Wkr 204352] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-20 17:08:41,644 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-20 17:08:41,648 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-20 17:08:42,195 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-20 17:08:42,195 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-20 17:08:42,256 - [SingularityEngine] - INFO - Running reactive drift check...
+2025-10-20 17:08:42,256 - [SingularityEngine] - INFO - Monitoring for concept drift...
+2025-10-20 17:08:42,256 - [SingularityEngine] - INFO - Updating ensemble weights based on performance log...
+2025-10-20 17:08:42,257 - [SingularityEngine] - INFO - Reactive check complete. Sleeping for 60s.
+  47     6.93        0.0634935        7        0.0869698        0.0869698      1.64s
+2025-10-20 17:08:42,387 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-20 17:08:42,387 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-20 17:08:42,387 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-20 17:08:42,389 - [Wkr 204352] - MTFA - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+2025-10-20 17:08:42,390 - [Wkr 204352] - forge.evolution.feature_synthesizer - [Feature Synthesizer] Starting feature evolution...
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0     8.10        0.0257633        3        0.0881082        0.0881082     22.27s
+  48     6.82        0.0625718        9        0.0869698        0.0869698      1.20s
+   1     4.98        0.0576003        6         0.109371         0.109371     43.27s
+  49     7.04        0.0631852        7        0.0869698        0.0869698      0.00s
+2025-10-20 17:08:44,532 - [CrucibleEngine] - INFO -   -> [ETH/USDT:USDT] Injecting 5 evolved features...
+2025-10-20 17:08:44,534 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object present. Attempting GNN generation (Main context). ---
+2025-10-20 17:08:44,535 - [CrucibleEngine] - INFO -   -> Generating GNN features for the entire market...
+[GNN Pipeline] Starting feature generation...
+[Data Fetcher] Fetching 500 candles for BTC/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ETH/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for SOL/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for XRP/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for DOGE/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for BNB/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ASTER/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ENA/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for SUI/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ADA/USDT from Binance...
+   2     3.19        0.0767176        6         0.116485         0.116485     45.87s
+   3     3.83        0.0847039        6          0.12377          0.12377     41.35s
+   4     5.10        0.0923739        8         0.128942         0.128942     35.57s
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+   5     5.82        0.0999198       10         0.130936         0.130936     35.44s
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+   6     6.82        0.0968243       10         0.136271         0.136271     34.70s
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[GNN Pipeline] GNN feature generation complete.
+2025-10-20 17:08:48,277 - [CrucibleEngine] - INFO -   -> GNN feature generation returned no data. Skipping merge.
+2025-10-20 17:08:48,277 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+2025-10-20 17:08:48,282 - [V3Agent_ETHUSDT] - ERROR - Error getting prediction from model ETHUSDT-USDT_15m_unified: name 'latest_features' is not defined
+ERROR:V3Agent_ETHUSDT:Error getting prediction from model ETHUSDT-USDT_15m_unified: name 'latest_features' is not defined
+2025-10-20 17:08:48,282 - [V3Agent_ETHUSDT] - WARNING - No valid predictions from any specialist model.
+WARNING:V3Agent_ETHUSDT:No valid predictions from any specialist model.
+2025-10-20 17:08:48,283 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-20 17:08:48,283 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-20 17:08:48,287 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-20 17:08:48,288 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 2. VMD Complete.
+2025-10-20 17:08:48,288 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-20 17:08:48,309 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 3. Particle Filter Complete.
+2025-10-20 17:08:48,309 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for SOL/USDT...
+   7     8.08         0.101525       15         0.138092         0.138092     35.81s
+   8     8.88         0.103127       17         0.142197         0.142197     36.86s
+2025-10-20 17:08:50,115 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [SOL/USDT:USDT] 4. Order Flow Features Complete.
+2025-10-20 17:08:50,120 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0     8.10                0       11                0                0     17.86s
+   9     9.85         0.105538       17         0.142197         0.142197     46.58s
+   1     2.23                0        2                0                0     32.78s
+   2     1.47                0        1                0                0     35.01s
+  10    10.45         0.108311       17         0.142197         0.142197     41.67s
+   3     1.30                0        1                0                0     34.98s
+  11     9.71         0.108841       17         0.142197         0.142197     44.76s
+   4     1.29                0        1                0                0     33.46s
+   5     1.30                0        1                0                0     36.12s
+  12     9.97         0.110318       17         0.139897         0.139897     40.14s
+   6     1.29                0        1                0                0     32.10s
+  13     9.91         0.109931       17         0.139897         0.139897     39.64s
+   7     1.28                0        1                0                0     29.27s
+   8     1.25                0        1                0                0     32.37s
+  14     9.59         0.108987       17         0.139897         0.139897     39.59s
+   9     1.39                0        1                0                0     31.08s
+  15     9.77         0.107969       17         0.139897         0.139897     38.00s
+  10     1.30                0        1                0                0     28.45s
+  16     9.77         0.107692       17         0.139897         0.139897     35.72s
+  11     1.29                0        1                0                0     27.63s
+  12     1.20                0        1                0                0     27.05s
+  17     9.76          0.10834       17         0.139897         0.139897     43.18s
+  13     1.29                0        5                0                0     23.42s
+  14     1.22                0        1                0                0     26.11s
+  18     9.83         0.106339       17         0.139897         0.139897     34.61s
+  15     1.29                0        1                0                0     22.64s
+  19     9.67         0.105945       17         0.139897         0.139897     34.36s
+  16     1.32                0        1                0                0     27.06s
+  17     1.30                0        1                0                0     23.38s
+  20     9.52         0.109263       17         0.139897         0.139897     30.64s
+  18     1.35                0        4                0                0     28.46s
+  21     9.43          0.10817       17         0.139897         0.139897     29.97s
+  19     1.28                0        1                0                0     21.84s
+  20     1.28                0        1                0                0     23.37s
+  22     9.90         0.108546       17         0.139897         0.139897     30.87s
+  21     1.29                0        8                0                0     19.99s
+  23     9.91          0.10936       17         0.139897         0.139897     28.26s
+  22     1.26                0        8                0                0     18.51s
+  23     1.31                0        1                0                0     19.59s
+  24     9.59         0.107071       17         0.139897         0.139897     26.29s
+  24     1.30                0        1                0                0     19.07s
+  25     9.43          0.10836       17         0.139897         0.139897     26.06s
+  25     1.23                0        1                0                0     16.81s
+  26     1.31                0        1                0                0     18.14s
+  26     9.78         0.108159       17         0.139897         0.139897     26.02s
+  27     1.27                0        1                0                0     16.70s
+  27     9.88         0.108221       17         0.139897         0.139897     23.91s
+  28     1.24                0        1                0                0     15.33s
+  28     9.67         0.108871       17         0.139897         0.139897     22.39s
+  29     1.28                0        1                0                0     14.51s
+  30     1.32                0        1                0                0     13.97s
+  29     9.85         0.107539       17         0.139897         0.139897     21.73s
+  31     1.39                0       12                0                0     12.26s
+  32     1.25                0        1                0                0     12.59s
+  30     9.77         0.107701       17         0.139897         0.139897     22.65s
+  33     1.40                0        1                0                0     11.66s
+  31     9.75         0.109657       17         0.139897         0.139897     19.58s
+  34     1.28                0        1                0                0     10.28s
+  35     1.21                0        2                0                0     10.79s
+  32     9.57         0.109033       17         0.139897         0.139897     17.88s
+[Data Fetcher] Fetching 200 candles for BTC/USDT from Binance...
+  36     1.27                0        1                0                0      9.92s
+[Data Fetcher] Fetching 200 candles for ETH/USDT from Binance...
+  33     9.91         0.107676       17         0.139897         0.139897     18.13s
+  37     1.30                0        1                0                0      8.25s
+[Data Fetcher] Fetching 200 candles for SOL/USDT from Binance...
+  38     1.30                0        1                0                0      8.46s
+  34     9.88         0.109626       17         0.139897         0.139897     16.27s
+[Data Fetcher] Fetching 200 candles for XRP/USDT from Binance...
+  39     1.28                0        1                0                0      7.64s
+[Data Fetcher] Fetching 200 candles for DOGE/USDT from Binance...
+  35     9.88         0.108819       17         0.139897         0.139897     15.21s
+  40     1.22                0        1                0                0      6.41s
+[Data Fetcher] Fetching 200 candles for BNB/USDT from Binance...
+  36     9.79         0.107984       17         0.139897         0.139897     14.31s
+  41     1.37                0        1                0                0      6.08s
+[Data Fetcher] Fetching 200 candles for ASTER/USDT from Binance...
+--- Symbol not available on current exchange, trying Binance...
+  37    10.01         0.108381       17         0.139897         0.139897     13.57s
+  42     1.31                0        1                0                0      7.94s
+  38     9.63         0.108025       17         0.139897         0.139897     11.24s
+  43     1.31                0        1                0                0      7.23s
+--- Successfully fetched from Binance
+[Data Fetcher] Fetching 200 candles for ENA/USDT from Binance...
+--- Symbol not available on current exchange, trying Binance...
+  39     9.73         0.109801       17         0.139897         0.139897     10.54s
+  44     1.22                0        1                0                0      4.64s
+--- Successfully fetched from Binance
+[Data Fetcher] Fetching 200 candles for SUI/USDT from Binance...
+  40     9.89         0.108024       17         0.139897         0.139897      9.37s
+  45     1.24                0        1                0                0      4.59s
+[Data Fetcher] Fetching 200 candles for ADA/USDT from Binance...
+  46     1.24                0        1                0                0      2.46s
+  41     9.74         0.106828       17         0.139897         0.139897      8.54s
+  47     1.31                0        1                0                0      1.48s
+  42     9.73         0.108237       17         0.139897         0.139897      7.41s
+  48     1.25                0        1                0                0      0.69s
+  43     9.75         0.107464       17         0.139897         0.139897      6.21s
+  49     1.39                0        1                0                0      0.00s
+2025-10-20 17:09:28,430 - [CrucibleEngine] - INFO -   -> [SOL/USDT:USDT] Injecting 5 evolved features...
+2025-10-20 17:09:28,434 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object present. Attempting GNN generation (Main context). ---
+2025-10-20 17:09:28,434 - [CrucibleEngine] - INFO -   -> Generating GNN features for the entire market...
+[GNN Pipeline] Starting feature generation...
+[Data Fetcher] Fetching 500 candles for BTC/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ETH/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for SOL/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for XRP/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for DOGE/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for BNB/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ASTER/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ENA/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for SUI/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ADA/USDT from Binance...
+  44     9.71         0.108408       17         0.139897         0.139897      6.04s
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+  45     9.94         0.108969       17         0.139897         0.139897      3.47s
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+  46     9.90          0.10925       17         0.139897         0.139897      2.65s
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[GNN Pipeline] GNN feature generation complete.
+2025-10-20 17:09:31,758 - [CrucibleEngine] - INFO -   -> GNN feature generation returned no data. Skipping merge.
+2025-10-20 17:09:31,759 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+2025-10-20 17:09:31,763 - [V3Agent_SOLUSDT] - ERROR - Error getting prediction from model SOLUSDT-USDT_15m_unified: name 'latest_features' is not defined
+ERROR:V3Agent_SOLUSDT:Error getting prediction from model SOLUSDT-USDT_15m_unified: name 'latest_features' is not defined
+2025-10-20 17:09:31,763 - [V3Agent_SOLUSDT] - WARNING - No valid predictions from any specialist model.
+WARNING:V3Agent_SOLUSDT:No valid predictions from any specialist model.
+2025-10-20 17:09:31,764 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-20 17:09:31,764 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-20 17:09:31,767 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-20 17:09:31,788 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 2. VMD Complete.
+2025-10-20 17:09:31,788 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-20 17:09:31,810 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 3. Particle Filter Complete.
+2025-10-20 17:09:31,811 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for XRP/USDT...
+  47     9.96         0.107709       17         0.139897         0.139897      1.83s
+2025-10-20 17:09:32,982 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 4. Order Flow Features Complete.
+2025-10-20 17:09:32,984 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+  48     9.54         0.107359       14         0.138991         0.138991      0.96s
+   0     8.10       0.00716427        7        0.0142689        0.0142689     16.10s
+   1     2.57        0.0108475        5        0.0147241        0.0147241     35.06s
+  49     9.90         0.109076       17         0.139897         0.139897      0.00s
+2025-10-20 17:09:34,260 - [Wkr 204352] - forge.evolution.feature_synthesizer - [Feature Synthesizer] Feature evolution complete. Found 1000 features.
+2025-10-20 17:09:34,283 - [Wkr 204352] - MTFA -   -> [MTFA_TEMP] Injecting 5 evolved features...
+2025-10-20 17:09:34,286 - [Wkr 204352] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-20 17:09:34,286 - [Wkr 204352] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-20 17:09:34,286 - [Wkr 204352] - MTFA - [MTFA] Kept LTF 1m dataframe intact
+2025-10-20 17:09:34,287 - [Wkr 204352] - MTFA - [MTFA] Aligning 1h features onto 1m...
+2025-10-20 17:09:34,288 - [Wkr 204352] - MTFA - [MTFA] Successfully aligned 21 features from 1h
+2025-10-20 17:09:34,288 - [Wkr 204352] - MTFA - [MTFA] Aligning 15m features onto 1m...
+2025-10-20 17:09:34,290 - [Wkr 204352] - MTFA - [MTFA] Successfully aligned 21 features from 15m
+2025-10-20 17:09:34,291 - [Wkr 204352] - MTFA - [MTFA] Dropped 0 rows with incomplete HTF data
+2025-10-20 17:09:34,291 - [Wkr 204352] - MTFA - [MTFA] Final dataset: 2500 bars with 68 features
+2025-10-20 17:09:34,291 - [Wkr 204352] - ForgeWorkerMain - [MTFA] Processing complete: 2500 bars with 68 features
+2025-10-20 17:09:34,292 - [Wkr 204352] - forge.modeling.causal_engine - [CDE] Running causal discovery for target 'close' with tau_max=3...
+   2     1.77        0.0109123        4        0.0314791        0.0314791     31.30s
+   3     2.41        0.0103138        4        0.0314791        0.0314791     32.80s
+   4     3.42        0.0133251        3        0.0314791        0.0314791     33.48s
+   5     3.50        0.0249996        4        0.0314791        0.0314791     33.51s
+   6     3.06        0.0249764        3        0.0314791        0.0314791     37.93s
+   7     3.13          0.02578        3        0.0314791        0.0314791     29.25s
+   8     3.06        0.0255759        3        0.0314791        0.0314791     28.64s
+   9     3.16        0.0252706        3        0.0314791        0.0314791     27.30s
+  10     3.18        0.0261351        3        0.0314791        0.0314791     29.60s
+  11     3.10        0.0255977        3        0.0314791        0.0314791     27.11s
+  12     3.06        0.0257296        3        0.0314791        0.0314791     26.99s
+2025-10-20 17:09:42,272 - [SingularityEngine] - INFO - Running reactive drift check...
+2025-10-20 17:09:42,279 - [SingularityEngine] - INFO - Monitoring for concept drift...
+2025-10-20 17:09:42,317 - [SingularityEngine] - INFO - Updating ensemble weights based on performance log...
+2025-10-20 17:09:42,365 - [SingularityEngine] - INFO - Reactive check complete. Sleeping for 60s.
+  13     3.13        0.0259986        3        0.0314791        0.0314791     26.24s
+  14     3.07        0.0260528        5        0.0314791        0.0314791     24.96s
+  15     3.10        0.0255552        3        0.0314791        0.0314791     24.26s
+  16     3.13        0.0254995        3        0.0314791        0.0314791     23.56s
+  17     3.12        0.0255279        5        0.0314791        0.0314791     23.33s
+  18     3.19        0.0253173        5        0.0314791        0.0314791     22.10s
+  19     3.00        0.0247257        3        0.0314791        0.0314791     22.30s
+  20     3.06        0.0253334        3        0.0314791        0.0314791     20.26s
+  21     3.02        0.0250993        3        0.0314791        0.0314791     19.94s
+  22     3.14        0.0257775        3        0.0314791        0.0314791     20.13s
+  23     3.20         0.025843        3        0.0314791        0.0314791     18.15s
+  24     3.05        0.0251309        3        0.0314791        0.0314791     22.89s
+  25     3.01        0.0252407        3        0.0314791        0.0314791     16.72s
+  26     3.11        0.0253676        3        0.0314791        0.0314791     16.05s
+  27     3.12        0.0257382        3        0.0314791        0.0314791     15.70s
+  28     3.02        0.0251606        3        0.0314791        0.0314791     15.03s
+  29     3.16        0.0256153        3        0.0314791        0.0314791     14.86s
+  30     3.10        0.0254374        3        0.0314791        0.0314791     14.13s
+  31     3.21        0.0255659        3        0.0314791        0.0314791     12.60s
+  32     3.10        0.0259035        3        0.0314791        0.0314791     12.09s
+  33     3.21        0.0257242        3        0.0314791        0.0314791     11.43s
+  34     3.10        0.0256252        5        0.0314791        0.0314791     10.93s
+  35     3.08        0.0262684        3        0.0314791        0.0314791     10.42s
+  36     3.15        0.0257637        3        0.0314791        0.0314791      9.68s
+  37     3.21        0.0264201        3        0.0314791        0.0314791      8.73s
+2025-10-20 17:10:00,669 - [Wkr 204352] - forge.modeling.causal_engine - [CDE] Error during causal discovery: 'tau_max'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\modeling\causal_engine.py", line 56, in run_causal_discovery
+    causal_parents = get_causal_parents(results, var_names, target_variable)
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\modeling\causal_engine.py", line 88, in get_causal_parents
+    for tau in range(1, results['tau_max'] + 1): # Lag
+KeyError: 'tau_max'
+2025-10-20 17:10:00,702 - [Wkr 204352] - ForgeWorkerMain - [CDE] Causal discovery returned no features. Proceeding with all features.
+2025-10-20 17:10:00,702 - [Wkr 204352] - ForgeWorkerMain - [CDE] Using 63 causally-informed features for evolution.
+[Labeling] Creating labels with Symmetrical Triple-Barrier (PT/SL: 2.0*ATR, Max Hold: 20 bars)
+[Labeling] Distribution: BUY=1233, SELL=1118, HOLD=149
+[EnvClassifier] Current Environment: Low_Volatility_Reversion (Vol: 34.96, Trend: 42.99)
+
+============================================================
+| FORGE: Starting Bake-Off for BTC/USDT:USDT in 'Low_Volatility_Reversion'
+============================================================
+
+[Bake-Off] Training Challenger: GP 2.0 (Pop: 2000, Gen: 100)...
+2025-10-20 17:10:00,967 - [Wkr 204352] - ForgeWorkerMain - [Elite Preservation] Initialized. Current elites: 0
+2025-10-20 17:10:00,967 - [Wkr 204352] - ForgeWorkerMain - [Elite] No elite DNA found for symbol=BTC/USDT:USDT, architecture=GP2_Evolved
+2025-10-20 17:10:00,967 - [Wkr 204352] - ForgeWorkerMain - [GP 2.0] No elite DNA found. Starting from scratch.
+2025-10-20 17:10:00,967 - [Wkr 204352] - ForgeWorkerMain - [VELOCITY UPGRADE] Surrogate-Assisted Evolution ENABLED
+[Bake-Off] ERROR: GP 2.0 training failed: 'Toolbox' object has no attribute 'expr_mut'
+2025-10-20 17:10:00,968 - [Wkr 204352] - ForgeWorkerMain - [Bake-Off] ERROR: GP 2.0 training failed: 'Toolbox' object has no attribute 'expr_mut'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\overlord\task_scheduler.py", line 301, in train_gp_islands
+    adversarial_forge = AdversarialForge(
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\adversarial_forge.py", line 69, in __init__
+    self.predator_toolbox.register("mutate", gp.mutUniform, expr=self.predator_toolbox.expr_mut, pset=self.predator_pset)
+AttributeError: 'Toolbox' object has no attribute 'expr_mut'
+
+[Bake-Off] Training Challenger: Meta-Learner...
+2025-10-20 17:10:00,982 - [Wkr 204352] - forge.models.meta_learner - Starting Reptile meta-training for 10 epochs...
+  38     3.16        0.0260281        3        0.0314791        0.0314791      8.04s
+  39     3.13        0.0258359        3        0.0314791        0.0314791      7.60s
+  40     3.09        0.0262611        3        0.0314791        0.0314791      7.11s
+  41     3.14        0.0248629        3        0.0314791        0.0314791      5.95s
+2025-10-20 17:10:03,560 - [Wkr 204352] - forge.models.meta_learner - Epoch [10/10] Meta-update complete.
+2025-10-20 17:10:03,560 - [Wkr 204352] - forge.models.meta_learner - Reptile meta-training finished.
+[Bake-Off] Meta-Learner training complete.
+
+------------------------------------------------------------
+| FORGE: Entering Validation Gauntlet
+------------------------------------------------------------
+
+--- Validating Challenger: Meta-Learner ---
+
+[Gauntlet] STARTING FULL GAUNTLET FOR: MetaLearnerWrapper on BTC/USDT:USDT
+
+[Gauntlet] STEP 1: RUNNING IN-SAMPLE SANITY CHECK
+  42     3.15         0.025536        3        0.0314791        0.0314791      5.32s
+  43     3.15        0.0255235        5        0.0314791        0.0314791      6.06s
+  44     3.04        0.0256212        3        0.0314791        0.0314791      3.55s
+[Gauntlet]   -> ❌ FAILED: Model is not profitable on its training data. Sharpe: 0.00, PnL: 0.00%
+
+============================================================
+| FORGE: Selecting Champion from Gauntlet Results
+============================================================
+
+[FORGE] ❌ No models survived the gauntlet.
+2025-10-20 17:10:05,828 - [Wkr 204352] - ForgeWorkerMain - ✅ Forge cycle for BTCUSDT-proactive-1760947602 completed.
+2025-10-20 17:10:05,844 - [CrucibleEngine] - INFO - Forge task BTC/USDT:USDT completed, but no new model was registered.
+2025-10-20 17:10:05,844 - [SingularityEngine] - INFO - Forge task for BTC/USDT:USDT completed. Removing from active set.
+2025-10-20 17:10:05,863 - [CrucibleEngine] - INFO - --- Processing Forge task from Proactive (P10): ETH/USDT:USDT ---
+2025-10-20 17:10:05,875 - [Wkr 204352] - ForgeWorkerMain - Forge worker for ETH/USDT:USDT will use device: cpu
+2025-10-20 17:10:05,875 - [Wkr 204352] - ForgeWorkerMain - [MTFA] Loading timeframes: ['1h', '15m', '1m']
+2025-10-20 17:10:05,889 - [Wkr 204352] - ForgeWorkerMain - [MTFA] Loaded 1h: 500 bars from data/ETHUSDT_1h_raw.csv
+2025-10-20 17:10:05,909 - [Wkr 204352] - ForgeWorkerMain - [MTFA] Loaded 15m: 500 bars from data/ETHUSDT_15m_raw.csv
+2025-10-20 17:10:06,084 - [Wkr 204352] - ForgeWorkerMain - [MTFA] Loaded 1m: 2500 bars from data/ETHUSDT_1m_raw.csv
+2025-10-20 17:10:06,084 - [Wkr 204352] - ForgeWorkerMain - [MTFA] Starting multi-timeframe processing and alignment...
+2025-10-20 17:10:06,084 - [Wkr 204352] - MTFA - [MTFA] LTF identified: 1m
+2025-10-20 17:10:06,084 - [Wkr 204352] - MTFA - [MTFA] Processing features for timeframe: 1h (500 bars)
+2025-10-20 17:10:06,084 - [Wkr 204352] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-20 17:10:06,085 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-20 17:10:06,089 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-20 17:10:06,244 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-20 17:10:06,244 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-20 17:10:06,290 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-20 17:10:06,290 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-20 17:10:06,291 - [Wkr 204352] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-20 17:10:06,293 - [Wkr 204352] - MTFA - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+2025-10-20 17:10:06,294 - [Wkr 204352] - forge.evolution.feature_synthesizer - [Feature Synthesizer] Starting feature evolution...
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0     8.10        0.0819551        3         0.193752         0.193752     18.38s
+  45     3.03        0.0256067        3        0.0314791        0.0314791      3.73s
+   1     5.02         0.126711       11         0.210711         0.210711     34.32s
+  46     3.10        0.0259943        5        0.0314791        0.0314791      2.70s
+   2     3.44         0.164551       11         0.210711         0.210711     39.36s
+  47     3.11        0.0251538        5        0.0314791        0.0314791      1.78s
+   3     4.18         0.167407       10         0.210999         0.210999     37.81s
+  48     3.08        0.0256122        3        0.0314791        0.0314791      0.88s
+   4     7.36         0.163307       12          0.21879          0.21879     38.36s
+  49     3.20        0.0252218        3        0.0314791        0.0314791      0.00s
+2025-10-20 17:10:10,313 - [CrucibleEngine] - INFO -   -> [XRP/USDT:USDT] Injecting 5 evolved features...
+2025-10-20 17:10:10,316 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object present. Attempting GNN generation (Main context). ---
+2025-10-20 17:10:10,316 - [CrucibleEngine] - INFO -   -> Generating GNN features for the entire market...
+[GNN Pipeline] Starting feature generation...
+[Data Fetcher] Fetching 500 candles for BTC/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ETH/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for SOL/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for XRP/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for DOGE/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for BNB/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ASTER/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ENA/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for SUI/USDT from Binance...
+[Data Fetcher] Fetching 500 candles for ADA/USDT from Binance...
+   5     9.49         0.167482       11         0.220861         0.220861     34.08s
+   6     8.40         0.172986       11         0.223038         0.223038     31.33s
+   7     8.85         0.174764       15         0.223038         0.223038     30.62s
+   8     9.68         0.174953       18         0.225335         0.225335     32.45s
+   9     8.83         0.175881       11         0.223914         0.223914     30.32s
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[Data Fetcher] Fetching 200 candles for BTC/USDT from Binance...
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+  10     8.26          0.17753       11         0.223914         0.223914     30.30s
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[Data Fetcher] Fetching 200 candles for ETH/USDT from Binance...
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[On-Chain] Fetching real on-chain data from DeFiLlama...
+  11     8.07         0.178978       11         0.223914         0.223914     29.41s
+[On-Chain] Successfully fetched and processed DeFiLlama data.
+[GNN Pipeline] GNN feature generation complete.
+2025-10-20 17:10:27,511 - [CrucibleEngine] - INFO -   -> GNN feature generation returned no data. Skipping merge.
+2025-10-20 17:10:27,511 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+2025-10-20 17:10:27,515 - [V3Agent_XRPUSDT] - ERROR - Error getting prediction from model XRPUSDT-USDT_15m_unified: name 'latest_features' is not defined
+ERROR:V3Agent_XRPUSDT:Error getting prediction from model XRPUSDT-USDT_15m_unified: name 'latest_features' is not defined
+2025-10-20 17:10:27,516 - [V3Agent_XRPUSDT] - WARNING - No valid predictions from any specialist model.
+WARNING:V3Agent_XRPUSDT:No valid predictions from any specialist model.
+2025-10-20 17:10:27,517 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-20 17:10:27,518 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-20 17:10:27,521 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-20 17:10:27,522 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 2. VMD Complete.
+2025-10-20 17:10:27,522 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-20 17:10:27,539 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 3. Particle Filter Complete.
+2025-10-20 17:10:27,539 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for DOGE/USDT...
+[Data Fetcher] Fetching 200 candles for SOL/USDT from Binance...
+  12     8.20         0.177164       11         0.223914         0.223914     29.88s
+[Data Fetcher] Fetching 200 candles for XRP/USDT from Binance...
+  13     8.07         0.180502       11         0.223914         0.223914     27.36s
+[Data Fetcher] Fetching 200 candles for DOGE/USDT from Binance...
+  14     7.80         0.177545        8          0.22366          0.22366     26.51s
+[Data Fetcher] Fetching 200 candles for BNB/USDT from Binance...
+2025-10-20 17:10:30,050 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [DOGE/USDT:USDT] 4. Order Flow Features Complete.
+2025-10-20 17:10:30,053 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0     8.10                0       11                0                0     16.83s
+[Data Fetcher] Fetching 200 candles for ASTER/USDT from Binance...
+--- Symbol not available on current exchange, trying Binance...
+   1     2.23                0        2                0                0     29.81s
+  15     7.91         0.177215        8          0.22366          0.22366     43.21s
+--- Successfully fetched from Binance
+[Data Fetcher] Fetching 200 candles for ENA/USDT from Binance...
+--- Symbol not available on current exchange, trying Binance...
+   2     1.47                0        1                0                0     46.22s
+  16     7.99         0.177689        8          0.22366          0.22366     32.52s
+--- Successfully fetched from Binance
+[Data Fetcher] Fetching 200 candles for SUI/USDT from Binance...
+  17     7.95          0.17861       13          0.22366          0.22366     29.26s
+   3     1.30                0        1                0                0     44.39s
+[

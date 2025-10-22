@@ -1,0 +1,1627 @@
+##################################
+#     The Singularity Protocol   #
+#         Cortex Startup         #
+##################################
+
+[1/2] Activating Python Environment...
+[1/2] Environment activated.
+
+[2/2] Launching Cortex (Python Core)....
+--------------------------------------------------------------------
+System Startup Initiated.
+Monitor this window for Cortex logs (Python).
+Press CTRL+C in THIS WINDOW to stop the Python application.
+--------------------------------------------------------------------
+
+[Multiprocessing] Start method is 'None'. Forcing to 'spawn'.
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+[App.py] Initializing ServiceManager (Main Process)...
+[App.py] ServiceManager initialized.
+[App.py] ServiceManager: Initializing services...
+2025-10-20 22:55:06,776 - [CrucibleEngine] - INFO - Basic exchange 'bybit' setup complete.
+[Watchtower] Initialized with Elite Preservation System.
+[Watchtower] Current Elites: 0 | Best Profit: +0.00%
+2025-10-20 22:55:06,776 - [CrucibleEngine] - INFO - [PIT CREW] Initialized - Continuous shadow evaluation active
+[Hedge] Initializing weights uniformly.
+2025-10-20 22:55:07,914 - [CrucibleEngine] - INFO - [Crucible] IEL agent loaded successfully.
+2025-10-20 22:55:07,914 - [SingularityEngine] - INFO - Singularity Engine initialized.
+2025-10-20 22:55:07,914 - [SingularityEngine] - INFO - Asset universe order: ['BTC/USDT:USDT', 'XRP/USDT:USDT', 'MNT/USDT:USDT', 'ETH/USDT:USDT', 'SUI/USDT:USDT', 'BNB/USDT:USDT', 'EPIC/USDT:USDT', 'ARC/USDT:USDT', 'SOL/USDT:USDT', 'DOGE/USDT:USDT']
+[Model Check] ❌ Missing essential model type 'Specialist'.
+
+============================================================
+===============   MISSING MODELS - MANUAL START REQUIRED   ===============
+============================================================
+Models are missing. Please run '3_Start_Initial_Script.bat' to train them.
+The application will not function correctly until all models are trained.
+============================================================
+
+[App.py] Starting main loop thread...
+2025-10-20 22:55:07,918 - [CrucibleEngine] - INFO - Starting Hyper-Evolutionary Engine...
+[App.py] Main execution block started.
+2025-10-20 22:55:07,918 - [CrucibleEngine] - INFO - ProcessPoolExecutor initialized in run() using 'spawn' context with 15 workers.
+2025-10-20 22:55:07,918 - [CrucibleEngine] - INFO - --- Phase 1: Initializing Core Systems (Waiting for completion)... ---
+2025-10-20 22:55:07,918 - [CrucibleEngine] - INFO - Initializing HMM regime models for market state detection...
+2025-10-20 22:55:07,918 - [CrucibleEngine] - INFO - No existing HMM regime models found - training new ones...
+ * Serving Flask app 'app'
+ * Debug mode: off
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+[Multiprocessing] Start method confirmed as 'spawn'.
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+[BTC/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+[XRP/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[MNT/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[ETH/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[SUI/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[BNB/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[EPIC/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[ARC/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[SOL/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[DOGE/USDT:USDT] Starting initial regime model training (Worker Forced Single Thread)...
+[Data Fetcher] Fetching L2 order book for EPIC/USDT...
+[Data Fetcher] Fetching L2 order book for ARC/USDT...
+[Data Fetcher] Fetching L2 order book for MNT/USDT...
+[Data Fetcher] Fetching L2 order book for SOL/USDT...
+[Data Fetcher] Fetching L2 order book for ETH/USDT...
+[Data Fetcher] Fetching L2 order book for BTC/USDT...
+[Data Fetcher] Fetching L2 order book for XRP/USDT...
+[Data Fetcher] Fetching L2 order book for DOGE/USDT...
+[Data Fetcher] Fetching L2 order book for SUI/USDT...
+[Data Fetcher] Fetching L2 order book for BNB/USDT...
+--- ERROR fetching L2 order book for ARC/USDT: bybit does not have market symbol ARC/USDT
+--- ERROR fetching L2 order book for EPIC/USDT: bybit does not have market symbol EPIC/USDT
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+    |   Population Average    |             Best Individual              |
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0     8.10        0.0312714       19         0.135383         0.135383      2.80m
+   0     8.10                0       11                0                0      3.68m
+   1     5.02        0.0627338        8         0.137527         0.137527      1.92m
+   2     3.75         0.109005        8         0.137527         0.137527     44.76s
+   0     8.10        0.0382325        5         0.114411         0.114411      5.33m
+   0     8.10        0.0318627       10        0.0779841        0.0779841      5.96m
+   3     2.31         0.109989        8         0.137527         0.137527     41.87s
+   1     2.23                0        2                0                0      3.14m
+   0     8.10        0.0476223        5         0.116503         0.116503      6.60m
+   4     5.39        0.0810764        8         0.138898         0.138898     43.12s
+   2     1.47                0        1                0                0     48.90s
+   5     6.03        0.0826282        3         0.140428         0.140428     40.93s
+   0     8.10        0.0466118       26         0.133835         0.133835      7.80m
+   3     1.30                0        1                0                0     40.40s
+   1     4.18        0.0557239        5         0.097936         0.097936      2.68m
+   6     5.79        0.0799535        3         0.140428         0.140428     54.54s
+   4     1.29                0        1                0                0     37.09s
+   1     4.82        0.0736864        3         0.114411         0.114411      3.70m
+   0     8.10        0.0555142       10         0.206848         0.206848      8.87m
+   5     1.30                0        1                0                0     50.88s
+   7     5.33        0.0865677        3         0.140428         0.140428      1.01m
+   2     3.01        0.0917331        9          0.14086          0.14086     54.06s
+   1     4.66        0.0920572        5         0.171478         0.171478      3.73m
+   0     8.10          0.10603        3         0.308347         0.308347     10.28m
+   0     8.10        0.0533478        6         0.154043         0.154043     11.06m
+   8     3.44         0.106814        9         0.142269         0.142269     50.28s
+   6     1.29                0        1                0                0     37.68s
+   3     3.75        0.0967892        3         0.191943         0.191943     51.07s
+   1     5.33        0.0831282       26         0.142875         0.142875      3.43m
+   2     3.08        0.0683501        6         0.110099         0.110099      3.09m
+   1     5.18         0.121415       12         0.205618         0.205618      2.57m
+   2     2.48         0.109029        6         0.171478         0.171478      1.80m
+   1     5.85         0.206176        9         0.309376         0.309376      1.86m
+   0     8.10           0.0511        8         0.143175         0.143175     13.36m
+   7     1.28                0        1                0                0      1.35m
+   9     3.16         0.113833        3         0.140428         0.140428      1.28m
+   8     1.25                0        1                0                0     38.72s
+  10     3.18         0.115727        3         0.140428         0.140428     40.96s
+   9     1.39                0        1                0                0     36.81s
+  11     3.10         0.114846        4         0.142269         0.142269     35.43s
+  10     1.30                0        1                0                0     33.86s
+  12     3.08         0.113037        4         0.142269         0.142269     35.31s
+  11     1.29                0        1                0                0     31.62s
+  13     3.26         0.113283        4         0.142269         0.142269     36.01s
+  12     1.20                0        1                0                0     29.76s
+  13     1.29                0        5                0                0     28.38s
+  14     3.73        0.0948936        4         0.142269         0.142269     47.48s
+  14     1.22                0        1                0                0     33.40s
+  15     4.04        0.0924598        4         0.142269         0.142269     35.98s
+   2     4.25         0.156976       12         0.207312         0.207312      7.15m
+  15     1.29                0        1                0                0     27.28s
+  16     3.49         0.100298        3         0.142269         0.142269     33.34s
+  16     1.32                0        1                0                0     26.27s
+   3     5.08         0.160954       22         0.209763         0.209763     48.77s
+   2     5.72         0.254966        6         0.312233         0.312233      8.41m
+   1     4.29         0.117103        6         0.174706         0.174706      8.78m
+  17     1.30                0        1                0                0     30.34s
+  17     3.12         0.116048        3         0.142269         0.142269     43.91s
+   4     4.88          0.16146        7         0.210999         0.210999      1.07m
+   4     5.86        0.0994645        3         0.191943         0.191943      8.51m
+  18     1.35                0        4                0                0     31.38s
+   2     3.20         0.127352        7         0.176529         0.176529     55.66s
+   3     3.40         0.270253        6         0.312233         0.312233     54.39s
+   1     4.49        0.0992579        4         0.144402         0.144402      9.91m
+  18     3.19         0.111138        3         0.142269         0.142269     39.07s
+   3     3.34         0.115889        6         0.201163         0.201163     10.66m
+   2     8.23        0.0959303        7         0.143556         0.143556     11.07m
+   3     3.86        0.0776018        8          0.11227          0.11227     10.84m
+   5     4.28         0.172996        8         0.212444         0.212444      1.64m
+   5     6.04         0.117718        5          0.20796          0.20796      1.65m
+  19     1.28                0        1                0                0     59.42s
+   4     3.71         0.261474        9         0.313141         0.313141      1.03m
+   3     4.69         0.133979        9         0.196205         0.196205      1.30m
+   6     5.73         0.169794        8         0.216628         0.216628      1.14m
+  19     3.00         0.114505        3         0.142269         0.142269     50.89s
+   4     5.27        0.0841522        7         0.114333         0.114333      1.17m
+   4     5.13          0.12783        3         0.201247         0.201247      1.38m
+   3     9.07         0.101822        7         0.143556         0.143556      1.34m
+   2     3.91         0.113008        8         0.173265         0.173265      1.32m
+   6     3.33         0.143168        5          0.20796          0.20796      1.83m
+  20     3.06         0.114645        3         0.142269         0.142269     58.25s
+  20     1.28                0        1                0                0     47.87s
+   5     4.26         0.255461        4         0.313125         0.313125      1.81m
+   5     5.86         0.136177       13         0.203137         0.203137      2.08m
+   7     6.91         0.169434       12          0.21718          0.21718      1.64m
+  21     1.29                0        8                0                0     28.40s
+   5     6.48         0.087092        9         0.118532         0.118532      1.64m
+   7     4.30         0.140914        5          0.20796          0.20796     58.15s
+   4     6.11         0.147205       10         0.204655         0.204655      1.73m
+   4     7.96         0.107025       15         0.147364         0.147364      1.71m
+  21     3.02         0.116633        3         0.142269         0.142269     34.79s
+   6     3.06         0.273665        5          0.31241          0.31241     44.30s
+   3     4.43         0.122751        8         0.180571         0.180571      1.27m
+   6     6.92        0.0906824        9         0.118532         0.118532      1.89m
+   5     7.01         0.108822       23         0.147574         0.147574      1.97m
+  22     1.26                0        8                0                0      1.25m
+   4     5.12         0.132782       17         0.183388         0.183388     58.15s
+   8     5.26         0.133753        5          0.20796          0.20796      1.87m
+   5     7.11         0.152115       15         0.213093         0.213093      2.02m
+   7     3.13         0.275501        3         0.312233         0.312233      1.73m
+   6     4.40          0.13841        8         0.206458         0.206458      2.20m
+  22     3.14         0.114419        3         0.142269         0.142269      1.24m
+   8     7.26         0.169872       12         0.227049         0.227049      1.99m
+   7     7.06        0.0905094        8         0.120378         0.120378      2.01m
+   5     7.99         0.144838       11         0.192569         0.192569      2.06m
+   9     4.96         0.130556        5          0.20796          0.20796      1.88m
+   7     3.23          0.15781       12         0.206509         0.206509      1.96m
+  23     1.31                0        1                0                0      1.23m
+  23     3.20         0.114878        3         0.142269         0.142269      1.23m
+   9     8.00         0.171543       16         0.227993         0.227993      1.86m
+   6     8.82         0.163329       18         0.224864         0.224864      2.06m
+   6     6.88          0.10496        9         0.143951         0.143951      2.10m
+   8     3.06         0.276103        3         0.312233         0.312233      1.97m
+  24     3.05         0.114908        3         0.142269         0.142269      1.07m
+  24     1.30                0        1                0                0      1.15m
+   8     3.49         0.157714        8         0.206458         0.206458      1.98m
+   7     6.66         0.104688       13         0.143951         0.143951      2.03m
+  10     5.09         0.133955        5          0.20796          0.20796      1.95m
+   6     7.65         0.145398       14         0.197161         0.197161      2.15m
+  10    10.33         0.179299       19         0.237076         0.237076      1.90m
+   7    10.52         0.167986       18         0.224864         0.224864      2.04m
+   8     7.79        0.0946408        8         0.120378         0.120378      2.01m
+   9     3.16         0.271118        3         0.312233         0.312233      1.31m
+   8    11.04         0.174566       19         0.227825         0.227825      1.87m
+   8     5.74         0.115261        9         0.143951         0.143951      1.89m
+  25     3.01         0.116236        3         0.142269         0.142269      1.22m
+  11     5.00         0.132913        5          0.20796          0.20796      1.79m
+  25     1.23                0        1                0                0      1.18m
+   9     8.66         0.100567       10         0.120378         0.120378      1.88m
+  10     3.18         0.278142        3         0.312233         0.312233      1.66m
+   7     8.60         0.152642       13         0.198052         0.198052      1.99m
+   9     4.85         0.150164        8         0.207196         0.207196      1.94m
+  11    11.01         0.182072       19         0.237076         0.237076      2.98m
+   9     9.59          0.16781       17         0.231629         0.231629      1.74m
+   8     7.75         0.151907       13         0.197161         0.197161      1.76m
+  10     8.81         0.099869       10         0.120532         0.120532      1.71m
+   9     5.00         0.121357        6         0.142584         0.142584      1.77m
+  26     1.31                0        1                0                0      1.02m
+  26     3.11          0.11408        3         0.142269         0.142269      1.03m
+  11     3.10         0.275309        3         0.312233         0.312233      1.70m
+  12     4.98         0.131879        7          0.20796          0.20796      1.87m
+  12    10.11         0.182366       20         0.238875         0.238875      1.46m
+   9     7.62         0.154125       11         0.196174         0.196174      1.26m
+  10     7.48         0.161051        8         0.207196         0.207196      2.33m
+  10     8.52          0.17085       17         0.231629         0.231629      1.30m
+  10     5.11         0.124216        5         0.142244         0.142244      1.30m
+  11     8.00         0.095441        7         0.121981         0.121981      1.28m
+  27     1.27                0        1                0                0     44.41s
+  27     3.12         0.114194        3         0.142269         0.142269     46.00s
+  11     7.05         0.157238        8         0.207196         0.207196      1.67m
+  13     8.81         0.169144       20         0.238875         0.238875      1.64m
+  10     8.54         0.156476       11         0.196738         0.196738      1.81m
+  12     3.06          0.27569        3         0.312233         0.312233      1.92m
+  12     8.02        0.0953343       11          0.12225          0.12225      1.72m
+  11     9.68         0.169781       16         0.231629         0.231629      1.76m
+  28     1.24                0        1                0                0     58.40s
+  11     4.96         0.123222        5         0.142244         0.142244      1.77m
+  13     5.03         0.136577        5          0.20796          0.20796      1.76m
+  28     3.02          0.11397        3         0.142269         0.142269     29.37s
+  12     5.00         0.124609        5         0.142244         0.142244      1.72m
+  14     6.46         0.158239       13         0.227228         0.227228      1.69m
+  13     3.13         0.279679        3         0.312233         0.312233      1.75m
+  29     1.28                0        1                0                0     57.74s
+  12    10.60         0.175778       17          0.23239          0.23239      1.79m
+  14     4.94         0.135318        5          0.20796          0.20796      1.69m
+  11     7.79         0.154538       11         0.199424         0.199424      1.87m
+  12     7.04          0.15608        7         0.207321         0.207321      1.87m
+  29     3.16         0.114838        3         0.142269         0.142269     27.97s
+  13     7.64        0.0953357       12         0.122771         0.122771      1.77m
+  14     3.07         0.277417        5         0.312233         0.312233      1.52m
+  12     8.90         0.158013       11         0.199424         0.199424      1.73m
+  15     5.05         0.134004        5          0.20796          0.20796      1.66m
+  30     1.32                0        1                0                0     56.94s
+  13     5.01         0.124661        5         0.142244         0.142244      1.84m
+  15     5.95         0.159069        6         0.226791         0.226791      1.73m
+  13    12.50         0.178524       17          0.23239          0.23239      1.81m
+  14     6.78        0.0940713        9          0.12225          0.12225      1.91m
+  30     3.10         0.115133        3         0.142269         0.142269      1.20m
+  13     7.00         0.157202        7         0.207321         0.207321      2.29m
+  15     3.10         0.272909        3         0.312233         0.312233      1.33m
+  31     1.39                0       12                0                0     40.55s
+  13     9.97         0.160967       11         0.199424         0.199424      1.39m
+  16     5.92         0.153994        6         0.226791         0.226791      1.22m
+  15     6.92        0.0933438        8         0.122944         0.122944     49.11s
+  16     5.04          0.13002        5          0.20796          0.20796      1.26m
+  16     3.13         0.275251        3         0.312233         0.312233      1.00m
+  17     5.96         0.158686        6         0.226791         0.226791     49.81s
+  14     4.96         0.124087        3         0.145232         0.145232      1.52m
+  14     6.85         0.152749        7         0.207321         0.207321      1.12m
+  32     1.25                0        1                0                0     31.80s
+  31     3.21         0.114225        3         0.142269         0.142269     41.15s
+  14    10.51         0.159853       16         0.199439         0.199439      1.16m
+  14    13.70         0.184861       16         0.233532         0.233532      1.30m
+  16     7.07        0.0951242        9          0.12225          0.12225     33.94s
+  17     4.99         0.129014        5          0.20796          0.20796      1.37m
+  17     3.12         0.273973        5         0.312233         0.312233      1.41m
+  33     1.40                0        1                0                0     36.84s
+  15    12.84         0.182404       15         0.233532         0.233532     53.05s
+  15    10.69         0.159728       11         0.199424         0.199424     58.97s
+  18     6.00         0.157815        6         0.226791         0.226791      1.40m
+  17     6.95        0.0926043        9          0.12225          0.12225     57.55s
+  32     3.10         0.117726        3         0.142269         0.142269     40.23s
+  16    12.46         0.186207       15         0.233532         0.233532     47.13s
+  16    10.68         0.160436       11         0.199424         0.199424     38.49s
+  18     3.19         0.272738        5         0.312233         0.312233     45.95s
+  19     5.78         0.151278        6         0.226791         0.226791     39.08s
+  34     1.28                0        1                0                0     24.01s
+  33     3.21         0.116134        3         0.142269         0.142269     29.21s
+  18     6.87        0.0921521        9          0.12225          0.12225      1.16m
+  17    10.68         0.160319       11         0.199424         0.199424     48.56s
+  35     1.21                0        2                0                0     15.36s
+  15     6.92         0.152608        7         0.207321         0.207321      1.19m
+  19     3.00         0.270544        3         0.312233         0.312233     46.00s
+  18     5.03         0.129259        5          0.20796          0.20796     54.88s
+  15     4.99         0.123183        3         0.145232         0.145232      1.35m
+  19     6.93        0.0930509       10         0.124146         0.124146     46.63s
+  36     1.27                0        1                0                0     23.77s
+  16     7.01         0.153759        7         0.207321         0.207321     54.59s
+  18    10.69          0.15848       11         0.199424         0.199424     42.54s
+  16     4.75          0.12335        5         0.149652         0.149652     52.61s
+  20     5.84         0.155388        6         0.226791         0.226791     44.90s
+  19     4.88         0.129887        5          0.20796          0.20796     52.87s
+  20     3.06          0.27211        3         0.312233         0.312233     42.06s
+  17    13.53         0.179813       24         0.234562         0.234562      1.32m
+  34     3.10          0.11746        3         0.142269         0.142269     16.23s
+  20     6.81        0.0932706        9          0.12225          0.12225     32.95s
+  37     1.30                0        1                0                0     10.58s
+  17     7.01         0.152507        7         0.207321         0.207321      1.65m
+  21     5.72         0.154128        6         0.226791         0.226791      1.35m
+  20     4.92         0.131734        5          0.20796          0.20796      1.35m
+  21     6.75        0.0931286        7         0.122944         0.122944     58.31s
+  18    14.60         0.178446       15         0.233532         0.233532      1.44m
+  19    10.51          0.15834       11         0.199424         0.199424      1.49m
+  17     3.61         0.125268        5         0.149652         0.149652      1.53m
+  21     3.02         0.271622        3         0.312233         0.312233      1.28m
+  35     3.08         0.116443        3         0.142269         0.142269     37.70s
+  38     1.30                0        1                0                0     33.56s
+  22     3.14         0.274582        5         0.312336         0.312336      1.14m
+  22     6.01         0.160536        6         0.226791         0.226791      1.20m
+  21     4.81         0.133793        7          0.20796          0.20796      1.27m
+  19    14.26         0.180201       15         0.233532         0.233532      1.36m
+  22     6.91         0.092796        7         0.122944         0.122944      1.24m
+  18     4.51         0.130174        9         0.154239         0.154239      1.40m
+  36     3.15         0.113653        3         0.142269         0.142269     32.38s
+  18     6.96         0.154597        7         0.207321         0.207321      1.45m
+  23     7.00        0.0954625        7         0.122944         0.122944     41.09s
+  20    10.50         0.161661       11         0.199424         0.199424      1.34m
+  22     4.99         0.128996        5          0.20796          0.20796      1.10m
+  23     3.20          0.27412        3         0.312233         0.312233     58.67s
+  23     6.03         0.160638        6         0.226791         0.226791     59.09s
+  39     1.28                0        1                0                0     24.73s
+  21    10.27         0.160631       11         0.199424         0.199424     35.07s
+  20    14.28         0.178184       15         0.233532         0.233532      1.03m
+  37     3.21         0.117815        3         0.142269         0.142269     18.03s
+  19     6.86          0.14896        7         0.207321         0.207321     44.17s
+  19     6.16         0.134105        8         0.176039         0.176039     55.57s
+  40     1.22                0        1                0                0     10.55s
+  22    10.73         0.161132       11         0.199424         0.199424     38.35s
+  38     3.16         0.116619        3         0.142269         0.142269     13.84s
+  24     5.80         0.155275        6         0.226791         0.226791     30.06s
+  21    13.96         0.178971       15         0.233532         0.233532     54.73s
+  20     6.88         0.153378        7         0.207321         0.207321     55.58s
+  24     3.05           0.2714        3         0.312233         0.312233     32.71s
+  20     8.42         0.137889       10         0.180155         0.180155     42.88s
+  39     3.13         0.115747        3         0.142269         0.142269     14.44s
+  41     1.37                0        1                0                0     13.01s
+  21     6.75         0.154336        7         0.207321         0.207321     34.27s
+  23     5.04         0.130608        5          0.20796          0.20796     39.48s
+  25     3.01         0.275817        3         0.312233         0.312233     37.64s
+  21     9.09         0.139842       10         0.180155         0.180155     35.57s
+  22    14.70         0.179943       15         0.233532         0.233532     45.85s
+  23    10.77         0.160845       11         0.199424         0.199424     39.63s
+  25     5.71         0.152656        6         0.226791         0.226791     29.33s
+  24     4.90         0.131741        5          0.20796          0.20796     32.51s
+  40     3.09         0.119005        3         0.142269         0.142269     14.80s
+  42     1.31                0        1                0                0      9.30s
+  24     6.76        0.0934183        9         0.123198         0.123198     35.31s
+  26     3.11         0.272754        3         0.312233         0.312233     47.94s
+  22    10.26         0.146022       15         0.180919         0.180919      1.20m
+  22     7.00         0.155143        7         0.207321         0.207321     41.16s
+  26     5.88         0.154663        6         0.226791         0.226791     51.85s
+  23    14.70         0.180897       15         0.233532         0.233532      1.04m
+  25     6.71        0.0922436        9         0.123198         0.123198     36.73s
+  41     3.14         0.113184        3         0.142269         0.142269     17.91s
+  25     4.88         0.131436        5          0.20796          0.20796     50.02s
+  43     1.31                0        1                0                0     13.54s
+  24    10.46         0.158913       11         0.199424         0.199424     55.36s
+  27     3.12         0.276201        3         0.312233         0.312233     38.38s
+  23     7.02         0.159557        7         0.207321         0.207321     36.00s
+  27     5.97         0.156275        6         0.226791         0.226791     49.43s
+  24    14.03         0.180474       15         0.233532         0.233532      1.09m
+  26     6.92        0.0925463        9         0.123198         0.123198     54.44s
+  28     3.02         0.271746        8         0.313643         0.313643     39.83s
+  26     4.94         0.134088        5          0.20796          0.20796     40.73s
+  25    10.30         0.158914       13         0.199452         0.199452     56.23s
+  44     1.22                0        1                0                0      8.53s
+  29     3.16         0.275074        3         0.312233         0.312233     27.53s
+  42     3.15         0.114692        3         0.142269         0.142269     19.06s
+  23     9.42         0.145766       15          0.18143          0.18143     50.67s
+  28     5.81         0.151807        6         0.226791         0.226791     40.08s
+  25    13.94         0.178802       15         0.233532         0.233532     40.09s
+  24     6.79         0.152084        7         0.207321         0.207321     29.96s
+  45     1.24                0        1                0                0      6.02s
+  27     5.09         0.135255        5          0.20796          0.20796     29.27s
+  24     8.69         0.144558       10          0.18094          0.18094     42.86s
+  43     3.15         0.114438        3         0.142269         0.142269     11.48s
+  30     3.10         0.273243        3         0.312233         0.312233     41.47s
+  26    10.60         0.157802       11         0.199424         0.199424     27.14s
+  26    14.46         0.182688       15         0.233532         0.233532     41.19s
+  29     6.03         0.158028        6         0.226791         0.226791     35.61s
+  27     7.10        0.0949744        9         0.123198         0.123198     35.47s
+  25     6.75         0.154714        7         0.207321         0.207321     52.24s
+  46     1.24                0        1                0                0      7.18s
+  28     4.93         0.132809        5          0.20796          0.20796     56.72s
+  28     6.96         0.092842        7         0.123182         0.123182     56.09s
+  26     6.93         0.153193        7         0.207321         0.207321     29.68s
+  31     3.21         0.275441        3         0.312233         0.312233     46.63s
+  44     3.04         0.115471        3         0.142269         0.142269     13.82s
+  27    14.74         0.182101       15         0.233532         0.233532     55.90s
+  27    10.89         0.161191       11         0.199424         0.199424      1.03m
+  25     9.03         0.146699       14         0.181558         0.181558      1.07m
+  30     5.90         0.155343        6         0.226791         0.226791     53.37s
+  29     6.95        0.0920347        7         0.123182         0.123182     46.37s
+  47     1.31                0        1                0                0      6.08s
+  27     7.04         0.154336        7         0.207321         0.207321     55.36s
+  28    14.29         0.180192       15         0.233532         0.233532     49.11s
+  32     3.10          0.27673        3         0.312233         0.312233     42.20s
+  31     5.95         0.159382        6         0.226791         0.226791     22.47s
+  30     6.84        0.0920293        7         0.123182         0.123182     22.31s
+  45     3.03         0.116206        3         0.142269         0.142269     10.84s
+  26     8.98         0.147408       13         0.181558         0.181558     38.23s
+  48     1.25                0        1                0                0      1.07s
+  28    10.57         0.159821       11         0.199424         0.199424     48.69s
+  29     5.00         0.129743        5          0.20796          0.20796     55.77s
+  28     6.95         0.154106        7         0.207321         0.207321     38.27s
+  29    14.65         0.180469       15         0.233532         0.233532     31.45s
+  31     6.94        0.0935247        7         0.123182         0.123182     22.61s
+  33     3.21         0.274545        3         0.312233         0.312233     22.95s
+  32     5.91          0.16161        6         0.226791         0.226791     24.38s
+  30     4.96         0.130585        7          0.20796          0.20796     38.32s
+  32     6.84        0.0926177        7         0.123182         0.123182     35.85s
+  29    10.81         0.160046       11         0.199424         0.199424     44.49s
+  46     3.10         0.116469        3         0.142269         0.142269      8.11s
+  29     7.08         0.156669        7         0.207321         0.207321     46.65s
+  31     5.10         0.133881        5          0.20796          0.20796     25.17s
+  27     8.98         0.149583       13         0.180851         0.180851     55.37s
+  30    10.65         0.159046       11         0.199424         0.199424     26.83s
+  34     3.10         0.274233        5         0.312233         0.312233     29.08s
+  49     1.39                0        1                0                0      0.00s
+  33     7.06        0.0921872        7         0.123182         0.123182     25.29s
+  33     6.01         0.155863        6         0.226791         0.226791     33.51s
+  30    14.46         0.181254       15         0.233532         0.233532     40.60s
+  47     3.11         0.113903        3         0.142269         0.142269      2.58s
+  32     4.97         0.134086        5          0.20796          0.20796     39.83s
+  30     6.96         0.152852        7         0.207321         0.207321     49.38s
+  34     5.95         0.159386        6         0.226791         0.226791     23.98s
+  31    10.66         0.161276       11         0.199424         0.199424     42.72s
+  31    14.43          0.18121       16         0.233532         0.233532     35.22s
+  48     3.08         0.115491        3         0.142269         0.142269      1.49s
+  34     7.00        0.0930194        7         0.123182         0.123182     25.30s
+  35     3.08          0.27629        3         0.312233         0.312233     25.32s
+[EPIC/USDT:USDT] Regime model fitted successfully.
+[EPIC/USDT:USDT] Saved HMM model to models\EPICUSDT_HMM.joblib
+  35     5.91         0.160335        6         0.226791         0.226791     22.32s
+  32    14.48          0.17842       16         0.233532         0.233532     33.36s
+  31     6.97         0.155394        7         0.207321         0.207321     30.39s
+  49     3.20         0.114157        3         0.142269         0.142269      0.00s
+  33     5.12         0.135759        5          0.20796          0.20796     30.57s
+  32    10.41         0.161331       11         0.199424         0.199424     26.83s
+  28     8.71         0.149438       10         0.181069         0.181069     51.73s
+  35     6.96        0.0924497        7         0.123182         0.123182     18.29s
+  36     3.15          0.27406        3         0.312233         0.312233     14.80s
+  36     5.94          0.15602        6         0.226791         0.226791     19.14s
+Model is not converging.  Current: 36947.94238105099 is not greater than 36948.428401898076. Delta is -0.4860208470854559
+[ARC/USDT:USDT] Regime model fitted successfully.
+[ARC/USDT:USDT] Saved HMM model to models\ARCUSDT_HMM.joblib
+  29     8.95         0.148792        9         0.180851         0.180851     38.18s
+  32     6.80         0.157339        7         0.207321         0.207321     40.58s
+  33    14.71         0.177919       15         0.233532         0.233532     40.30s
+  34     5.02         0.131977        5          0.20796          0.20796     33.85s
+  33    10.84         0.159527       11         0.199424         0.199424     35.69s
+  37     3.21         0.279045        3         0.312233         0.312233     14.79s
+  36     6.86        0.0916523        7         0.123182         0.123182     28.95s
+  37     6.10         0.159258        6         0.226791         0.226791     22.76s
+  34    14.64         0.179977       15         0.233532         0.233532     28.63s
+  33     7.04         0.152822        8         0.214446         0.214446     31.17s
+  38     3.16         0.277575        3         0.312233         0.312233     21.37s
+  34    10.79         0.161036       11         0.199424         0.199424     30.88s
+  37     7.09        0.0935483        7         0.123182         0.123182     21.05s
+  30     8.76         0.147145        9         0.180851         0.180851     42.76s
+  35     5.01         0.135917        5          0.20796          0.20796     29.15s
+  34     6.98         0.156109       13         0.233066         0.233066     21.64s
+  35    14.67         0.180063       15         0.233532         0.233532     21.54s
+  39     3.13          0.27668       10          0.31388          0.31388     13.50s
+  38     5.90         0.158423        6         0.226791         0.226791     18.93s
+  36     4.99          0.13531        5          0.20796          0.20796     24.84s
+  35    10.78         0.160992       11         0.199424         0.199424     33.83s
+  36    14.54         0.181964       15         0.233532         0.233532     26.14s
+  31     8.79          0.14796        9         0.180851         0.180851     37.20s
+  35     7.14          0.15453       11         0.233452         0.233452     26.77s
+  38     6.80        0.0923706        7         0.123182         0.123182     24.93s
+  40     3.09         0.280492        3         0.312233         0.312233     25.08s
+  36    10.67          0.16051       11         0.199424         0.199424     24.86s
+  39     6.84        0.0928431        7         0.123182         0.123182     20.53s
+  37    14.76         0.181097       16         0.233532         0.233532     24.99s
+  39     5.91         0.161222        6         0.226791         0.226791     23.89s
+  36     8.00         0.160068       16         0.233776         0.233776     27.15s
+  32     8.80         0.150995       13         0.180851         0.180851     35.80s
+  37     5.05         0.132209        5          0.20796          0.20796     26.24s
+  41     3.14         0.267782        3         0.312233         0.312233     20.21s
+  37    10.26         0.174113       19         0.236299         0.236299     27.85s
+  40     5.95         0.159751        6         0.226791         0.226791     21.03s
+  40     6.90         0.092835        7         0.123182         0.123182     21.32s
+  37    10.99          0.16217       11         0.199424         0.199424     30.06s
+  38     4.98         0.131939        5          0.20796          0.20796     22.84s
+  38    14.37         0.180833       15         0.233532         0.233532     26.36s
+  33     8.95         0.149153        9         0.180851         0.180851     37.90s
+  38    10.80          0.17868       16         0.238949         0.238949     26.54s
+  42     3.15         0.274434        4         0.313125         0.313125     17.17s
+  41     6.93          0.09119        7         0.123182         0.123182     19.43s
+  34     8.74         0.148824        9         0.180851         0.180851     36.13s
+  39    14.34         0.181235       15         0.233532         0.233532     24.48s
+  41     5.91         0.154168        6         0.226791         0.226791     20.07s
+  39     4.94         0.133679        5          0.20796          0.20796     24.68s
+  38    10.59         0.160181       11         0.199424         0.199424     27.46s
+  42     6.96         0.090999        7         0.123182         0.123182     16.82s
+  40    14.51         0.178754       15         0.233532         0.233532     21.34s
+  39    10.54         0.161374       11         0.199424         0.199424     23.59s
+  39     9.94         0.173258       21         0.238277         0.238277     24.67s
+  40     4.95         0.129063        5          0.20796          0.20796     21.48s
+  43     3.15         0.273168        5         0.312823         0.312823     14.75s
+  42     5.95         0.156657        6         0.226791         0.226791     16.85s
+  35     8.90          0.14982        9         0.180851         0.180851     34.37s
+  40    10.79         0.159995       11         0.199424         0.199424     21.57s
+  40     9.61         0.171428        9         0.239225         0.239225     21.57s
+  44     3.04         0.277252        3         0.312233         0.312233     12.06s
+  36     8.69         0.148094        9         0.180851         0.180851     31.36s
+  43     5.96         0.155624        6         0.226791         0.226791     14.55s
+  43     6.88        0.0912746        7         0.123182         0.123182     14.88s
+  41    14.36         0.179161       15         0.233532         0.233532     19.81s
+  41     4.96         0.127779        5          0.20796          0.20796     19.62s
+  44     6.89        0.0922583        7         0.123182         0.123182     12.01s
+  37     9.03         0.150596        9         0.180851         0.180851     29.17s
+  42    14.45         0.180236       15         0.233532         0.233532     16.87s
+  45     3.03          0.27641        5          0.31229          0.31229      9.83s
+  41     9.30         0.168767        9         0.239225         0.239225     20.05s
+  44     5.87         0.156994        6         0.226791         0.226791     12.41s
+  42     5.01          0.13126        5          0.20796          0.20796     17.32s
+  41    10.63         0.157836       11         0.199424         0.199424     20.37s
+  45     6.92        0.0923035        7         0.123182         0.123182      9.46s
+  42     9.06         0.166187       15         0.239392         0.239392     16.48s
+  38     8.74           0.1506        9         0.180851         0.180851     26.60s
+  43    14.44         0.181233       15         0.233532         0.233532     14.51s
+  42    10.66         0.161565       11         0.199424         0.199424     16.43s
+  46     3.10         0.276339        5         0.312782         0.312782      7.24s
+  45     5.90         0.158635        6         0.226791         0.226791      9.53s
+  43     4.96         0.128481        7          0.20796          0.20796     14.27s
+  46     7.02        0.0940179        7         0.123182         0.123182      7.16s
+  43     8.88         0.160788        9         0.239225         0.239225     14.75s
+  43    10.66         0.157869       11         0.199424         0.199424     14.67s
+  39     8.75         0.148251        9         0.180851         0.180851     24.57s
+  44     4.93         0.131133        5          0.20796          0.20796     12.16s
+  47     3.11         0.270445        5         0.312233         0.312233      4.91s
+  46     5.97         0.162236        6         0.226791         0.226791      7.39s
+  44    14.48         0.179084       15         0.233532         0.233532     20.22s
+  48     3.08          0.27425        3         0.312233         0.312233      2.11s
+  45     4.99         0.132976        5          0.20796          0.20796      8.56s
+  44    10.69          0.15909       11         0.199424         0.199424     10.78s
+  40     8.71         0.150226        9         0.180851         0.180851     19.37s
+  47     6.95        0.0927438        7         0.123182         0.123182      4.48s
+  47     5.94         0.154046        6         0.226791         0.226791      4.30s
+  44     8.82         0.159945        9         0.239225         0.239225     11.10s
+  45    14.61         0.181251       15         0.233532         0.233532     10.51s
+  46     5.00         0.134349        5          0.20796          0.20796      7.18s
+  41     8.69         0.147047        9         0.180851         0.180851     19.09s
+  48     5.83         0.156421        6         0.226791         0.226791      2.35s
+  48     6.89        0.0931155        7         0.123182         0.123182      2.39s
+  45     8.99         0.157787        9         0.239225         0.239225      9.32s
+  45    10.78         0.161311       11         0.199424         0.199424      9.71s
+  49     3.20         0.273348        3         0.312233         0.312233      0.00s
+Model is not converging.  Current: 70585.30031098194 is not greater than 70585.91752575117. Delta is -0.6172147692268481
+[SUI/USDT:USDT] Regime model fitted successfully.
+[SUI/USDT:USDT] Saved HMM model to models\SUIUSDT_HMM.joblib
+  46    14.60         0.182429       15         0.233532         0.233532      6.26s
+  49     7.10        0.0914978        7         0.123182         0.123182      0.00s
+  42     8.76         0.149338        9         0.180851         0.180851     14.24s
+  46     8.92         0.163694        9         0.239225         0.239225      6.06s
+  46    10.84         0.161525       11         0.199424         0.199424      6.04s
+  49     6.03         0.156825        6         0.226791         0.226791      0.00s
+  47     5.00         0.129486        7          0.20796          0.20796      4.50s
+Model is not converging.  Current: 65904.31267870874 is not greater than 65904.44497936402. Delta is -0.13230065528478008
+[MNT/USDT:USDT] Regime model fitted successfully.
+[MNT/USDT:USDT] Saved HMM model to models\MNTUSDT_HMM.joblib
+[BNB/USDT:USDT] Regime model fitted successfully.
+  43     8.82         0.148587        9         0.180851         0.180851      9.91s
+[BNB/USDT:USDT] Saved HMM model to models\BNBUSDT_HMM.joblib
+  47     8.91         0.159696       15         0.239757         0.239757      3.38s
+  47    10.83         0.160862       17         0.200852         0.200852      3.36s
+  47    14.40         0.180309       15         0.233532         0.233532      3.48s
+  48     4.91         0.131557        7          0.20796          0.20796      1.50s
+  44     8.79         0.149019        9         0.180851         0.180851      7.85s
+  48    10.45         0.159462       11         0.199424         0.199424      1.53s
+  48    14.37         0.180085       15         0.233532         0.233532      1.52s
+  48     8.71         0.156469        9         0.239225         0.239225      1.55s
+  49     5.07         0.131779        5          0.20796          0.20796      0.00s
+[ETH/USDT:USDT] Regime model fitted successfully.
+[ETH/USDT:USDT] Saved HMM model to models\ETHUSDT_HMM.joblib
+  45     8.85         0.149984        9         0.180851         0.180851      5.31s
+  49    10.83         0.159297       11         0.199424         0.199424      0.00s
+  49    14.58         0.181854       15         0.233532         0.233532      0.00s
+  49     9.03         0.161631       11         0.239225         0.239225      0.00s
+[XRP/USDT:USDT] Regime model fitted successfully.
+[XRP/USDT:USDT] Saved HMM model to models\XRPUSDT_HMM.joblib
+[SOL/USDT:USDT] Regime model fitted successfully.
+[SOL/USDT:USDT] Saved HMM model to models\SOLUSDT_HMM.joblib
+[BTC/USDT:USDT] Regime model fitted successfully.
+[BTC/USDT:USDT] Saved HMM model to models\BTCUSDT_HMM.joblib
+  46     8.98         0.151685        9         0.180851         0.180851      1.98s
+  47     8.84         0.148215        9         0.180851         0.180851      1.21s
+  48     8.86         0.148918        9         0.180851         0.180851      0.63s
+  49     8.91         0.148731        9         0.180851         0.180851      0.00s
+Model is not converging.  Current: 37507.377768913946 is not greater than 37508.357536793366. Delta is -0.9797678794202511
+[DOGE/USDT:USDT] Regime model fitted successfully.
+[DOGE/USDT:USDT] Saved HMM model to models\DOGEUSDT_HMM.joblib
+2025-10-20 22:58:24,986 - [CrucibleEngine] - INFO - HMM Regime model trained for BTC/USDT:USDT
+2025-10-20 22:58:24,986 - [CrucibleEngine] - INFO - HMM Regime model trained for XRP/USDT:USDT
+2025-10-20 22:58:24,986 - [CrucibleEngine] - INFO - HMM Regime model trained for MNT/USDT:USDT
+2025-10-20 22:58:24,991 - [CrucibleEngine] - INFO - HMM Regime model trained for ETH/USDT:USDT
+2025-10-20 22:58:24,991 - [CrucibleEngine] - INFO - HMM Regime model trained for SUI/USDT:USDT
+2025-10-20 22:58:24,992 - [CrucibleEngine] - INFO - HMM Regime model trained for BNB/USDT:USDT
+2025-10-20 22:58:24,992 - [CrucibleEngine] - INFO - HMM Regime model trained for EPIC/USDT:USDT
+2025-10-20 22:58:24,992 - [CrucibleEngine] - INFO - HMM Regime model trained for ARC/USDT:USDT
+2025-10-20 22:58:24,992 - [CrucibleEngine] - INFO - HMM Regime model trained for SOL/USDT:USDT
+2025-10-20 22:58:24,996 - [CrucibleEngine] - INFO - HMM Regime model trained for DOGE/USDT:USDT
+2025-10-20 22:58:24,996 - [CrucibleEngine] - INFO - HMM Regime model initialization complete
+2025-10-20 22:58:24,996 - [CrucibleEngine] - INFO - Initializing immune system for risk monitoring...
+2025-10-20 22:58:24,996 - [CrucibleEngine] - INFO - Immune system initialized successfully
+2025-10-20 22:58:24,996 - [CrucibleEngine] - INFO - Scanning for and loading all existing models from model directories...
+2025-10-20 22:58:25,035 - [CrucibleEngine] - INFO - Found 1 model(s) for BTC/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 22:58:25,035 - [V3Agent_BTCUSDT] - INFO - No saved state for BTCUSDT_ensemble_agent. Initializing with default values.
+INFO:V3Agent_BTCUSDT:No saved state for BTCUSDT_ensemble_agent. Initializing with default values.
+2025-10-20 22:58:25,039 - [V3Agent_BTCUSDT] - INFO - V3Agent initialized for BTC/USDT:USDT with balance: $200.00
+INFO:V3Agent_BTCUSDT:V3Agent initialized for BTC/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: BTCUSDT_ensemble_agent to BTC/USDT:USDT arena.
+2025-10-20 22:58:25,039 - [V3Agent_BTCUSDT] - INFO - Scanning for model directories in models for symbol BTC/USDT:USDT
+INFO:V3Agent_BTCUSDT:Scanning for model directories in models for symbol BTC/USDT:USDT
+2025-10-20 22:58:25,105 - [V3Agent_BTCUSDT] - INFO - Successfully loaded joblib model: BTCUSDT_15m_unified
+INFO:V3Agent_BTCUSDT:Successfully loaded joblib model: BTCUSDT_15m_unified
+2025-10-20 22:58:25,109 - [CrucibleEngine] - INFO - ✅ AGENT BTCUSDT_ensemble_agent for BTC/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 22:58:25,109 - [CrucibleEngine] - INFO - Found 1 model(s) for XRP/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 22:58:25,109 - [V3Agent_XRPUSDT] - INFO - No saved state for XRPUSDT_ensemble_agent. Initializing with default values.
+INFO:V3Agent_XRPUSDT:No saved state for XRPUSDT_ensemble_agent. Initializing with default values.
+2025-10-20 22:58:25,109 - [V3Agent_XRPUSDT] - INFO - V3Agent initialized for XRP/USDT:USDT with balance: $200.00
+INFO:V3Agent_XRPUSDT:V3Agent initialized for XRP/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: XRPUSDT_ensemble_agent to XRP/USDT:USDT arena.
+2025-10-20 22:58:25,113 - [V3Agent_XRPUSDT] - INFO - Scanning for model directories in models for symbol XRP/USDT:USDT
+INFO:V3Agent_XRPUSDT:Scanning for model directories in models for symbol XRP/USDT:USDT
+2025-10-20 22:58:25,177 - [V3Agent_XRPUSDT] - INFO - Successfully loaded joblib model: XRPUSDT_15m_unified
+INFO:V3Agent_XRPUSDT:Successfully loaded joblib model: XRPUSDT_15m_unified
+2025-10-20 22:58:25,177 - [CrucibleEngine] - INFO - ✅ AGENT XRPUSDT_ensemble_agent for XRP/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 22:58:25,181 - [CrucibleEngine] - INFO - Found 1 model(s) for MNT/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 22:58:25,181 - [V3Agent_MNTUSDT] - INFO - No saved state for MNTUSDT_ensemble_agent. Initializing with default values.
+INFO:V3Agent_MNTUSDT:No saved state for MNTUSDT_ensemble_agent. Initializing with default values.
+2025-10-20 22:58:25,185 - [V3Agent_MNTUSDT] - INFO - V3Agent initialized for MNT/USDT:USDT with balance: $200.00
+INFO:V3Agent_MNTUSDT:V3Agent initialized for MNT/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: MNTUSDT_ensemble_agent to MNT/USDT:USDT arena.
+2025-10-20 22:58:25,185 - [V3Agent_MNTUSDT] - INFO - Scanning for model directories in models for symbol MNT/USDT:USDT
+INFO:V3Agent_MNTUSDT:Scanning for model directories in models for symbol MNT/USDT:USDT
+2025-10-20 22:58:25,245 - [V3Agent_MNTUSDT] - INFO - Successfully loaded joblib model: MNTUSDT_15m_unified
+INFO:V3Agent_MNTUSDT:Successfully loaded joblib model: MNTUSDT_15m_unified
+2025-10-20 22:58:25,245 - [CrucibleEngine] - INFO - ✅ AGENT MNTUSDT_ensemble_agent for MNT/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 22:58:25,249 - [CrucibleEngine] - INFO - Found 1 model(s) for ETH/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 22:58:25,249 - [V3Agent_ETHUSDT] - INFO - No saved state for ETHUSDT_ensemble_agent. Initializing with default values.
+INFO:V3Agent_ETHUSDT:No saved state for ETHUSDT_ensemble_agent. Initializing with default values.
+2025-10-20 22:58:25,249 - [V3Agent_ETHUSDT] - INFO - V3Agent initialized for ETH/USDT:USDT with balance: $200.00
+INFO:V3Agent_ETHUSDT:V3Agent initialized for ETH/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: ETHUSDT_ensemble_agent to ETH/USDT:USDT arena.
+2025-10-20 22:58:25,249 - [V3Agent_ETHUSDT] - INFO - Scanning for model directories in models for symbol ETH/USDT:USDT
+INFO:V3Agent_ETHUSDT:Scanning for model directories in models for symbol ETH/USDT:USDT
+2025-10-20 22:58:25,317 - [V3Agent_ETHUSDT] - INFO - Successfully loaded joblib model: ETHUSDT_15m_unified
+INFO:V3Agent_ETHUSDT:Successfully loaded joblib model: ETHUSDT_15m_unified
+2025-10-20 22:58:25,317 - [CrucibleEngine] - INFO - ✅ AGENT ETHUSDT_ensemble_agent for ETH/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 22:58:25,321 - [CrucibleEngine] - INFO - Found 1 model(s) for SUI/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 22:58:25,321 - [V3Agent_SUIUSDT] - INFO - No saved state for SUIUSDT_ensemble_agent. Initializing with default values.
+INFO:V3Agent_SUIUSDT:No saved state for SUIUSDT_ensemble_agent. Initializing with default values.
+2025-10-20 22:58:25,321 - [V3Agent_SUIUSDT] - INFO - V3Agent initialized for SUI/USDT:USDT with balance: $200.00
+INFO:V3Agent_SUIUSDT:V3Agent initialized for SUI/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: SUIUSDT_ensemble_agent to SUI/USDT:USDT arena.
+2025-10-20 22:58:25,321 - [V3Agent_SUIUSDT] - INFO - Scanning for model directories in models for symbol SUI/USDT:USDT
+INFO:V3Agent_SUIUSDT:Scanning for model directories in models for symbol SUI/USDT:USDT
+2025-10-20 22:58:25,381 - [V3Agent_SUIUSDT] - INFO - Successfully loaded joblib model: SUIUSDT_15m_unified
+INFO:V3Agent_SUIUSDT:Successfully loaded joblib model: SUIUSDT_15m_unified
+2025-10-20 22:58:25,381 - [CrucibleEngine] - INFO - ✅ AGENT SUIUSDT_ensemble_agent for SUI/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 22:58:25,385 - [CrucibleEngine] - INFO - Found 1 model(s) for BNB/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 22:58:25,385 - [V3Agent_BNBUSDT] - INFO - No saved state for BNBUSDT_ensemble_agent. Initializing with default values.
+INFO:V3Agent_BNBUSDT:No saved state for BNBUSDT_ensemble_agent. Initializing with default values.
+2025-10-20 22:58:25,385 - [V3Agent_BNBUSDT] - INFO - V3Agent initialized for BNB/USDT:USDT with balance: $200.00
+INFO:V3Agent_BNBUSDT:V3Agent initialized for BNB/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: BNBUSDT_ensemble_agent to BNB/USDT:USDT arena.
+2025-10-20 22:58:25,389 - [V3Agent_BNBUSDT] - INFO - Scanning for model directories in models for symbol BNB/USDT:USDT
+INFO:V3Agent_BNBUSDT:Scanning for model directories in models for symbol BNB/USDT:USDT
+2025-10-20 22:58:25,453 - [V3Agent_BNBUSDT] - INFO - Successfully loaded joblib model: BNBUSDT_15m_unified
+INFO:V3Agent_BNBUSDT:Successfully loaded joblib model: BNBUSDT_15m_unified
+2025-10-20 22:58:25,453 - [CrucibleEngine] - INFO - ✅ AGENT BNBUSDT_ensemble_agent for BNB/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 22:58:25,457 - [CrucibleEngine] - INFO - No models found for EPIC/USDT:USDT. It will be forged by the Singularity Engine.
+2025-10-20 22:58:25,457 - [CrucibleEngine] - INFO - Found 1 model(s) for ARC/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 22:58:25,457 - [V3Agent_ARCUSDT] - INFO - No saved state for ARCUSDT_ensemble_agent. Initializing with default values.
+INFO:V3Agent_ARCUSDT:No saved state for ARCUSDT_ensemble_agent. Initializing with default values.
+2025-10-20 22:58:25,457 - [V3Agent_ARCUSDT] - INFO - V3Agent initialized for ARC/USDT:USDT with balance: $200.00
+INFO:V3Agent_ARCUSDT:V3Agent initialized for ARC/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: ARCUSDT_ensemble_agent to ARC/USDT:USDT arena.
+2025-10-20 22:58:25,461 - [V3Agent_ARCUSDT] - INFO - Scanning for model directories in models for symbol ARC/USDT:USDT
+INFO:V3Agent_ARCUSDT:Scanning for model directories in models for symbol ARC/USDT:USDT
+2025-10-20 22:58:25,525 - [V3Agent_ARCUSDT] - INFO - Successfully loaded joblib model: ARCUSDT_15m_unified
+INFO:V3Agent_ARCUSDT:Successfully loaded joblib model: ARCUSDT_15m_unified
+2025-10-20 22:58:25,529 - [CrucibleEngine] - INFO - ✅ AGENT ARCUSDT_ensemble_agent for ARC/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 22:58:25,529 - [CrucibleEngine] - INFO - Found 1 model(s) for SOL/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 22:58:25,529 - [V3Agent_SOLUSDT] - INFO - No saved state for SOLUSDT_ensemble_agent. Initializing with default values.
+INFO:V3Agent_SOLUSDT:No saved state for SOLUSDT_ensemble_agent. Initializing with default values.
+2025-10-20 22:58:25,533 - [V3Agent_SOLUSDT] - INFO - V3Agent initialized for SOL/USDT:USDT with balance: $200.00
+INFO:V3Agent_SOLUSDT:V3Agent initialized for SOL/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: SOLUSDT_ensemble_agent to SOL/USDT:USDT arena.
+2025-10-20 22:58:25,533 - [V3Agent_SOLUSDT] - INFO - Scanning for model directories in models for symbol SOL/USDT:USDT
+INFO:V3Agent_SOLUSDT:Scanning for model directories in models for symbol SOL/USDT:USDT
+2025-10-20 22:58:25,603 - [V3Agent_SOLUSDT] - INFO - Successfully loaded joblib model: SOLUSDT_15m_unified
+INFO:V3Agent_SOLUSDT:Successfully loaded joblib model: SOLUSDT_15m_unified
+2025-10-20 22:58:25,603 - [CrucibleEngine] - INFO - ✅ AGENT SOLUSDT_ensemble_agent for SOL/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 22:58:25,607 - [CrucibleEngine] - INFO - Found 1 model(s) for DOGE/USDT:USDT. Creating a single V3Agent to manage them.
+2025-10-20 22:58:25,607 - [V3Agent_DOGEUSDT] - INFO - No saved state for DOGEUSDT_ensemble_agent. Initializing with default values.
+INFO:V3Agent_DOGEUSDT:No saved state for DOGEUSDT_ensemble_agent. Initializing with default values.
+2025-10-20 22:58:25,607 - [V3Agent_DOGEUSDT] - INFO - V3Agent initialized for DOGE/USDT:USDT with balance: $200.00
+INFO:V3Agent_DOGEUSDT:V3Agent initialized for DOGE/USDT:USDT with balance: $200.00
+INFO:DecisionsLogger:AGENT ADDED: DOGEUSDT_ensemble_agent to DOGE/USDT:USDT arena.
+2025-10-20 22:58:25,611 - [V3Agent_DOGEUSDT] - INFO - Scanning for model directories in models for symbol DOGE/USDT:USDT
+INFO:V3Agent_DOGEUSDT:Scanning for model directories in models for symbol DOGE/USDT:USDT
+2025-10-20 22:58:25,678 - [V3Agent_DOGEUSDT] - INFO - Successfully loaded joblib model: DOGEUSDT_15m_unified
+INFO:V3Agent_DOGEUSDT:Successfully loaded joblib model: DOGEUSDT_15m_unified
+2025-10-20 22:58:25,678 - [CrucibleEngine] - INFO - ✅ AGENT DOGEUSDT_ensemble_agent for DOGE/USDT:USDT is LIVE. Loaded 1 models.
+2025-10-20 22:58:25,682 - [CrucibleEngine] - INFO - --- Finished loading existing agents. ---
+2025-10-20 22:58:25,682 - [CrucibleEngine] - INFO - --- Phase 1: Complete. ---
+2025-10-20 22:58:25,682 - [CrucibleEngine] - INFO - --- Phase 2: Starting Main Operational Loops (Concurrent)... ---
+2025-10-20 22:58:25,682 - [CrucibleEngine] - INFO - Starting centralized Forge processing loop...
+2025-10-20 22:58:25,682 - [CrucibleEngine] - INFO - [PIT CREW] Shadow evaluation loop started
+2025-10-20 22:58:25,682 - [CrucibleEngine] - INFO - Trade watcher started - monitoring live market data...
+[Data Fetcher] Fetching 200 candles for BTC/USDT from Bybit...
+2025-10-20 22:58:25,682 - [CrucibleEngine] - INFO - Arena loop started - agents ready for battle...
+2025-10-20 22:58:25,686 - [SingularityEngine] - INFO - Singularity Engine starting its operational loops.
+2025-10-20 22:58:25,686 - [SingularityEngine] - INFO - Starting reactive drift monitoring loop...
+2025-10-20 22:58:25,688 - [SingularityEngine] - INFO - Running reactive drift check...
+2025-10-20 22:58:25,688 - [SingularityEngine] - INFO - Monitoring for concept drift...
+2025-10-20 22:58:25,688 - [SingularityEngine] - INFO - Starting continuous, round-robin Forge loop...
+2025-10-20 22:58:25,688 - [SingularityEngine] - INFO - Starting a new round-robin forging cycle...
+2025-10-20 22:58:25,692 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for BTC/USDT:USDT.
+2025-10-20 22:58:25,692 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): BTC/USDT:USDT. Inheritance: False
+2025-10-20 22:58:25,696 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for XRP/USDT:USDT.
+2025-10-20 22:58:25,696 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): XRP/USDT:USDT. Inheritance: False
+2025-10-20 22:58:25,702 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for MNT/USDT:USDT.
+2025-10-20 22:58:25,702 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): MNT/USDT:USDT. Inheritance: False
+2025-10-20 22:58:25,702 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for ETH/USDT:USDT.
+2025-10-20 22:58:25,702 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): ETH/USDT:USDT. Inheritance: False
+2025-10-20 22:58:25,702 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for SUI/USDT:USDT.
+2025-10-20 22:58:25,706 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): SUI/USDT:USDT. Inheritance: False
+2025-10-20 22:58:25,706 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for BNB/USDT:USDT.
+2025-10-20 22:58:25,708 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): BNB/USDT:USDT. Inheritance: False
+2025-10-20 22:58:25,708 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for EPIC/USDT:USDT.
+2025-10-20 22:58:25,708 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): EPIC/USDT:USDT. Inheritance: False
+2025-10-20 22:58:25,708 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for ARC/USDT:USDT.
+2025-10-20 22:58:25,712 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): ARC/USDT:USDT. Inheritance: False
+2025-10-20 22:58:25,718 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for SOL/USDT:USDT.
+2025-10-20 22:58:25,718 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): SOL/USDT:USDT. Inheritance: False
+2025-10-20 22:58:25,718 - [SingularityEngine] - INFO - [Proactive Forge] Submitting new forge task for DOGE/USDT:USDT.
+2025-10-20 22:58:25,718 - [CrucibleEngine] - INFO - [Proactive] Submitting Forge task (P10): DOGE/USDT:USDT. Inheritance: False
+2025-10-20 22:58:25,718 - [SingularityEngine] - INFO - Submitted 10 forge tasks for this cycle. Now waiting for completion...
+2025-10-20 22:58:25,718 - [SingularityEngine] - INFO - Updating ensemble weights based on performance log...
+2025-10-20 22:58:25,722 - [CrucibleEngine] - INFO - --- Processing Forge task from Proactive (P10): BTC/USDT:USDT ---
+2025-10-20 22:58:25,722 - [SingularityEngine] - INFO - Reactive check complete. Sleeping for 60s.
+2025-10-20 22:58:25,728 - [Wkr 276320] - ForgeWorkerMain - Forge worker for BTC/USDT:USDT will use device: cpu
+[Data Fetcher] Fetching 200 candles for XRP/USDT from Bybit...
+2025-10-20 22:58:25,955 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-20 22:58:25,959 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-20 22:58:25,963 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-20 22:58:25,979 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 2. VMD Complete.
+2025-10-20 22:58:25,979 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-20 22:58:25,995 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 3. Particle Filter Complete.
+2025-10-20 22:58:25,995 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for BTC/USDT...
+[Data Fetcher] Fetching 200 candles for MNT/USDT from Bybit...
+[Data Fetcher] Fetching 200 candles for ETH/USDT from Bybit...
+[Data Fetcher] Fetching 200 candles for SUI/USDT from Bybit...
+2025-10-20 22:58:26,900 - [Wkr 276320] - ForgeWorkerMain - [MTFA] Loading timeframes: ['1h', '15m', '1m']
+2025-10-20 22:58:26,906 - [Wkr 276320] - ForgeWorkerMain - [MTFA] Loaded 1h: 500 bars from data/BTCUSDT_1h_raw.csv
+2025-10-20 22:58:26,922 - [Wkr 276320] - ForgeWorkerMain - [MTFA] Loaded 15m: 500 bars from data/BTCUSDT_15m_raw.csv
+[Data Fetcher] Fetching 200 candles for BNB/USDT from Bybit...
+2025-10-20 22:58:27,070 - [Wkr 276320] - ForgeWorkerMain - [MTFA] Loaded 1m: 2500 bars from data/BTCUSDT_1m_raw.csv
+2025-10-20 22:58:27,070 - [Wkr 276320] - ForgeWorkerMain - [MTFA] Starting multi-timeframe processing and alignment...
+2025-10-20 22:58:27,074 - [Wkr 276320] - MTFA - [MTFA] LTF identified: 1m
+2025-10-20 22:58:27,074 - [Wkr 276320] - MTFA - [MTFA] Processing features for timeframe: 1h (500 bars)
+2025-10-20 22:58:27,074 - [Wkr 276320] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-20 22:58:27,074 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-20 22:58:27,078 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-20 22:58:27,114 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-20 22:58:27,114 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-20 22:58:27,150 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-20 22:58:27,150 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-20 22:58:27,150 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-20 22:58:27,154 - [Wkr 276320] - MTFA - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+2025-10-20 22:58:27,154 - [Wkr 276320] - forge.evolution.feature_synthesizer - [Feature Synthesizer] Starting feature evolution...
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+[Data Fetcher] Fetching 200 candles for EPIC/USDT from Bybit...
+--- WARNING: Attempt 1 failed for EPIC/USDT. Retrying in 2s... Error: bybit does not have market symbol EPIC/USDT
+   0     8.10         0.130493        8         0.272185         0.272185     10.58s
+2025-10-20 22:58:27,386 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [BTC/USDT:USDT] 4. Order Flow Features Complete.
+2025-10-20 22:58:27,386 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   1     4.50         0.223815        7         0.272781         0.272781     32.84s
+   2     2.59         0.247681        2         0.272185         0.272185     45.04s
+--- WARNING: Attempt 2 failed for EPIC/USDT. Retrying in 2s... Error: bybit does not have market symbol EPIC/USDT
+   0     8.10         0.095306       13          0.20181          0.20181      1.71m
+   3     2.21         0.254931        4         0.278292         0.278292     32.95s
+   1     5.03         0.148624        6         0.211954         0.211954     24.59s
+   4     2.22         0.252658        4         0.278292         0.278292     30.43s
+   2     2.77         0.179659        5         0.222073         0.222073     28.59s
+   3     3.46         0.187799        6         0.231421         0.231421     28.07s
+--- ERROR fetching market data for EPIC/USDT after 3 attempts: bybit does not have market symbol EPIC/USDT
+2025-10-20 22:58:31,261 - [CrucibleEngine] - WARNING - No data received for EPIC/USDT:USDT
+[Data Fetcher] Fetching 200 candles for ARC/USDT from Bybit...
+   5     2.48         0.247583        4         0.278292         0.278292     37.86s
+--- WARNING: Attempt 1 failed for ARC/USDT. Retrying in 2s... Error: bybit does not have market symbol ARC/USDT
+   4     4.16         0.184263        8         0.263809         0.263809     28.36s
+   6     3.57         0.226424        4         0.278292         0.278292     27.19s
+   5     5.54         0.180881        8         0.263809         0.263809     27.47s
+   7     4.03         0.219776        4         0.278292         0.278292     25.55s
+   6     6.60          0.18405        8         0.263809         0.263809     29.33s
+   8     4.03         0.217475        4         0.278292         0.278292     27.23s
+--- WARNING: Attempt 2 failed for ARC/USDT. Retrying in 2s... Error: bybit does not have market symbol ARC/USDT
+   7     7.45         0.196909       13         0.283006         0.283006     27.17s
+   9     4.06         0.214752        4         0.278292         0.278292     25.24s
+   8     8.02         0.197091       18          0.29492          0.29492     26.81s
+  10     4.08         0.217761        4         0.278292         0.278292     26.04s
+  11     4.04          0.21683        4         0.278292         0.278292     23.80s
+   9     9.32         0.211804       18          0.29492          0.29492     33.21s
+--- ERROR fetching market data for ARC/USDT after 3 attempts: bybit does not have market symbol ARC/USDT
+2025-10-20 22:58:35,332 - [CrucibleEngine] - WARNING - No data received for ARC/USDT:USDT
+[Data Fetcher] Fetching 200 candles for SOL/USDT from Bybit...
+[Data Fetcher] Fetching 200 candles for DOGE/USDT from Bybit...
+  12     4.02         0.214067        6         0.278292         0.278292     22.15s
+  10    13.89         0.232007       15         0.304958         0.304958     25.61s
+  13     4.05         0.221008        4         0.278292         0.278292     23.34s
+  11    14.59         0.235866       15         0.306156         0.306156     26.69s
+  14     4.00         0.219338        4         0.278292         0.278292     21.08s
+  12    14.70         0.235797       13         0.327921         0.327921     24.95s
+  15     4.04         0.221136        4         0.278292         0.278292     22.86s
+  13    13.93           0.2452       16         0.327921         0.327921     23.55s
+  16     4.05         0.210339        4         0.278292         0.278292     21.07s
+  14    14.39         0.244034       20         0.346729         0.346729     25.56s
+  17     4.07         0.214145        4         0.278292         0.278292     20.36s
+  15    13.70         0.247569       32         0.365128         0.365128     23.67s
+  18     4.11         0.214744        4         0.281984         0.281984     18.24s
+  16    13.71         0.254058       29         0.365128         0.365128     22.91s
+  19     3.95         0.214958        4         0.281984         0.281984     19.45s
+  20     3.95         0.225784        4         0.281984         0.281984     18.97s
+  17    16.62         0.261415       32         0.365128         0.365128     23.24s
+  21     3.42         0.251952        4         0.281984         0.281984     18.97s
+  18    18.66         0.265166       29         0.365128         0.365128     29.38s
+  22     3.14         0.251512        3         0.281462         0.281462     14.54s
+  19    18.12         0.265385       32         0.365128         0.365128     22.27s
+  23     3.20         0.251413        3         0.281462         0.281462     16.02s
+  20    16.90         0.269504       20         0.363393         0.363393     19.67s
+  24     3.05         0.251608        3         0.281462         0.281462     23.71s
+  21    16.22         0.266494       20         0.363393         0.363393     20.04s
+  25     3.01         0.253931        3         0.281462         0.281462     15.55s
+  22    17.30         0.268208       31         0.373817         0.373817     18.75s
+  26     3.11         0.253469        3         0.281462         0.281462     14.27s
+  23    17.82         0.268987       31         0.373817         0.373817     20.50s
+  27     3.12         0.253732        3         0.281462         0.281462     14.44s
+  24    18.37         0.269859       21         0.368888         0.368888     18.16s
+  28     3.02         0.251629        3         0.281462         0.281462     13.61s
+  29     3.16         0.253459        3         0.281462         0.281462     13.21s
+  25    18.73         0.269504       21         0.368888         0.368888     18.20s
+  30     3.10         0.253308        3         0.281462         0.281462     11.86s
+  26    19.55         0.272162       24         0.385422         0.385422     22.92s
+  31     3.21         0.253598        3         0.281462         0.281462      9.80s
+  27    20.66         0.273193       24         0.385422         0.385422     16.16s
+  32     3.10         0.255105        3         0.281462         0.281462     10.75s
+  33     3.21         0.252743        3         0.281462         0.281462     11.05s
+  28    20.57         0.270999       24         0.385422         0.385422     16.94s
+  34     3.10         0.253181        3         0.281462         0.281462      9.64s
+  29    21.03         0.272088       24         0.385422         0.385422     17.18s
+  35     3.08         0.253012        3         0.281462         0.281462      9.36s
+  30    21.75          0.27584       24         0.385422         0.385422     17.56s
+  36     3.15         0.249707        3         0.281462         0.281462      8.87s
+  31    22.50         0.279499       24         0.385422         0.385422     14.52s
+  37     3.21         0.253282        3         0.281462         0.281462      8.59s
+  38     3.16         0.253419        3         0.281462         0.281462      7.33s
+  32    22.98         0.282427       31         0.390228         0.390228     14.15s
+  39     3.13         0.252506        3         0.281462         0.281462      6.28s
+  33    23.89         0.277763       24         0.385422         0.385422     16.69s
+  40     3.09         0.255845        3         0.281462         0.281462      5.36s
+  41     3.14         0.249709        3         0.281462         0.281462      5.30s
+  34    23.54         0.280467       24         0.385422         0.385422     12.76s
+  42     3.15         0.252763        3         0.281462         0.281462      4.23s
+  35    23.52         0.280965       24         0.385422         0.385422     11.40s
+  43     3.15         0.251547        3         0.281462         0.281462      3.77s
+  36    23.37         0.285916       24         0.385422         0.385422     11.13s
+  44     3.04         0.255561        3         0.281462         0.281462      3.42s
+2025-10-20 22:59:25,729 - [SingularityEngine] - INFO - Running reactive drift check...
+Error fetching price for MNT/USDT:USDT:
+2025-10-20 22:59:54,050 - [SingularityEngine] - INFO - Monitoring for concept drift...
+Error fetching price for BTC/USDT:USDT:
+Error fetching price for BTC/USDT:USDT:
+Error fetching price for BTC/USDT:USDT:
+Error fetching price for BTC/USDT:USDT:
+Error fetching price for BTC/USDT:USDT:
+2025-10-20 22:59:54,054 - [SingularityEngine] - INFO - Updating ensemble weights based on performance log...
+[Data Fetcher] Fetching 200 candles for BTC/USDT from Bybit...
+2025-10-20 22:59:54,126 - [SingularityEngine] - INFO - Reactive check complete. Sleeping for 60s.
+  45     3.03          0.25441        3         0.281462         0.281462      2.66s
+  37    23.86         0.280957       24         0.385422         0.385422     10.04s
+[Data Fetcher] Fetching 200 candles for XRP/USDT from Bybit...
+  46     3.10         0.253856        3         0.281462         0.281462      2.72s
+  38    22.78         0.278896       33         0.387041         0.387041      8.81s
+[Data Fetcher] Fetching 200 candles for MNT/USDT from Bybit...
+  47     3.11         0.250526        3         0.281462         0.281462      1.23s
+  39    22.97         0.279269       24         0.385422         0.385422      9.26s
+[Data Fetcher] Fetching 200 candles for ETH/USDT from Bybit...
+  48     3.08         0.254022        3         0.281462         0.281462      0.59s
+[Data Fetcher] Fetching 200 candles for SUI/USDT from Bybit...
+  49     3.20         0.251565        3         0.281462         0.281462      0.00s
+2025-10-20 22:59:57,474 - [Wkr 276320] - forge.evolution.feature_synthesizer - [Feature Synthesizer] Feature evolution complete. Found 1000 features.
+  40    23.32         0.279081       27         0.385422         0.385422      7.87s
+2025-10-20 22:59:57,504 - [Wkr 276320] - MTFA -   -> [MTFA_TEMP] Injecting 5 evolved features...
+2025-10-20 22:59:57,508 - [Wkr 276320] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-20 22:59:57,508 - [Wkr 276320] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-20 22:59:57,508 - [Wkr 276320] - MTFA - [MTFA] Renamed 21 features for 1h
+2025-10-20 22:59:57,508 - [Wkr 276320] - MTFA - [MTFA] Processing features for timeframe: 15m (500 bars)
+2025-10-20 22:59:57,508 - [Wkr 276320] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-20 22:59:57,512 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-20 22:59:57,512 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-20 22:59:57,624 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-20 22:59:57,624 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-20 22:59:57,663 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-20 22:59:57,663 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-20 22:59:57,663 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-20 22:59:57,667 - [Wkr 276320] - MTFA - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+2025-10-20 22:59:57,667 - [Wkr 276320] - forge.evolution.feature_synthesizer - [Feature Synthesizer] Starting feature evolution...
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0     8.10         0.100031        3         0.218758         0.218758     14.21s
+[Data Fetcher] Fetching 200 candles for BNB/USDT from Bybit...
+  41    23.33         0.276777       24         0.385422         0.385422      6.93s
+   1     4.22         0.154371        4         0.218758         0.218758     24.41s
+[Data Fetcher] Fetching 200 candles for EPIC/USDT from Bybit...
+--- WARNING: Attempt 1 failed for EPIC/USDT. Retrying in 2s... Error: bybit does not have market symbol EPIC/USDT
+   2     3.01         0.181442        5         0.218758         0.218758     32.00s
+  42    23.32         0.278028       24         0.385422         0.385422      5.98s
+   3     3.25          0.19031        4         0.218758         0.218758     28.35s
+  43    23.39         0.274404       24         0.385422         0.385422      4.72s
+   4     3.09         0.188903        3         0.218758         0.218758     27.73s
+  44    23.33         0.278605       24         0.385422         0.385422      4.72s
+--- WARNING: Attempt 2 failed for EPIC/USDT. Retrying in 2s... Error: bybit does not have market symbol EPIC/USDT
+   5     3.15         0.190378        3         0.218758         0.218758     26.24s
+   6     3.06         0.188971        3         0.218758         0.218758     29.08s
+  45    23.67         0.278471       24         0.385422         0.385422      3.65s
+   7     3.13         0.189987        3         0.218758         0.218758     26.05s
+--- ERROR fetching market data for EPIC/USDT after 3 attempts: bybit does not have market symbol EPIC/USDT
+2025-10-20 23:00:02,968 - [CrucibleEngine] - WARNING - No data received for EPIC/USDT:USDT
+[Data Fetcher] Fetching 200 candles for ARC/USDT from Bybit...
+--- WARNING: Attempt 1 failed for ARC/USDT. Retrying in 2s... Error: bybit does not have market symbol ARC/USDT
+   8     3.06          0.18971        3         0.218758         0.218758     28.55s
+  46    23.88         0.285828       24         0.385422         0.385422      3.54s
+   9     3.16          0.18693        3         0.218758         0.218758     26.97s
+  47    23.69         0.279521       27         0.385422         0.385422      1.82s
+  10     3.18         0.190563        3         0.218758         0.218758     26.61s
+  48    23.18         0.277198       24         0.385422         0.385422      0.99s
+  11     3.10          0.18983        3         0.218758         0.218758     25.34s
+--- WARNING: Attempt 2 failed for ARC/USDT. Retrying in 2s... Error: bybit does not have market symbol ARC/USDT
+  12     3.06         0.189044        3         0.218758         0.218758     26.85s
+  49    23.51         0.277606       24         0.385422         0.385422      0.00s
+2025-10-20 23:00:05,871 - [CrucibleEngine] - INFO -   -> [BTC/USDT:USDT] Injecting 5 evolved features...
+2025-10-20 23:00:05,875 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object present. Attempting GNN generation (Main context). ---
+2025-10-20 23:00:05,875 - [CrucibleEngine] - INFO -   -> Generating GNN features for the entire market...
+[GNN Pipeline] Starting feature generation...
+[Data Fetcher] Fetching 500 candles for BTC/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for XRP/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for MNT/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for ETH/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for SUI/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for BNB/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for EPIC/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for ARC/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for SOL/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for DOGE/USDT from Bybit...
+  13     3.13         0.191211        3         0.218758         0.218758     19.30s
+  14     3.07          0.19138        3         0.218758         0.218758     21.50s
+--- WARNING: Attempt 1 failed for EPIC/USDT. Retrying in 2s... Error: bybit does not have market symbol EPIC/USDT
+--- WARNING: Attempt 1 failed for ARC/USDT. Retrying in 2s... Error: bybit does not have market symbol ARC/USDT
+--- ERROR fetching market data for ARC/USDT after 3 attempts: bybit does not have market symbol ARC/USDT
+2025-10-20 23:00:06,999 - [CrucibleEngine] - WARNING - No data received for ARC/USDT:USDT
+[Data Fetcher] Fetching 200 candles for SOL/USDT from Bybit...
+  15     3.10         0.188781        3         0.218758         0.218758     18.97s
+[Data Fetcher] Fetching 200 candles for DOGE/USDT from Bybit...
+  16     3.13         0.189126        3         0.218758         0.218758     17.95s
+  17     3.12         0.189561        3         0.218758         0.218758     16.28s
+--- WARNING: Attempt 2 failed for EPIC/USDT. Retrying in 2s... Error: bybit does not have market symbol EPIC/USDT
+--- WARNING: Attempt 2 failed for ARC/USDT. Retrying in 2s... Error: bybit does not have market symbol ARC/USDT
+  18     3.19         0.184955        3         0.218758         0.218758     15.78s
+  19     3.00          0.18846        3         0.218758         0.218758     14.79s
+  20     3.06         0.188635        3         0.218758         0.218758     15.17s
+  21     3.02         0.189112        3         0.218758         0.218758     15.24s
+--- ERROR fetching market data for EPIC/USDT after 3 attempts: bybit does not have market symbol EPIC/USDT
+--- ERROR fetching market data for ARC/USDT after 3 attempts: bybit does not have market symbol ARC/USDT
+[GNN Pipeline] WARNING: Failed to fetch or process data for EPIC/USDT:USDT. Excluding from this graph build.
+[GNN Pipeline] WARNING: Failed to fetch or process data for ARC/USDT:USDT. Excluding from this graph build.
+  22     3.14         0.188025        3         0.218758         0.218758     19.90s
+C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\data_processing_v2.py:257: FutureWarning: Not prepending group keys to the result index of transform-like apply. In the future, the group keys will be included in the index, regardless of whether the applied function returns a like-indexed object.
+To preserve the previous behavior, use
+
+        >>> .groupby(..., group_keys=False)
+
+To adopt the future behavior and silence this warning, use
+
+        >>> .groupby(..., group_keys=True)
+  combined_features = combined_df.groupby(level='symbol').apply(add_all_features)
+[GNN Pipeline] GNN feature generation complete.
+2025-10-20 23:00:11,549 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+2025-10-20 23:00:11,549 - [CrucibleEngine] - ERROR - Error processing features for BTC/USDT:USDT: "['RSI_14', 'ATRr_14', 'SMA_20'] not in index"
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\crucible_engine.py", line 363, in _arena_loop
+    features_for_regime = df_features[regime_model.feature_columns]
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\venv\lib\site-packages\pandas\core\frame.py", line 3813, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\venv\lib\site-packages\pandas\core\indexes\base.py", line 6070, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\venv\lib\site-packages\pandas\core\indexes\base.py", line 6133, in _raise_if_missing
+    raise KeyError(f"{not_found} not in index")
+KeyError: "['RSI_14', 'ATRr_14', 'SMA_20'] not in index"
+2025-10-20 23:00:11,589 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-20 23:00:11,593 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-20 23:00:11,597 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-20 23:00:11,609 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 2. VMD Complete.
+2025-10-20 23:00:11,609 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-20 23:00:11,629 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 3. Particle Filter Complete.
+2025-10-20 23:00:11,629 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for XRP/USDT...
+  23     3.20         0.188861        3         0.218758         0.218758     13.58s
+  24     3.05         0.188339        3         0.218758         0.218758     13.00s
+  25     3.01         0.190253        3         0.218758         0.218758     12.60s
+2025-10-20 23:00:13,053 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [XRP/USDT:USDT] 4. Order Flow Features Complete.
+2025-10-20 23:00:13,053 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0     8.10       0.00694343        3        0.0164083        0.0164083     15.19s
+  26     3.11         0.189456        3         0.218758         0.218758     14.65s
+   1     2.67        0.0110088        3         0.018969         0.018969     23.34s
+  27     3.12         0.190313        3         0.218758         0.218758     14.35s
+   2     2.81        0.0120743        3         0.018969         0.018969     40.05s
+  28     3.02         0.188277        3         0.218758         0.218758     13.57s
+   3     3.06        0.0135403        3         0.018969         0.018969     26.88s
+  29     3.16         0.188999        3         0.218758         0.218758     13.12s
+   4     3.10        0.0157816        3         0.018969         0.018969     27.91s
+  30     3.10         0.189732        3         0.218758         0.218758     12.32s
+   5     3.15        0.0162434        3         0.018969         0.018969     26.06s
+  31     3.21         0.189874        3         0.218758         0.218758     11.75s
+   6     3.06        0.0158275        3         0.018969         0.018969     24.70s
+  32     3.10          0.19137        3         0.218758         0.218758     11.22s
+   7     3.13        0.0161566        3         0.018969         0.018969     24.71s
+  33     3.21         0.189443        3         0.218758         0.218758      9.80s
+   8     3.06        0.0160742        3         0.018969         0.018969     24.85s
+  34     3.10         0.190518        3         0.218758         0.218758      9.96s
+   9     3.16        0.0159627        3         0.018969         0.018969     24.01s
+  35     3.08         0.190082        3         0.218758         0.218758      8.46s
+  10     3.18        0.0163498        3         0.018969         0.018969     25.21s
+  36     3.15         0.186945        3         0.218758         0.218758      8.43s
+  11     3.10        0.0160858        3         0.018969         0.018969     21.06s
+  37     3.21         0.191018        3         0.218758         0.218758      7.76s
+  12     3.06        0.0161363        3         0.018969         0.018969     22.50s
+  38     3.16          0.19104        3         0.218758         0.218758      7.48s
+  13     3.13        0.0163559        3         0.018969         0.018969     22.19s
+  14     3.07        0.0163368        5         0.018969         0.018969     21.85s
+  39     3.13         0.190304        3         0.218758         0.218758      6.68s
+  15     3.10        0.0161936       13         0.018969         0.018969     21.42s
+  40     3.09         0.191597        3         0.218758         0.218758      5.92s
+  16     3.13         0.016114        3         0.018969         0.018969     21.33s
+  41     3.14         0.186747        3         0.218758         0.218758      5.41s
+  17     3.12        0.0161097        5         0.018969         0.018969     19.59s
+  42     3.15         0.189163        3         0.218758         0.218758      4.44s
+  18     3.19         0.015909        5         0.018969         0.018969     18.42s
+  43     3.15          0.18862        3         0.218758         0.218758      3.99s
+  44     3.04         0.191329        3         0.218758         0.218758      3.20s
+  19     3.00        0.0157518        3         0.018969         0.018969     24.61s
+  20     3.06        0.0159104        3         0.018969         0.018969     17.87s
+  45     3.03         0.190447        3         0.218758         0.218758      3.87s
+  21     3.02        0.0158812        3         0.018969         0.018969     16.19s
+  46     3.10         0.190299        3         0.218758         0.218758      1.93s
+  22     3.14        0.0161774        3         0.018969         0.018969     17.29s
+  47     3.11         0.187562        3         0.218758         0.218758      1.26s
+  23     3.20        0.0162166        3         0.018969         0.018969     16.20s
+  48     3.08         0.190241        3         0.218758         0.218758      0.65s
+  24     3.05        0.0158448        3         0.018969         0.018969     15.56s
+  49     3.20         0.187693        3         0.218758         0.218758      0.00s
+2025-10-20 23:00:28,748 - [Wkr 276320] - forge.evolution.feature_synthesizer - [Feature Synthesizer] Feature evolution complete. Found 1000 features.
+2025-10-20 23:00:28,792 - [Wkr 276320] - MTFA -   -> [MTFA_TEMP] Injecting 5 evolved features...
+2025-10-20 23:00:28,795 - [Wkr 276320] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-20 23:00:28,795 - [Wkr 276320] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-20 23:00:28,799 - [Wkr 276320] - MTFA - [MTFA] Renamed 21 features for 15m
+2025-10-20 23:00:28,799 - [Wkr 276320] - MTFA - [MTFA] Processing features for timeframe: 1m (2500 bars)
+2025-10-20 23:00:28,803 - [Wkr 276320] - MTFA - --- Feature Factory: Starting Processing ---
+2025-10-20 23:00:28,803 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 1. Calculating Technical Indicators...
+2025-10-20 23:00:28,803 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+  25     3.01        0.0159152        3         0.018969         0.018969     14.72s
+2025-10-20 23:00:29,264 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 2. VMD Complete.
+2025-10-20 23:00:29,264 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Generating Particle Filter Features (Potential Hang Point)...
+  26     3.11        0.0159395        3         0.018969         0.018969     12.15s
+2025-10-20 23:00:29,458 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 3. Particle Filter Complete.
+2025-10-20 23:00:29,458 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] Skipping Order Flow Features for temporary MTFA symbol.
+2025-10-20 23:00:29,458 - [Wkr 276320] - MTFA -   -> [DIAGNOSTIC] [MTFA_TEMP] 4. Order Flow Features Complete.
+2025-10-20 23:00:29,462 - [Wkr 276320] - MTFA - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+2025-10-20 23:00:29,462 - [Wkr 276320] - forge.evolution.feature_synthesizer - [Feature Synthesizer] Starting feature evolution...
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0     8.10         0.065515        7         0.196752         0.196752     17.15s
+  27     3.12        0.0162021        3         0.018969         0.018969     15.67s
+   1     4.56           0.1516        6         0.205921         0.205921     28.24s
+  28     3.02        0.0159081        3         0.018969         0.018969     14.29s
+   2     2.87         0.171418        7         0.209421         0.209421     32.63s
+  29     3.16        0.0161311        3         0.018969         0.018969     12.97s
+   3     2.65         0.177508        7         0.209421         0.209421     30.00s
+  30     3.10        0.0160198        3         0.018969         0.018969     11.63s
+   4     4.26         0.177289        7         0.209421         0.209421     28.45s
+  31     3.21         0.016096        3         0.018969         0.018969     10.95s
+   5     5.57         0.181826        7         0.209421         0.209421     31.78s
+  32     3.10        0.0162496        3         0.018969         0.018969     10.34s
+   6     5.45         0.184703        6         0.209421         0.209421     30.96s
+  33     3.21        0.0162236        3         0.018969         0.018969     10.18s
+   7     6.06         0.184909        6         0.209421         0.209421     32.17s
+  34     3.10        0.0160573        5         0.018969         0.018969     10.59s
+   8     5.60         0.187146        6         0.209421         0.209421     29.58s
+  35     3.08        0.0164722        3         0.018969         0.018969      9.20s
+  36     3.15        0.0162215        3         0.018969         0.018969      8.54s
+   9     5.00         0.182727        5         0.209421         0.209421     29.15s
+  37     3.21        0.0165187        3         0.018969         0.018969      7.85s
+  10     5.05         0.186532        5         0.209421         0.209421     28.64s
+  38     3.16        0.0163033        3         0.018969         0.018969      6.34s
+  11     4.93         0.186432        5         0.209421         0.209421     27.37s
+  39     3.13        0.0163047        3         0.018969         0.018969      9.28s
+  12     4.99         0.189295        5         0.209421         0.209421     26.43s
+  40     3.09        0.0164873        3         0.018969         0.018969      6.09s
+  13     4.98         0.188425        5         0.209421         0.209421     27.52s
+  41     3.14        0.0157655        3         0.018969         0.018969      5.01s
+  14     4.91         0.189638        5         0.209421         0.209421     26.68s
+  42     3.15        0.0160542        7        0.0202324        0.0202324      4.45s
+  15     4.99         0.186776        5         0.209421         0.209421     22.72s
+  43     3.15        0.0159821        5         0.018969         0.018969      3.94s
+  16     4.96         0.184626        5         0.209421         0.209421     25.11s
+  44     3.04        0.0161286        3         0.018969         0.018969      3.07s
+  45     3.03        0.0161359        3         0.018969         0.018969      2.47s
+  17     4.97         0.185725        5         0.209421         0.209421     30.12s
+  46     3.10        0.0163155        5         0.018969         0.018969      1.97s
+  18     5.00          0.18263        5         0.209421         0.209421     24.38s
+  47     3.11         0.015868        5         0.018969         0.018969      1.18s
+  19     4.86         0.185341        5         0.209421         0.209421     23.35s
+  48     3.08        0.0160633        3         0.018969         0.018969      0.63s
+  20     4.88         0.185186        5         0.209421         0.209421     21.82s
+  49     3.20        0.0159314        3         0.018969         0.018969      0.00s
+2025-10-20 23:00:44,547 - [CrucibleEngine] - INFO -   -> [XRP/USDT:USDT] Injecting 5 evolved features...
+2025-10-20 23:00:44,551 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object present. Attempting GNN generation (Main context). ---
+2025-10-20 23:00:44,551 - [CrucibleEngine] - INFO -   -> Generating GNN features for the entire market...
+[GNN Pipeline] Starting feature generation...
+[Data Fetcher] Fetching 500 candles for BTC/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for XRP/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for MNT/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for ETH/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for SUI/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for BNB/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for EPIC/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for ARC/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for SOL/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for DOGE/USDT from Bybit...
+  21     4.86         0.185879        5         0.209421         0.209421     18.26s
+--- WARNING: Attempt 1 failed for EPIC/USDT. Retrying in 2s... Error: bybit does not have market symbol EPIC/USDT
+--- WARNING: Attempt 1 failed for ARC/USDT. Retrying in 2s... Error: bybit does not have market symbol ARC/USDT
+  22     4.99         0.187252        5         0.209421         0.209421     17.07s
+  23     5.03         0.185914        5         0.209421         0.209421     15.41s
+  24     4.87          0.18423        5         0.209421         0.209421     14.76s
+  25     4.83          0.18609        5         0.209421         0.209421     14.59s
+--- WARNING: Attempt 2 failed for EPIC/USDT. Retrying in 2s... Error: bybit does not have market symbol EPIC/USDT
+--- WARNING: Attempt 2 failed for ARC/USDT. Retrying in 2s... Error: bybit does not have market symbol ARC/USDT
+  26     4.93         0.186767        5         0.209421         0.209421     14.01s
+  27     5.04         0.189091        5         0.209421         0.209421     12.85s
+  28     4.89         0.186937        5         0.209421         0.209421     12.39s
+--- ERROR fetching market data for ARC/USDT after 3 attempts: bybit does not have market symbol ARC/USDT
+--- ERROR fetching market data for EPIC/USDT after 3 attempts: bybit does not have market symbol EPIC/USDT
+  29     4.99         0.185354        5         0.209421         0.209421     11.71s
+[GNN Pipeline] WARNING: Failed to fetch or process data for EPIC/USDT:USDT. Excluding from this graph build.
+[GNN Pipeline] WARNING: Failed to fetch or process data for ARC/USDT:USDT. Excluding from this graph build.
+C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\data_processing_v2.py:257: FutureWarning: Not prepending group keys to the result index of transform-like apply. In the future, the group keys will be included in the index, regardless of whether the applied function returns a like-indexed object.
+To preserve the previous behavior, use
+
+        >>> .groupby(..., group_keys=False)
+
+To adopt the future behavior and silence this warning, use
+
+        >>> .groupby(..., group_keys=True)
+  combined_features = combined_df.groupby(level='symbol').apply(add_all_features)
+[GNN Pipeline] GNN feature generation complete.
+2025-10-20 23:00:50,017 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+2025-10-20 23:00:50,017 - [CrucibleEngine] - ERROR - Error processing features for XRP/USDT:USDT: "['RSI_14', 'ATRr_14', 'SMA_20'] not in index"
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\crucible_engine.py", line 363, in _arena_loop
+    features_for_regime = df_features[regime_model.feature_columns]
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\venv\lib\site-packages\pandas\core\frame.py", line 3813, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\venv\lib\site-packages\pandas\core\indexes\base.py", line 6070, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\venv\lib\site-packages\pandas\core\indexes\base.py", line 6133, in _raise_if_missing
+    raise KeyError(f"{not_found} not in index")
+KeyError: "['RSI_14', 'ATRr_14', 'SMA_20'] not in index"
+2025-10-20 23:00:50,017 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-20 23:00:50,017 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [MNT/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-20 23:00:50,021 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [MNT/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-20 23:00:50,021 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [MNT/USDT:USDT] 2. VMD Complete.
+2025-10-20 23:00:50,021 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [MNT/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-20 23:00:50,045 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [MNT/USDT:USDT] 3. Particle Filter Complete.
+2025-10-20 23:00:50,045 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [MNT/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for MNT/USDT...
+  30     4.94         0.185394        5         0.209421         0.209421     12.61s
+  31     5.04         0.187076        5         0.209421         0.209421     10.51s
+2025-10-20 23:00:51,613 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [MNT/USDT:USDT] 4. Order Flow Features Complete.
+2025-10-20 23:00:51,613 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+  32     4.91         0.187859        5         0.209421         0.209421     11.36s
+   0     8.10                0       11                0                0     11.57s
+   1     2.23                0        2                0                0     23.14s
+  33     5.09         0.187348        5         0.209421         0.209421     12.97s
+   2     1.47                0        1                0                0     22.48s
+2025-10-20 23:00:54,122 - [SingularityEngine] - INFO - Running reactive drift check...
+Error fetching price for EPIC/USDT:USDT:
+2025-10-20 23:01:08,361 - [SingularityEngine] - INFO - Monitoring for concept drift...
+Error fetching price for BTC/USDT:USDT:
+Error fetching price for BTC/USDT:USDT:
+Error fetching price for BTC/USDT:USDT:
+Error fetching price for BTC/USDT:USDT:
+Error fetching price for BTC/USDT:USDT:
+[Data Fetcher] Fetching 200 candles for BTC/USDT from Bybit...
+2025-10-20 23:01:08,417 - [SingularityEngine] - INFO - Updating ensemble weights based on performance log...
+2025-10-20 23:01:08,433 - [SingularityEngine] - INFO - Reactive check complete. Sleeping for 60s.
+   3     1.30                0        1                0                0     21.28s
+   4     1.29                0        1                0                0     23.88s
+[Data Fetcher] Fetching 200 candles for XRP/USDT from Bybit...
+  34     4.98          0.18698        5         0.209421         0.209421     16.16s
+   5     1.30                0        1                0                0     24.71s
+[Data Fetcher] Fetching 200 candles for MNT/USDT from Bybit...
+  35     4.96         0.186299        5         0.209421         0.209421     11.25s
+   6     1.29                0        1                0                0     29.00s
+[Data Fetcher] Fetching 200 candles for ETH/USDT from Bybit...
+  36     4.98         0.185521        5         0.209421         0.209421      9.72s
+   7     1.28                0        1                0                0     21.97s
+[Data Fetcher] Fetching 200 candles for SUI/USDT from Bybit...
+   8     1.25                0        1                0                0     23.29s
+  37     5.09         0.187657        5         0.209421         0.209421      9.21s
+   9     1.39                0        1                0                0     22.07s
+[Data Fetcher] Fetching 200 candles for BNB/USDT from Bybit...
+  38     4.96         0.188144        5         0.209421         0.209421      8.49s
+  10     1.30                0        1                0                0     18.61s
+[Data Fetcher] Fetching 200 candles for EPIC/USDT from Bybit...
+--- WARNING: Attempt 1 failed for EPIC/USDT. Retrying in 2s... Error: bybit does not have market symbol EPIC/USDT
+  11     1.29                0        1                0                0     22.67s
+  39     4.95         0.187417        5         0.209421         0.209421      8.33s
+  12     1.20                0        1                0                0     18.48s
+  40     4.95           0.1899        5         0.209421         0.209421      7.22s
+  13     1.29                0        5                0                0     18.95s
+  41     4.92         0.183489        5         0.209421         0.209421      6.21s
+  14     1.22                0        1                0                0     21.38s
+--- WARNING: Attempt 2 failed for EPIC/USDT. Retrying in 2s... Error: bybit does not have market symbol EPIC/USDT
+  15     1.29                0        1                0                0     19.63s
+  42     4.98          0.18702        5         0.209421         0.209421      5.20s
+  16     1.32                0        1                0                0     16.64s
+  43     4.97         0.184097        5         0.209421         0.209421      4.90s
+  17     1.30                0        1                0                0     17.01s
+--- ERROR fetching market data for EPIC/USDT after 3 attempts: bybit does not have market symbol EPIC/USDT
+2025-10-20 23:01:16,968 - [CrucibleEngine] - WARNING - No data received for EPIC/USDT:USDT
+[Data Fetcher] Fetching 200 candles for ARC/USDT from Bybit...
+--- WARNING: Attempt 1 failed for ARC/USDT. Retrying in 2s... Error: bybit does not have market symbol ARC/USDT
+  18     1.35                0        4                0                0     18.15s
+  44     4.93         0.188516        5         0.209421         0.209421      4.03s
+  19     1.28                0        1                0                0     14.60s
+  45     4.95         0.186784        5         0.209421         0.209421      3.32s
+  20     1.28                0        1                0                0     15.38s
+  21     1.29                0        8                0                0     15.50s
+  46     4.98         0.187799        5         0.209421         0.209421      2.26s
+--- WARNING: Attempt 2 failed for ARC/USDT. Retrying in 2s... Error: bybit does not have market symbol ARC/USDT
+  22     1.26                0        8                0                0     14.03s
+  47     4.98         0.185359        5         0.209421         0.209421      1.63s
+  23     1.31                0        1                0                0     14.70s
+  24     1.30                0        1                0                0     14.82s
+  48     4.92         0.188088        5         0.209421         0.209421      0.79s
+  25     1.23                0        1                0                0     12.14s
+--- ERROR fetching market data for ARC/USDT after 3 attempts: bybit does not have market symbol ARC/USDT
+2025-10-20 23:01:20,966 - [CrucibleEngine] - WARNING - No data received for ARC/USDT:USDT
+[Data Fetcher] Fetching 200 candles for SOL/USDT from Bybit...
+  49     5.10         0.186234        5         0.209421         0.209421      0.00s
+2025-10-20 23:01:21,301 - [Wkr 276320] - forge.evolution.feature_synthesizer - [Feature Synthesizer] Feature evolution complete. Found 1000 features.
+2025-10-20 23:01:21,328 - [Wkr 276320] - MTFA -   -> [MTFA_TEMP] Injecting 5 evolved features...
+2025-10-20 23:01:21,332 - [Wkr 276320] - MTFA - --- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---
+2025-10-20 23:01:21,332 - [Wkr 276320] - MTFA - --- Feature Factory: All Processing Complete ---
+2025-10-20 23:01:21,332 - [Wkr 276320] - MTFA - [MTFA] Kept LTF 1m dataframe intact
+2025-10-20 23:01:21,335 - [Wkr 276320] - MTFA - [MTFA] Aligning 1h features onto 1m...
+2025-10-20 23:01:21,335 - [Wkr 276320] - MTFA - [MTFA] Successfully aligned 21 features from 1h
+2025-10-20 23:01:21,335 - [Wkr 276320] - MTFA - [MTFA] Aligning 15m features onto 1m...
+2025-10-20 23:01:21,339 - [Wkr 276320] - MTFA - [MTFA] Successfully aligned 21 features from 15m
+2025-10-20 23:01:21,345 - [Wkr 276320] - MTFA - [MTFA] Dropped 0 rows with incomplete HTF data
+2025-10-20 23:01:21,345 - [Wkr 276320] - MTFA - [MTFA] Final dataset: 2500 bars with 68 features
+2025-10-20 23:01:21,345 - [Wkr 276320] - ForgeWorkerMain - [MTFA] Processing complete: 2500 bars with 68 features
+2025-10-20 23:01:21,349 - [Wkr 276320] - forge.modeling.causal_engine - [CDE] Removed 9 constant features.
+2025-10-20 23:01:21,349 - [Wkr 276320] - forge.modeling.causal_engine - [CDE] Running causal discovery for target 'close' with tau_max=3...
+  26     1.31                0        1                0                0     11.64s
+[Data Fetcher] Fetching 200 candles for DOGE/USDT from Bybit...
+  27     1.27                0        1                0                0     10.03s
+  28     1.24                0        1                0                0      9.07s
+  29     1.28                0        1                0                0     11.47s
+  30     1.32                0        1                0                0      8.51s
+  31     1.39                0       12                0                0      7.96s
+  32     1.25                0        1                0                0      8.20s
+  33     1.40                0        1                0                0      7.34s
+  34     1.28                0        1                0                0      6.54s
+  35     1.21                0        2                0                0      6.07s
+  36     1.27                0        1                0                0      5.84s
+  37     1.30                0        1                0                0      5.20s
+  38     1.30                0        1                0                0      4.91s
+  39     1.28                0        1                0                0      4.58s
+  40     1.22                0        1                0                0      4.34s
+  41     1.37                0        1                0                0      3.63s
+  42     1.31                0        1                0                0      3.15s
+  43     1.31                0        1                0                0      2.70s
+  44     1.22                0        1                0                0      2.24s
+  45     1.24                0        1                0                0      1.82s
+  46     1.24                0        1                0                0      1.32s
+  47     1.31                0        1                0                0      1.00s
+  48     1.25                0        1                0                0      0.47s
+  49     1.39                0        1                0                0      0.00s
+2025-10-20 23:01:31,994 - [CrucibleEngine] - INFO -   -> [MNT/USDT:USDT] Injecting 5 evolved features...
+2025-10-20 23:01:31,994 - [CrucibleEngine] - INFO - --- Feature Factory: Exchange object present. Attempting GNN generation (Main context). ---
+2025-10-20 23:01:31,998 - [CrucibleEngine] - INFO -   -> Generating GNN features for the entire market...
+[GNN Pipeline] Starting feature generation...
+[Data Fetcher] Fetching 500 candles for BTC/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for XRP/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for MNT/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for ETH/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for SUI/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for BNB/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for EPIC/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for ARC/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for SOL/USDT from Bybit...
+[Data Fetcher] Fetching 500 candles for DOGE/USDT from Bybit...
+--- WARNING: Attempt 1 failed for EPIC/USDT. Retrying in 2s... Error: bybit does not have market symbol EPIC/USDT
+--- WARNING: Attempt 1 failed for ARC/USDT. Retrying in 2s... Error: bybit does not have market symbol ARC/USDT
+--- WARNING: Attempt 2 failed for EPIC/USDT. Retrying in 2s... Error: bybit does not have market symbol EPIC/USDT
+--- WARNING: Attempt 2 failed for ARC/USDT. Retrying in 2s... Error: bybit does not have market symbol ARC/USDT
+--- ERROR fetching market data for ARC/USDT after 3 attempts: bybit does not have market symbol ARC/USDT
+--- ERROR fetching market data for EPIC/USDT after 3 attempts: bybit does not have market symbol EPIC/USDT
+[GNN Pipeline] WARNING: Failed to fetch or process data for EPIC/USDT:USDT. Excluding from this graph build.
+[GNN Pipeline] WARNING: Failed to fetch or process data for ARC/USDT:USDT. Excluding from this graph build.
+C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\data_processing_v2.py:257: FutureWarning: Not prepending group keys to the result index of transform-like apply. In the future, the group keys will be included in the index, regardless of whether the applied function returns a like-indexed object.
+To preserve the previous behavior, use
+
+        >>> .groupby(..., group_keys=False)
+
+To adopt the future behavior and silence this warning, use
+
+        >>> .groupby(..., group_keys=True)
+  combined_features = combined_df.groupby(level='symbol').apply(add_all_features)
+[GNN Pipeline] GNN feature generation complete.
+2025-10-20 23:01:37,315 - [CrucibleEngine] - INFO - --- Feature Factory: All Processing Complete ---
+2025-10-20 23:01:37,319 - [V3Agent_MNTUSDT] - INFO - [DIAGNOSTIC] --- Entering decide_and_execute for MNT/USDT:USDT ---
+INFO:V3Agent_MNTUSDT:[DIAGNOSTIC] --- Entering decide_and_execute for MNT/USDT:USDT ---
+2025-10-20 23:01:37,319 - [V3Agent_MNTUSDT] - INFO - Agent has no evolved GP 2.0 models. Waiting for Forge to create one. No trades will be placed.
+INFO:V3Agent_MNTUSDT:Agent has no evolved GP 2.0 models. Waiting for Forge to create one. No trades will be placed.
+2025-10-20 23:01:37,321 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Processing ---
+2025-10-20 23:01:37,325 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 1. Calculating Technical Indicators...
+2025-10-20 23:01:37,325 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 2. Generating VMD Features (Velocity Upgrade - 10-50x faster)...
+2025-10-20 23:01:37,357 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 2. VMD Complete.
+2025-10-20 23:01:37,357 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 3. Generating Particle Filter Features (Potential Hang Point)...
+2025-10-20 23:01:37,375 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 3. Particle Filter Complete.
+2025-10-20 23:01:37,375 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 4. Generating Order Flow Features...
+[Data Fetcher] Fetching L2 order book for ETH/USDT...
+2025-10-20 23:01:38,925 - [CrucibleEngine] - INFO -   -> [DIAGNOSTIC] [ETH/USDT:USDT] 4. Order Flow Features Complete.
+2025-10-20 23:01:38,927 - [CrucibleEngine] - INFO - --- Feature Factory: Starting Autonomous Feature Synthesis (God Evolution)... ---
+    |   Population Average    |             Best Individual              |
+---- ------------------------- ------------------------------------------ ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness  Time Left
+   0     8.10        0.0304136        3        0.0808979        0.0808979     10.69s
+   1     4.49        0.0484077        5        0.0838181        0.0838181     21.76s
+   2     3.57        0.0612093        6        0.0887886        0.0887886     24.76s
+   3     2.77        0.0726658        6        0.0887886        0.0887886     22.86s
+   4     3.25        0.0741105        5        0.0923366        0.0923366     23.60s
+   5     5.39          0.07197        5        0.0923366        0.0923366     22.31s
+   6     5.10        0.0727891        9        0.0931653        0.0931653     23.07s
+   7     5.14        0.0744507        8        0.0928249        0.0928249     25.75s
+   8     4.98        0.0749708        5        0.0923366        0.0923366     22.93s
+   9     5.04        0.0731318        5        0.0923366        0.0923366     22.75s
+2025-10-20 23:01:44,214 - [Wkr 276320] - forge.modeling.causal_engine - [CDE] 'tau_max' not found in PCMCI results. Skipping parent extraction.
+2025-10-20 23:01:44,214 - [Wkr 276320] - forge.modeling.causal_engine - [CDE] Found 0 causal parents for 'close': set()
+2025-10-20 23:01:44,233 - [Wkr 276320] - ForgeWorkerMain - [CDE] Causal discovery returned no features. Proceeding with all features.
+2025-10-20 23:01:44,233 - [Wkr 276320] - ForgeWorkerMain - [CDE] Using 63 causally-informed features for evolution.
+[Labeling] Creating labels with Symmetrical Triple-Barrier (PT/SL: 2.0*ATR, Max Hold: 20 bars)
+  10     5.16         0.073728        5        0.0923366        0.0923366     22.21s
+[Labeling] Distribution: BUY=1189, SELL=651, HOLD=660
+[EnvClassifier] Current Environment: Low_Volatility_Reversion (Vol: 241.11, Trend: 34.24)
+
+============================================================
+| FORGE: Starting Bake-Off for BTC/USDT:USDT in 'Low_Volatility_Reversion'
+============================================================
+
+[Bake-Off] Training Challenger: GP 2.0 (Pop: 3000, Gen: 100)...
+2025-10-20 23:01:44,515 - [Wkr 276320] - ForgeWorkerMain - [Elite Preservation] Initialized. Current elites: 0
+2025-10-20 23:01:44,515 - [Wkr 276320] - ForgeWorkerMain - [Elite] No elite DNA found for symbol=BTC/USDT:USDT, architecture=GP2_Evolved
+2025-10-20 23:01:44,515 - [Wkr 276320] - ForgeWorkerMain - [GP 2.0] No elite DNA found. Starting from scratch.
+2025-10-20 23:01:44,519 - [Wkr 276320] - ForgeWorkerMain - [VELOCITY UPGRADE] Surrogate-Assisted Evolution ENABLED
+2025-10-20 23:01:44,519 - [Wkr 276320] - ForgeWorkerMain - [GP 2.0] Running StrategySynthesizer (SAE/Loky Optimized)...
+2025-10-20 23:01:44,519 - [Wkr 276320] - ForgeWorkerMain - [GP 2.0] Detected execution within a subprocess (Forge Worker). Disabling Loky to prevent deadlock...
+2025-10-20 23:01:44,535 - [Wkr 276320] - ForgeWorkerMain - [GP 2.0] Starting evolution for 100 generations, Pop: 3000...
+2025-10-20 23:01:44,535 - [Wkr 276320] - ForgeWorkerMain - [SAE] Generation 0: Evaluating initial population...
+2025-10-20 23:01:44,535 - [Wkr 276320] - forge.evolution.surrogate_manager - SAE: Oracle not trained. Randomly sampling 60 individuals...
+2025-10-20 23:01:44,535 - [Wkr 276320] - forge.evolution.surrogate_manager - SAE: Evaluating 60 individuals with actual backtests...
+  11     4.99        0.0751032        5        0.0923366        0.0923366     21.89s
+  12     5.06        0.0743602        5        0.0923366        0.0923366     21.10s
+  13     5.03        0.0746647        5        0.0923366        0.0923366     19.90s
+2025-10-20 23:01:46,548 - [Wkr 276320] - ForgeWorkerMain - [GP Eval FIRST] Sharpe=-10.0000, Total PnL=0.00%, Trades=0, Entries=0
+2025-10-20 23:01:46,552 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'keys'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 96, in _evaluate_fitness_loky_worker
+    f.write(f"  metrics_keys: {list(metrics.keys())}\n")
+AttributeError: 'tuple' object has no attribute 'keys'
+2025-10-20 23:01:46,552 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: not_(and_(True, True))
+2025-10-20 23:01:46,568 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'keys'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 96, in _evaluate_fitness_loky_worker
+    f.write(f"  metrics_keys: {list(metrics.keys())}\n")
+AttributeError: 'tuple' object has no attribute 'keys'
+2025-10-20 23:01:46,568 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: lt(vmd_0_1h, liquidity_density_1h)
+2025-10-20 23:01:46,588 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'keys'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 96, in _evaluate_fitness_loky_worker
+    f.write(f"  metrics_keys: {list(metrics.keys())}\n")
+AttributeError: 'tuple' object has no attribute 'keys'
+2025-10-20 23:01:46,588 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: lt(vmd_3_1h, ATRr_14)
+2025-10-20 23:01:46,608 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'keys'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 96, in _evaluate_fitness_loky_worker
+    f.write(f"  metrics_keys: {list(metrics.keys())}\n")
+AttributeError: 'tuple' object has no attribute 'keys'
+2025-10-20 23:01:46,608 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: lt(vmd_2_1h, evolved_1_1h)
+2025-10-20 23:01:46,628 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'keys'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 96, in _evaluate_fitness_loky_worker
+    f.write(f"  metrics_keys: {list(metrics.keys())}\n")
+AttributeError: 'tuple' object has no attribute 'keys'
+2025-10-20 23:01:46,628 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: and_(not_(True), True)
+2025-10-20 23:01:46,652 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,652 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: or_(True, True)
+2025-10-20 23:01:46,676 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,676 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: or_(False, or_(True, True))
+2025-10-20 23:01:46,692 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,692 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: and_(False, False)
+2025-10-20 23:01:46,716 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,716 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: and_(False, True)
+2025-10-20 23:01:46,736 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,736 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: lt(mul(protected_div(denoised_close_pct_change, SMA_50_15m), protected_div(liquidity_density, vmd_4_1h)), protected_div(add(evolved_2_1h, ATRr_14_1h), add(evolved_4_1h, liquidity_density)))
+2025-10-20 23:01:46,752 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,752 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: gt(SMA_50_15m, book_pressure)
+2025-10-20 23:01:46,772 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,776 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: not_(False)
+2025-10-20 23:01:46,796 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,796 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: lt(RSI_14_1h, ATRr_14_15m)
+2025-10-20 23:01:46,824 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,824 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: gt(mul(protected_div(vmd_0_1h, liquidity_density), protected_div(evolved_3, ATRr_14_1h)), sub(sub(evolved_1_1h, book_pressure), sub(evolved_0_1h, state_uncertainty)))
+2025-10-20 23:01:46,844 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,844 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: and_(True, True)
+2025-10-20 23:01:46,860 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,860 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: and_(False, True)
+2025-10-20 23:01:46,884 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,884 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: gt(vmd_2, ATRr_14_1h)
+2025-10-20 23:01:46,900 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,904 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: gt(SMA_20_15m, vmd_3)
+2025-10-20 23:01:46,920 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,920 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: gt(ofi_15m, book_pressure_1h)
+2025-10-20 23:01:46,936 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,936 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: gt(ofi_1h, book_pressure_1h)
+2025-10-20 23:01:46,952 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,952 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: or_(True, or_(True, False))
+2025-10-20 23:01:46,968 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,968 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: not_(False)
+2025-10-20 23:01:46,988 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\LieD\Desktop\crypto trading bots\.Singularity Protocol\forge\evolution\strategy_synthesizer.py", line 103, in _evaluate_fitness_loky_worker
+    raw_fitness = metrics.get("ttt_fitness", -1e9)
+AttributeError: 'tuple' object has no attribute 'get'
+2025-10-20 23:01:46,988 - [Wkr 276320] - forge.evolution.strategy_synthesizer - Failing individual: and_(False, False)
+2025-10-20 23:01:47,004 - [Wkr 276320] - forge.evolution.strategy_synthesizer - LOKY WORKER CRASH: 'tuple' object has no attribute 'get'

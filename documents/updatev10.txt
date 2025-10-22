@@ -1,0 +1,99 @@
+
+
+You asked:
+
+1.  **What does "Confirm which ACP/CCA modules are intended for future integration" mean?**
+
+      * It means that while your codebase *contains the Python implementations* for many advanced ACP (Apex Convergence Protocol) and CCA (Causal Cognition Architecture) modules (like Chimera, Apex Predator, MCE, Influence Mapper, KCM, SDE, Topological Radar), these modules are currently **not connected to or used by your live trading system** (`CrucibleEngine`, `Agent`).
+      * The `acn_integration.py` script, for instance, shows how these components *could* work together but acts as a standalone test, not part of the main `app.py` execution flow.
+      * So, I need *you* (the developer) to clarify: Which of these already-coded modules do you actually *plan* to integrate into the live trading bot? Are some just experiments, intended for offline analysis, or perhaps deprecated? Knowing your intention helps prioritize the integration TODO list.
+
+2.  **Is ACP/CCA 100% working?**
+
+      * **No, the ACP/CCA features are *not* 100% working *within the live trading system*.**
+      * The Python code for the individual engines *exists* and seems implemented based on the files.
+      * However, they are **not integrated**. They don't receive live data from `CrucibleEngine`, their outputs don't influence the `Agent`'s decisions or risk, and they don't affect the `StrategySynthesizer`'s evolution process. They function as separate, currently disconnected pieces of logic.
+
+-----
+
+## 🛠️ TODO List for Implementing ACP/CCA
+
+Here's a breakdown for Gemini Code Assist to integrate the **most readily usable** component (KCM) and outline paths for others. Integrating *all* ACP/CCA modules is a major architectural task.
+
+### 1\. Integrate KCM (Kolmogorov Complexity Manager) - Recommended First Step
+
+  * **Goal:** Use market complexity for live risk scaling and strategy complexity for fitness penalization during evolution.
+  * **Task (Multi-File):**
+    1.  **Instantiate KCM:** In `crucible_engine.py::__init__`, add:
+        ```python
+        from forge.analysis.complexity_manager import KolmogorovComplexityManager # Add import
+        self.kcm = KolmogorovComplexityManager(mci_window=100, strategy_complexity_threshold=0.7)
+        self.logger.info("Kolmogorov Complexity Manager initialized.")
+        ```
+    2.  **Calculate & Pass Risk Multiplier:** In `crucible_engine.py::_arena_loop`, before calling `arena.process_data`:
+        ```python
+        # Inside _arena_loop, after getting df_features
+        try:
+            prices_dict = {symbol: df_features['close'].iloc[-1]}
+            # Offload if KCM becomes heavy, otherwise run directly
+            kcm_output = self.kcm.process_market_update(prices_dict)
+            risk_adjustments = kcm_output.get('risk_adjustments', {}).get(symbol, {})
+            risk_multiplier = risk_adjustments.get('risk_multiplier', 1.0)
+            self.logger.debug(f"[{symbol}] KCM Risk Multiplier: {risk_multiplier:.3f} (MCI: {risk_adjustments.get('mci', 'N/A'):.3f})")
+        except Exception as kcm_e:
+            self.logger.error(f"Error during KCM update for {symbol}: {kcm_e}")
+            risk_multiplier = 1.0 # Default on error
+
+        # Pass to ArenaManager
+        await self.arena.process_data(
+            # ... other args ...,
+            risk_multiplier=risk_multiplier # <-- PASS KCM OUTPUT
+        )
+        ```
+    3.  **Receive in Arena:** Modify `arena_manager.py::process_data` signature to accept `risk_multiplier: float = 1.0` and pass it down to `agent.agent.decide_and_execute`.
+    4.  **Apply in Agent:** Modify `agent.py::V3Agent.decide_and_execute` signature to accept `risk_multiplier: float = 1.0`. Multiply the final calculated `size_fraction` (whether from Kelly or RL Governor) by `risk_multiplier` *before* calling `_execute_trade`. Log the adjusted size.
+    5.  **Adjust Fitness:** In `strategy_synthesizer.py`'s fitness evaluation function (`evaluate_fitness`):
+          * Import `StrategyComplexityEstimator` from `complexity_manager.py`.
+          * Instantiate it: `complexity_estimator = StrategyComplexityEstimator(complexity_threshold=0.7)`.
+          * Get the GP tree string: `strategy_str = str(individual)`.
+          * Calculate penalty: `complexity_eval = complexity_estimator.evaluate_complexity(strategy_str)`, `penalty = complexity_eval['penalty']`.
+          * Modify the returned fitness: `return base_fitness - (COMPLEXITY_WEIGHT * penalty),` (Define `COMPLEXITY_WEIGHT`, e.g., 0.2, likely near the top of the file or passed in).
+
+-----
+
+### 2\. Potential Integration Paths for Other ACP/CCA Modules (Major Tasks) (we will do these right after you finish this upgrade so save this as a base)
+
+These require more significant design decisions and effort.
+
+  * **MCE (Micro-Causality Engine) [`micro_causality.py`]**:
+
+      * **Option:** Run MCE prediction within `FeatureFactory` or `CrucibleEngine._arena_loop` using L2 data (requires L2 data feed integration).
+      * **Output:** Add `MCE_Skew` and `MCE_Pressure` as features to the DataFrame passed to the `Agent`.
+      * **Agent:** Modify `Agent.decide_and_execute` to use these new features (e.g., adjust confidence, filter signals based on pressure).
+
+  * **Influence Mapper (Macro-Causality) [`macro_causality.py`]**:
+
+      * **Option:** Run `InfluenceMapperPipeline.process_update` periodically (e.g., every minute or 5 minutes) within `CrucibleEngine` or a separate async task.
+      * **Output:** Store incoming/outgoing influence scores.
+      * **Integration:** Pass scores to `Agent.decide_and_execute`. The agent could use high incoming influence as a volatility warning (similar to KCM's MCI) or use outgoing influence to understand its potential impact (less relevant for small size).
+
+  * **SDE (Symbiotic Distillation Engine) [`symbiotic_crucible.py`]**:
+
+      * **Option:** Requires training the `ImplicitBrain` (TFT model) first.
+      * **Integration:** In `StrategySynthesizer.evaluate_fitness`, generate `soft_labels` using `SoftLabelGenerator` and the trained `ImplicitBrain`. Calculate a mimicry score (e.g., cross-entropy) between the GP strategy's predictions and the soft labels. Add this mimicry score (weighted) to the base fitness (PnL/TTT/PSR).
+
+  * **Topological Radar [`acp_engines.py`]**:
+
+      * **Option:** Run `TopologicalRadar.detect_regime_change` within `ArenaManager.process_data`.
+      * **Output:** A boolean `regime_change_detected` signal or a persistence score.
+      * **Integration:** Replace or augment the HMM/HDBSCAN regime ID passed to the `Agent`. The agent logic would then react to `regime_id` changes detected by TDA.
+
+  * **Chimera / Apex Predator [`acp_engines.py`]**:
+
+      * **Option:** These are more complex. Could run as a background process within `SingularityEngine`.
+      * **Chimera:** Infers opponent strategies based on market data (potentially microstructure).
+      * **Apex Predator:** Uses inferred opponent strategies to guide the evolution in `StrategySynthesizer` (e.g., by adding an adversarial component to the fitness function) or directly synthesizes counter-strategies to be deployed. This requires significant changes to the evolution loop and fitness calculation.
+
+-----
+
+**Recommendation:** Start by fully integrating KCM (Task \#1). Then, consider integrating the regime signal from Topological Radar as a replacement/enhancement for the current regime model. Integrating MCE, IM, SDE, Chimera, and Apex Predator requires more substantial architectural planning.

@@ -1,0 +1,128 @@
+Okay, I finally have all the files, including `pit_crew.py` and `watchtower.py`.
+
+I will now fetch the content of *all* relevant Python files to perform the comprehensive analysis of the core systems: **Hot Swap (Pit Crew)**, **ACP/CCA**, **Watchtower**, and **Singularity Engine**, and their integrations.
+
+Fetching the content of 21 files. This may take a moment...
+     Fetched content for 'crucible_engine.py', 'singularity_engine.py', 'arena_manager.py', 'agent.py', 'complexity_manager.py', 'acp_engines.py', 'risk_management.py', 'validation_gauntlet.py', 'forge_worker.py', 'config.py', 'feature_factory.py', 'strategy_synthesizer.py', 'surrogate_manager.py', 'symbiotic_crucible.py', 'adversarial_forge.py', 'macro_causality.py', 'micro_causality.py', 'causal_engine.py', 'model_registry.py', 'ensemble_manager.py', 'task_scheduler.py', 'acn_integration.py', 'pit_crew.py', 'watchtower.py'.
+
+---
+
+Alright, I have successfully fetched all the core files. Here is the comprehensive analysis and the resulting TODO list:
+
+## ✅ Comprehensive Analysis of Core Systems
+
+1.  **Singularity Engine (`singularity_engine.py` & `crucible_engine.py`):**
+    * **Proactive Forge Loop (`_proactive_forge_loop`)**: **Operational.** Correctly iterates `DEPLOYMENT_STRATEGY`, generates `model_instance_id`s, submits tasks via `submit_forge_task` with `inherit_dna=True`, and uses the `_on_forge_task_done` callback. Waits for cycle completion.
+    * **Reactive Drift Monitoring Loop (`_reactive_drift_monitoring_loop`)**: **Partially Implemented / Inactive.** The loop runs, but `_analyze_drift` is a placeholder returning `False`. `_calculate_model_losses` only checks if the performance log exists but doesn't calculate losses. Calls to `trigger_weight_update_func` and `trigger_risk_reduction_func` exist but won't be effectively triggered.
+    * **Integration with Crucible**: **Operational.** `CrucibleEngine` correctly initializes `SingularityEngine`, passes necessary functions (`submit_forge_task`), and gathers its `run` task.
+
+2.  **Watchtower (`watchtower.py` & `crucible_engine.py`):**
+    * **Watchtower Loop (`_watchtower_loop` in `crucible_engine.py`)**: **Integration Correct.** The loop runs periodically, reads `performance_log.jsonl`, and correctly calls `self.watchtower.judge_agents`. If agents are flagged, it correctly logs reaping, calls `self.arena.remove_agent`, and submits a new Forge task using the `terminated_agent_id` with `inherit_dna=True`.
+    * **Judgment Logic (`judge_agents` in `watchtower.py`)**: **Operational but Basic Reaping.** It iterates through agents. It calls `check_agent_lifecycle` which primarily checks for bankruptcy (balance <= 0). It *also* calls `promote_elite` based on PSR > 0.99, interacting correctly with `ElitePreservationSystem`. **Missing:** There's no explicit reaping based on *sustained poor performance* (e.g., negative PSR over time) or excessive drawdown if not bankrupt. The `drawdown_limit` parameter in `__init__` is not used in `check_agent_lifecycle`.
+
+3.  **Hot Swap / Pit Crew (`pit_crew.py` & `crucible_engine.py`, `arena_manager.py`):**
+    * **Initialization & Challenger Handling**: **Operational.** `PitCrew` is initialized. `CrucibleEngine` correctly adds new models to the bench via `add_challenger`.
+    * **Shadow Evaluation (`shadow_evaluation_loop` in `pit_crew.py`)**: **Partially Implemented.** The loop structure exists. It correctly iterates through symbols and finds incumbents and challengers. It attempts to run shadow backtests (`_run_shadow_backtest`). **Issues:**
+        * `_run_shadow_backtest` is incomplete (marked `# TODO`) and doesn't actually run a backtest or compare performance.
+        * The logic to decide if a challenger should replace an incumbent (`# TODO: Implement promotion logic`) is missing.
+        * The call to `self.arena.replace_agent` is commented out.
+    * **Hot Swap Mechanism (`ArenaManager.replace_agent`)**: **Operational.** The method exists and correctly interacts with `HedgeEnsembleManager` before swapping agents.
+    * **Conclusion**: The infrastructure is mostly there, but the **core logic for evaluating challengers and triggering the hot swap is missing.**
+
+4.  **ACP/CCA Integration:**
+    * **KCM (`complexity_manager.py`)**: **Implemented but Not Integrated.** The `KolmogorovComplexityManager` class and its components are fully implemented. However, **there are no calls** in the core engine/agent/synthesizer files to instantiate or use it.
+    * **ACP Engines (`acp_engines.py`)**: **Standalone / Not Integrated.** This file contains implementations and tests but is **not called or used** by the live trading components.
+    * **Other CCA (`micro_causality.py`, `macro_causality.py`, `symbiotic_crucible.py`, `causal_engine.py`, `adversarial_forge.py`)**: **Implemented but Not Integrated.** These files exist but are not integrated into the main `CrucibleEngine` loops.
+    * **ACN Integration Script (`acn_integration.py`)**: **Standalone Test Script.** Confirmed this script imports and tests ACP/CCA components but **does not integrate them into the live `CrucibleEngine` workflow**.
+    * **Conclusion**: **ACP/CCA features remain largely unimplemented in the live trading system.** KCM is ready but needs integration. Other ACP/CCA engines exist as separate modules/scripts.
+
+5.  **Agent (`agent.py`):**
+    * **Initialization & State**: **Operational.**
+    * **Model Loading**: **Operational.** (Requires `is_gp_model=True` fix from previous TODO).
+    * **Decision Logic (`decide_and_execute`)**: **Operational but Incomplete Integration.** Ensemble voting, entry/exit logic, GP 2.0 restriction are present. **Still missing calls to RL Governor and usage of `regime_id`.**
+    * **Execution (`_execute_trade`)**: **Operational.**
+    * **Performance Logging**: **Operational.**
+
+6.  **Arena Manager (`arena_manager.py`):**
+    * **Agent Lifecycle**: **Operational.**
+    * **Data Processing (`process_data`)**: **Operational.** Includes regime prediction and concurrent agent calls.
+    * **Hedge Weights/Rescan**: **Operational.**
+
+7.  **Forge Workflow (`task_scheduler.py`, `strategy_synthesizer.py`, `forge_worker.py`):**
+    * **`run_single_forge_cycle` (`task_scheduler.py`)**: **Operational.** Orchestrates the full cycle including synthesis, validation, and registration.
+    * **`StrategySynthesizer` (`strategy_synthesizer.py`)**: **Operational.** Implements GP + SAE. **Missing KCM integration for fitness.**
+    * **`forge_worker.py`**: **Operational.**
+
+---
+
+## 🛠️ TODO List for Gemini Code Assist (System Integration Focus)
+
+This list focuses on activating implemented-but-inactive features and integrating core components. ACP/CCA integration remains optional but KCM is recommended.
+
+### 1. Implement Pit Crew Challenger Evaluation & Hot Swap Trigger (`pit_crew.py`)
+
+* **Goal:** Enable the core Hot Swap functionality.
+* **Location:** `pit_crew.py`, method `shadow_evaluation_loop`, specifically the section with `# TODO: Implement shadow backtest` and `# TODO: Implement promotion logic`.
+* **Task:**
+    1.  **Implement `_run_shadow_backtest`:**
+        * Load the challenger model logic (similar to how it's done in `task_scheduler` or `agent`).
+        * Generate signals using the challenger model on recent historical data (`features_df` passed to the loop).
+        * Use `NumbaTurboBacktester` (or the consistent backtester chosen) to run a backtest.
+        * Return key performance metrics (e.g., TTT fitness, PSR, Drawdown) from the backtest results.
+    2.  **Implement Promotion Logic:**
+        * Compare the challenger's shadow backtest metrics against the incumbent agent's recent *live* performance (requires fetching this, perhaps via `ArenaManager` or by reading `performance_log.jsonl`).
+        * Define clear promotion criteria (e.g., challenger TTT significantly better AND PSR meets threshold AND drawdown acceptable).
+        * If criteria met, uncomment and correctly call `await self.arena.replace_agent(symbol, incumbent.agent_id, challenger_crucible_agent)`. You'll need to create the `challenger_crucible_agent` instance, potentially loading the `V3Agent` similar to how `CrucibleEngine.load_existing_models` does.
+
+---
+
+### 2. Enhance Watchtower Reaping Logic (`watchtower.py`)
+
+* **Goal:** Add reaping criteria beyond just bankruptcy.
+* **Location:** `watchtower.py`, method `check_agent_lifecycle`.
+* **Task:**
+    1.  Modify `check_agent_lifecycle` to analyze recent `agent_trades`.
+    2.  Add checks for:
+        * **Drawdown:** Check if `current_balance` (needs to be tracked or fetched) is below `initial_capital * (1 - self.drawdown_limit)`.
+        * **Performance:** Calculate PSR or Sharpe over recent trades. If below a threshold (e.g., PSR < 0.5) for a sustained period (e.g., > 50 trades), flag for reaping.
+    3.  If any new reaping condition is met, set `agent.is_active = False` and log the reason.
+
+---
+
+### 3. Implement Singularity Reactive Loop Logic (`singularity_engine.py`)
+
+* **Goal:** Activate drift detection and dynamic model weighting.
+* **Location:** `singularity_engine.py`, methods `_analyze_drift` and `_calculate_model_losses`.
+* **Task:**
+    1.  **`_analyze_drift`**: Replace placeholder. Implement logic using `DriftDetector` on performance metrics (e.g., rolling Sharpe) from `performance_log.jsonl` for each `model_instance_id`. Trigger actions if drift detected.
+    2.  **`_calculate_model_losses`**: Implement parsing of `performance_log.jsonl`. Calculate a *loss metric* (e.g., negative PnL, 1/Sharpe) for each `model_instance_id`. Return `{model_id: loss}` for `trigger_weight_update_func`.
+
+---
+
+### 4. Integrate KCM (Complexity Management)
+
+* **Goal:** Use market complexity for risk scaling and strategy complexity for fitness penalization.
+* **Task (Multi-File):**
+    1.  Instantiate `KolmogorovComplexityManager` in `CrucibleEngine.__init__`.
+    2.  Modify `CrucibleEngine._arena_loop` to call `kcm.process_market_update` and pass the `risk_multiplier` to `arena.process_data`.
+    3.  Update `ArenaManager.process_data` signature to accept `risk_multiplier` and pass it to `agent.agent.decide_and_execute`.
+    4.  Modify `agent.py::V3Agent.decide_and_execute` signature to accept `risk_multiplier` and apply it to the `size_fraction`.
+    5.  In `strategy_synthesizer.py`'s fitness evaluation, instantiate `StrategyComplexityEstimator`, call `evaluate_complexity` on the GP tree string, get the `penalty`, and subtract it (weighted) from the base fitness.
+
+---
+
+### 5. Integrate RL Governor & Regime ID (`agent.py`)
+
+* **Goal:** Utilize loaded auxiliary models in agent decisions.
+* **Location:** `agent.py`, method `decide_and_execute`.
+* **Task:**
+    1.  **RL Governor:** If `self.governor` is loaded, prepare observation and call `self.governor.predict`. Use the result to adjust/determine `size_fraction` (after KCM multiplier).
+    2.  **Regime ID:** Use the `regime_id` parameter. Add logic (`if/elif`) to modify agent parameters or filter signals based on the regime.
+
+---
+
+### 6. Add Robust Error Handling (General)
+
+* **Goal:** Prevent crashes due to errors in non-critical components.
+* **Locations:** `crucible_engine.py` (`_watchtower_loop`), `agent.py` (`decide_and_execute`), `singularity_engine.py` (`_calculate_model_losses`), `pit_crew.py` (`_run_shadow_backtest`).
+* **Task:** Wrap potentially problematic calls (file I/O, external model predictions, backtests) in `try...except` blocks. Log errors clearly but allow main loops to continue where feasible.

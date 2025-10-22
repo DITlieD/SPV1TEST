@@ -1,0 +1,225 @@
+This persistent deadlock, occurring immediately after the message "Starting Forge cycle for BTC/USDT:USDT in background...", indicates a severe conflict during the initialization of the background worker process. The low CPU usage confirms the system is deadlocked, not busy computing.
+
+In complex Python environments combining Asyncio, Multiprocessing (`ProcessPoolExecutor`), and optimized numerical libraries, deadlocks are common and usually stem from these interacting factors:
+
+1.  **Logging Deadlocks:** Python's standard `logging.FileHandler` is **not** process-safe. If the main process and the worker process attempt to write to the same log file (e.g., `singularity_log.txt`), they will deadlock fighting over the file lock.
+2.  **I/O Initialization Conflicts:** Initializing complex I/O libraries like `ccxt` (which manages network connections and potentially its own event loops) within a worker process often conflicts with the main process's asyncio loop.
+3.  **Low-Level Threading Conflicts:** Numerical libraries (NumPy, Scikit-learn, HDBSCAN) use underlying threading (OpenMP/MKL/OpenBLAS). This threading conflicts with multiprocessing, even if `n_jobs=1` is set at the Python level.
+
+We need a comprehensive solution that addresses all these conflict points by isolating the worker environment, resolving the logging contention, and strictly enforcing single-threading.
+
+### 1\. Resolve the Logging Deadlock (`CrucibleEngine`)
+
+We must disable the `FileHandler` in the `CrucibleEngine` to prevent the main process and worker processes from fighting over the log file.
+
+**File:** `crucible_engine.py` (Main folder files)
+
+```python
+# In crucible_engine.py
+
+class CrucibleEngine:
+    # ... (__init__ and other methods) ...
+
+    def _setup_logger(self):
+        logger = logging.getLogger("CrucibleEngine")
+        logger.propagate = False
+        logger.setLevel(logging.INFO)
+        if not logger.handlers:
+            # CRITICAL FIX: Removed FileHandler due to multiprocessing deadlocks.
+            # Writing to the same file from multiple processes (Main and Forge workers) 
+            # using standard FileHandler is unsafe and causes hangs.
+            
+            # Original FileHandler (COMMENT OUT OR REMOVE):
+            # handler = logging.FileHandler("singularity_log.txt", mode='a')
+            # formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+            # handler.setFormatter(formatter)
+            # logger.addHandler(handler)
+            
+            # Use only StreamHandler (console output)
+            console_handler = logging.StreamHandler()
+            # Add timestamp and context back to the console formatter for clarity
+            console_formatter = logging.Formatter('%(asctime)s - [Crucible] - %(levelname)s - %(message)s') 
+            console_handler.setFormatter(console_formatter)
+            logger.addHandler(console_handler)
+        return logger
+
+    # ... (rest of the class) ...
+```
+
+### 2\. Isolate, Simplify, and Diagnose `forge_worker.py`
+
+We will enforce single-threading *before* imports, remove the conflicting `ccxt` initialization, and add immediate diagnostic output.
+
+**File:** `forge_worker.py` (Main folder files)
+
+```python
+# forge_worker.py
+
+import os
+import logging
+import sys
+import time
+
+# Delay complex imports until inside the function.
+
+def run_forge_process(symbol, agent_id, generation):
+    
+    # --- CRITICAL DEADLOCK FIX: Enforce Single Threading ---
+    # This must be done BEFORE importing libraries like numpy, sklearn, lightgbm.
+    os.environ['OMP_NUM_THREADS'] = '1'
+    os.environ['MKL_NUM_THREADS'] = '1'
+    os.environ['OPENBLAS_NUM_THREADS'] = '1'
+    os.environ['VECLIB_MAXIMUM_THREADS'] = '1'
+    os.environ['NUMEXPR_NUM_THREADS'] = '1'
+
+    # IMMEDIATE DIAGNOSTIC LOGGING
+    worker_pid = os.getpid()
+    # Use basic print and flush to ensure output is seen immediately.
+    print(f"\n>>> [DIAGNOSTIC - Worker {worker_pid}] Subprocess started for {symbol}. Single-threading enforced.")
+    sys.stdout.flush()
+    time.sleep(0.1)
+
+    # Delayed Imports
+    try:
+        print(f">>> [DIAGNOSTIC - Worker {worker_pid}] Importing modules...")
+        sys.stdout.flush()
+        
+        # CRITICAL FIX: Do NOT import or initialize ccxt or asyncio here.
+        import config as app_config
+        from forge.overlord.task_scheduler import run_single_forge_cycle
+        from forge.utils.pipeline_status import PipelineStatus
+        
+        print(f">>> [DIAGNOSTIC - Worker {worker_pid}] Imports complete.")
+        sys.stdout.flush()
+
+    except ImportError as e:
+        print(f"[CRITICAL - Worker {worker_pid}] Failed to import modules: {e}")
+        sys.stdout.flush()
+        return None
+
+    # Setup simplified logging to standard output (avoids file locking conflicts)
+    logger = logging.getLogger(f"ForgeSubprocess_{worker_pid}")
+    logger.setLevel(logging.INFO)
+    # Ensure handlers are configured correctly for the worker
+    if logger.hasHandlers():
+        logger.handlers.clear()
+        
+    handler = logging.StreamHandler(sys.stdout)
+    formatter = logging.Formatter(f'%(asctime)s - [Worker {worker_pid}] - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.propagate = False # Prevent logs from bubbling up
+
+    reporter = PipelineStatus()
+    
+    try:
+        timeframe = app_config.TIMEFRAMES['tactical']
+        base_symbol = symbol.split(':')[0].replace('/', '')
+        raw_data_path = os.path.join("data", f"{base_symbol}_{timeframe}_raw.csv")
+
+        # Force CPU
+        enforced_device = "cpu"
+        logger.info(f"Starting run_single_forge_cycle. Device: {enforced_device}")
+        
+        # CRITICAL FIX: Pass None for the exchange object. The worker must not manage connections.
+        run_single_forge_cycle(
+            raw_data_path=raw_data_path, asset_symbol=symbol, reporter=reporter,
+            app_config=app_config, exchange=None, device=enforced_device,
+            logger=logger
+        )
+        
+        logger.info(f"✅ Forge cycle for {agent_id} completed successfully.")
+        return symbol, agent_id
+        
+    except Exception as e:
+        logger.error(f"Error in subprocess forge for {agent_id}: {e}", exc_info=True)
+        return None
+    
+    # No finally block needed as we are not managing exchange/asyncio here.
+```
+
+### 3\. Adapt `FeatureFactory` for Worker Context
+
+The `FeatureFactory` must gracefully handle the case where `exchange=None` (when called from the Forge worker) by skipping operations that require an active connection (like the GNN pipeline, if it relies on the exchange).
+
+**File:** `forge/data_processing/feature_factory.py` (Forge folder files)
+
+```python
+# In forge/data_processing/feature_factory.py
+import asyncio # Ensure asyncio is imported
+
+class FeatureFactory:
+    # ... (__init__ and other methods) ...
+
+    # Ensure _generate_gnn_features exists and is async
+    async def _generate_gnn_features(self, app_config, exchange) -> dict:
+        # (Keep the implementation of this async method as is)
+        # ...
+
+    def create_all_features(self, app_config, exchange) -> dict:
+        """Generates features. Skips GNN if running inside the Forge worker (indicated by exchange=None)."""
+        
+        self.log("--- Feature Factory: Starting Processing ---")
+
+        # 1. Process single asset features
+        for symbol, df in self.data_universe.items():
+            df.attrs['symbol'] = symbol
+            self.data_universe[symbol] = self._process_single_asset(df)
+
+        # 2. Generate GNN features (Conditional Execution)
+        
+        if exchange is None:
+            # This path is taken when called from forge_worker.py
+            self.log("--- Feature Factory: Exchange object is None. Skipping GNN feature generation (Forge context). ---")
+        else:
+            # This path is taken if called from the main process 
+            self.log("--- Feature Factory: Exchange object present. Attempting GNN generation (Main context). ---")
+            
+            # Handle asyncio loop management required to run an async function from a sync context
+            try:
+                try:
+                    loop = asyncio.get_running_loop()
+                except RuntimeError:
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                
+                # Run the async GNN pipeline and update the universe
+                # We must use loop.run_until_complete to execute the async method
+                updated_universe = loop.run_until_complete(self._generate_gnn_features(app_config, exchange))
+                self.data_universe = updated_universe
+                
+            except Exception as e:
+                self.log(f"ERROR during GNN feature generation: {e}. Proceeding without GNN features.")
+
+
+        self.log("--- Feature Factory: All Processing Complete ---")
+        return self.data_universe
+```
+
+### 4\. Enforce Single-Threading in Regime Worker
+
+Ensure the regime initialization worker also enforces single threading, as HDBSCAN uses low-level threading.
+
+**File:** `crucible_engine.py` (Main folder files)
+
+```python
+# In crucible_engine.py
+
+def _initialize_regime_worker(symbol: str) -> tuple:
+    # CRITICAL FIX: Enforce single thread for numerical libraries (HDBSCAN/Numpy)
+    import os
+    os.environ['OMP_NUM_THREADS'] = '1'
+    os.environ['MKL_NUM_THREADS'] = '1'
+    os.environ['OPENBLAS_NUM_THREADS'] = '1'
+    os.environ['VECLIB_MAXIMUM_THREADS'] = '1'
+    os.environ['NUMEXPR_NUM_THREADS'] = '1'
+
+    # (Ensure necessary imports are inside the function as required for Pool workers)
+    import asyncio
+    import ccxt.pro as ccxt
+    # ... (other imports: config, get_market_data, FeatureFactory, DynamicRegimeModel)
+
+    print(f"[{symbol}] Starting initial regime model training (Worker Forced Single Thread)...")
+
+    # ... (rest of the function remains the same)
+```

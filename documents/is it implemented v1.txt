@@ -1,0 +1,94 @@
+Of course. Here is a detailed, multi-phase to-do list to implement every unimplemented feature from your strategic blueprints and evolve your system into the complete "Ascendant Protocol."
+
+This roadmap prioritizes foundational stability and risk management before layering on more complex alpha-generating components.
+
+***
+### Phase 1: High-Fidelity Simulation & Objective Alignment
+
+**Goal:** Ensure the system optimizes for the correct objective in a realistic environment. This is a non-negotiable prerequisite for everything that follows.
+
+* **1. Implement High-Fidelity Backtesting:**
+    * **File:** `backtester.py`.
+    * **Action:** Upgrade your `vectorbt` backtester to model real-world frictions.
+    * **Sub-Tasks:**
+        * [cite_start]**Latency:** Ensure trades execute at the **next bar's open price** to simulate signal processing and network delay[cite: 386].
+        * **Dynamic Costs:** Implement a dynamic `slippage` parameter. [cite_start]This cost should be a function of volatility (e.g., a fraction of the ATR) and potentially order size relative to volume, modeling the "Square Root Law" of market impact[cite: 389, 391, 407].
+        * [cite_start]**Liquidity Constraints:** Cap the maximum trade size as a fraction of the bar's total volume (e.g., `MAX_PARTICIPATION_RATE = 0.10`) to prevent unrealistic fills[cite: 402].
+
+* **2. Align Fitness Function with the Velocity Mandate:**
+    * **Files:** `forge/crucible/fitness_function.py`, `elite_tuner.py`.
+    * **Action:** Retarget the entire evolutionary engine to maximize **Log Wealth** under strict risk constraints.
+    * **Sub-Tasks:**
+        * [cite_start]Modify the fitness function to return the `log_wealth` from the backtest[cite: 1432, 1438].
+        * Implement **pruning constraints** in the Optuna `objective` function. [cite_start]A trial must be immediately pruned (`raise optuna.TrialPruned()`) if it fails to meet minimum thresholds for the number of trades, **Probabilistic Sharpe Ratio (PSR)**, or exceeds the **Maximum Drawdown (MDD)** threshold[cite: 1436, 1437].
+
+* **3. Implement Systematic Model Calibration:**
+    * **File:** `models_v2.py` (or your model wrappers).
+    * **Action:** The Kelly Criterion requires accurate probabilities. [cite_start]Wrap your base models (LGBM, XGBoost) with `sklearn.calibration.CalibratedClassifierCV` using `method='isotonic'` during the training phase[cite: 1425, 1426, 1427].
+
+---
+### Phase 2: On-Chain Intelligence & Systemic Resilience
+
+**Goal:** Integrate a new, powerful source of domain-specific alpha and build the system's "immune system" to handle anomalies.
+
+* **1. Integrate On-Chain Data:**
+    * **New File:** `forge/data_processing/onchain_data_fetcher.py`.
+    * [cite_start]**Action:** Create a module to fetch data from a provider like Glassnode or CryptoQuant[cite: 111].
+    * **Sub-Tasks:**
+        * [cite_start]Focus on **Net Exchange Flows** and **Stablecoin Supply** metrics[cite: 112].
+        * [cite_start]In `data_processing_v2.py`, add a step to fetch, clean, and align this data onto the strategic (4H) timeframe, creating momentum and standardized score features[cite: 113, 114].
+        * [cite_start]Incorporate these new on-chain features as inputs for the HDBSCAN regime detector and Strategic Bias model[cite: 115].
+
+* **2. Implement the "Immune System" (Anomaly Detection):**
+    * [cite_start]**New File:** `forge/monitoring/immune_system.py`[cite: 117].
+    * [cite_start]**Action:** Train an **Autoencoder** model on a vector of "normal" system and market data (e.g., API latency, feature values, model uncertainty scores)[cite: 118].
+    * **Sub-Tasks:**
+        * [cite_start]In the main trading loop, continuously feed the current state vector to the autoencoder and monitor the **reconstruction error**[cite: 119].
+        * [cite_start]If the error spikes above a threshold (indicating an anomaly), trigger a defensive protocol, such as signaling the RL Governor to halt new trades or immediately reduce exposure[cite: 120].
+
+---
+### Phase 3: Relational Dynamics & Probabilistic Modeling
+
+**Goal:** Evolve beyond single-asset analysis by implementing GNNs and integrating the existing (but unused) probabilistic models.
+
+* **1. Implement Graph Neural Network (GNN) Pipeline:**
+    * **Action:** Model the entire crypto market as an interconnected graph.
+    * **Sub-Tasks:**
+        * **`forge/data_processing/graph_builder.py`:** Create a module that constructs a dynamic graph at each time step. [cite_start]Assets are nodes, and edges are weighted by the rolling correlation between them[cite: 85, 87, 88].
+        * [cite_start]**`forge/models/gnn_intermarket.py`:** Define a **Graph Attention Network (GAT)** model using `torch_geometric`[cite: 84, 89].
+        * **Integration:** In your feature factory, pass the graph through the GAT to generate enriched embeddings for each asset. [cite_start]Add these embeddings as powerful new features for your Hydra models[cite: 92].
+
+* **2. Integrate Existing Probabilistic Models:**
+    * **Action:** Activate the `BayesianNN` and `MarketStateTracker` (Particle Filter) that are already in the code.
+    * **Sub-Tasks:**
+        * [cite_start]Add `'BayesianNN'` to the `MODEL_ARCHITECTURES` list in `forge/blueprint_factory/genetic_algorithm.py` so the GA can select it[cite: 803].
+        * In `feature_factory.py`, use the `MarketStateTracker` to generate a "denoised" close price and an "uncertainty" feature based on particle variance. [cite_start]Feed these as new inputs to all models[cite: 977, 978].
+
+---
+### Phase 4: Causal Inference & Autonomous Strategy Synthesis
+
+**Goal:** Implement the final, most advanced pillars: ensuring new logic is causally robust and automating the discovery of entire trading strategies.
+
+* **1. Implement the Causal Inference Gauntlet:**
+    * [cite_start]**New File:** `forge/validation/causal_validator.py`[cite: 94].
+    * **Action:** Build a rigorous validation step for all new GP-generated features.
+    * **Sub-Tasks:**
+        * [cite_start]Using `dowhy` and `econml`, create a pipeline that models the causal relationship (Treatment: New Feature, Outcome: Future Returns)[cite: 84, 96, 97].
+        * [cite_start]Estimate the feature's effect using **Double Machine Learning (DML)**[cite: 98, 99].
+        * **Critically**, try to **refute** the effect using tests like "Placebo Treatment." [cite_start]A feature is only approved if it has a significant causal effect AND passes these refutation tests[cite: 99, 100].
+
+* **2. Implement Autonomous Strategy Synthesis (GP 2.0):**
+    * [cite_start]**New File:** `forge/evolution/strategy_synthesizer.py`[cite: 101].
+    * **Action:** Upgrade from simple feature discovery to full strategy evolution.
+    * **Sub-Tasks:**
+        * [cite_start]Using the `deap` library, define a set of primitives including logical operators (`IfThenElse`, `GreaterThan`) and terminals (your entire pool of master features)[cite: 84, 102, 103].
+        * Build a GP engine that evolves complete trading strategies as trees.
+        * [cite_start]The fitness function will compile each tree into executable logic and evaluate it using the high-fidelity `vectorbt` backtester[cite: 105].
+        * [cite_start]Successful, validated strategies are then added as new, unique "species" (models) into the Hydra ensemble pool[cite: 106].
+
+* **3. Implement the AI Analyst:**
+    * [cite_start]**New File:** `forge/monitoring/ai_analyst.py`[cite: 121].
+    * [cite_start]**Action:** Set up **Ollama** with a local LLM[cite: 84, 121].
+    * **Sub-Tasks:**
+        * [cite_start]Create prompt templates to translate the evolved GP 2.0 strategy trees and the Causal Gauntlet results into human-readable text[cite: 122].
+        * [cite_start]Log the LLM's hypotheses to the dashboard, providing crucial transparency and fulfilling the Human-in-the-Loop governance requirement[cite: 122].

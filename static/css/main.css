@@ -1,0 +1,152 @@
+/* static/css/main.css */
+
+:root {
+    --bg-color: #050505;
+    --card-bg: rgba(18, 18, 18, 0.85); /* Slightly transparent for depth */
+    --card-border: #2a2a2a;
+    --text-primary: #FFFFFF;
+    --text-secondary: #AAAAAA;
+    --accent-color: #4a90e2; /* Professional Blue Accent */
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+}
+
+/* --- Background Waving Animation (Monochrome EMA Ribbon Style) --- */
+.background-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.wave-layer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%; /* Wider than screen for animation loop */
+    height: 100%;
+    background-repeat: repeat-x;
+    animation: wave-motion 30s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+    opacity: 0.12; /* Very Subtle effect */
+}
+
+/* Using embedded SVG data for the monochrome wave patterns */
+.layer1 {
+    /* Darkest Gray Wave */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23111111' fill-opacity='1' d='M0,96L48,117.3C96,139,192,181,288,208C384,235,480,245,576,224C672,203,768,149,864,133.3C960,117,1056,160,1152,165.3C1248,171,1344,139,1392,122.7L1440,106.7L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+    animation-duration: 65s;
+}
+
+.layer2 {
+    /* Medium Gray Wave */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23222222' fill-opacity='1' d='M0,224L48,213.3C96,203,192,192,288,197.3C384,203,480,224,576,240C672,256,768,267,864,250.7C960,235,1056,192,1152,181.3C1248,171,1344,192,1392,202.7L1440,213.3L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+    animation-duration: 55s;
+}
+
+.layer3 {
+     /* Lightest Gray Wave */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23333333' fill-opacity='1' d='M0,160L48,176C96,192,192,224,288,213.3C384,203,480,160,576,133.3C672,107,768,128,864,149.3C960,171,1056,192,1152,197.3C1248,203,1344,192,1392,186.7L1440,181.3L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+    animation-duration: 45s;
+}
+
+@keyframes wave-motion {
+    /* Slow horizontal movement */
+    0% { transform: translateX(0) translateZ(0) scaleY(1); }
+    50% { transform: translateX(-25%) translateZ(0) scaleY(0.9); }
+    100% { transform: translateX(-50%) translateZ(0) scaleY(1); }
+}
+
+
+/* --- Core UI Styles --- */
+
+#app-content {
+    position: relative;
+    z-index: 1; /* Ensure content is above the background animation */
+}
+
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px); /* Modern depth effect */
+}
+
+.card-header {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--card-border);
+    padding: 1rem 1.25rem;
+}
+
+.list-group-item {
+    background-color: transparent !important;
+    border-color: var(--card-border) !important;
+    color: var(--text-secondary);
+    padding: 0.6rem 0;
+    font-size: 0.875rem;
+}
+
+.btn {
+    border-radius: 0.25rem;
+    font-weight: 600;
+}
+
+.text-muted {
+    color: var(--text-secondary) !important;
+}
+
+/* --- Asset Block Specific Styles --- */
+.asset-block {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.asset-block:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.asset-price {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums; /* Prevents numbers from shifting width */
+}
+
+.status-detail {
+    font-size: 0.875rem;
+    color: var(--accent-color);
+    font-style: italic;
+    min-height: 3rem; /* Ensure enough space for detailed messages */
+    text-align: center;
+    padding: 0.75rem;
+    background-color: rgba(74, 144, 226, 0.1);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+/* --- Table Styles (Archive) --- */
+.table-dark {
+    --bs-table-bg: transparent;
+    --bs-table-striped-bg: rgba(255, 255, 255, 0.03);
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+    --bs-table-border-color: var(--card-border);
+}
+
+/* Logo Style (Stylized Text) */
+.protocol-logo {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-primary);
+}

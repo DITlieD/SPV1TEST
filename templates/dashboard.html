@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard | Singularity Protocol{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-4">
+    
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="protocol-logo">Singularity Protocol</h1>
+        
+        <div class="d-flex align-items-center">
+            <div id="master-status-display" class="me-3">
+                <span class="badge bg-secondary">INITIALIZING</span>
+            </div>
+            <div class="btn-group" role="group">
+                <button id="start-cycle-btn" class="btn btn-outline-success">START LOOP</button>
+                <button id="stop-cycle-btn" class="btn btn-outline-danger" disabled>STOP LOOP</button>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mb-4">Asset Monitoring Grid</h3>
+    <div id="bots-dashboard" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-5">
+        </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4 class="mb-0">Model Archive</h4>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">Historical record of deployed and retired models.</p>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Timestamp</th>
+                            <th scope="col">Model ID</th>
+                            <th scope="col">Asset</th>
+                            <th scope="col">Architecture</th>
+                            <th scope="col">Fitness Score</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="models-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

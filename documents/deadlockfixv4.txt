@@ -1,0 +1,439 @@
+The logs reveal a critical **Race Condition** during the system startup, leading to concurrent execution of computationally intensive tasks and the resulting deadlock.
+
+The `CrucibleEngine` initializes the `ImmuneSystem` (which runs the CPU-intensive `FeatureFactory` in the main thread) concurrently with the start of the `_continuous_seeding_loop` (which launches the Forge worker, also running `FeatureFactory`). Simultaneously, the `SingularityEngine`'s proactive loop starts, attempting to launch yet another Forge process.
+
+This concurrent execution of the CEEMDAN algorithm in multiple processes causes resource contention and deadlocks in the underlying numerical libraries and the logging system, evidenced by the interleaved logs from the main process (`INFO`) and the worker (`Worker 141544`).
+
+The solution requires architectural changes: enforcing sequential initialization and implementing a centralized queue to manage all Forge requests sequentially.
+
+### 1\. Isolate Logging Environments
+
+We must ensure distinct, non-propagating loggers for each component and process.
+
+#### A. Configure `CrucibleEngine` and `SingularityEngine` Loggers
+
+**File:** `crucible_engine.py` (Main folder files)
+
+```python
+# In crucible_engine.py
+import logging
+import asyncio
+# Ensure necessary imports (SingularityEngine, V3Agent, CrucibleAgent, run_forge_process)
+
+class CrucibleEngine:
+    def __init__(self, app_config, is_main_instance: bool = False):
+        # ... (other initializations: config, stop_event, etc.)
+        
+        # Initialize distinct loggers first
+        self.logger = self._setup_logger("CrucibleEngine")
+        self.singularity_logger = self._setup_logger("SingularityEngine")
+
+        # NEW: Centralized Forge Task Queue
+        self.forge_queue = asyncio.Queue()
+        self.active_forge_tasks = set() # To track currently running tasks by symbol
+
+        # ... (Executor setup: self.executor) ...
+
+        # Initialize SingularityEngine with distinct logger and submission function
+        # (Assuming SingularityEngine is imported)
+        from singularity_engine import SingularityEngine
+        
+        # Initialize remaining attributes before SingularityEngine
+        self.pipeline_status = PipelineStatus()
+        # ... (arena, watchtower, immune_system=None, generation_counters, raw_data_queue)
+
+        self.singularity_engine = SingularityEngine(
+            trigger_trader_restart_func=self._trigger_agent_rescan,
+            trigger_risk_reduction_func=self._trigger_risk_reduction,
+            trigger_weight_update_func=self.update_ensemble_weights,
+            status_reporter=self.pipeline_status,
+            stop_event=self.stop_event,
+            app_config=self.config,
+            logger=self.singularity_logger, # Pass the distinct logger
+            submit_forge_task_func=self.submit_forge_task, # Pass the submission function
+        )
+
+    # Modify _setup_logger for isolation
+    def _setup_logger(self, name="CrucibleEngine"):
+        logger = logging.getLogger(name)
+        logger.propagate = False # CRITICAL: Prevent logs from bubbling up to the root logger
+        logger.setLevel(logging.INFO)
+        
+        # Clear existing handlers
+        if logger.hasHandlers():
+            logger.handlers.clear()
+            
+        # Use only StreamHandler (Console)
+        console_handler = logging.StreamHandler()
+        # Use the specific name in the formatter
+        console_formatter = logging.Formatter(f'%(asctime)s - [{name}] - %(levelname)s - %(message)s') 
+        console_handler.setFormatter(console_formatter)
+        logger.addHandler(console_handler)
+        return logger
+    
+    # ... (rest of the class continues in step 2) ...
+```
+
+#### B. Update `SingularityEngine` Initialization
+
+**File:** `singularity_engine.py` (Inferred location, Main folder files)
+
+```python
+# In singularity_engine.py
+import logging
+import asyncio
+import time
+
+class SingularityEngine:
+    # Add logger=None and submit_forge_task_func=None to the __init__ arguments
+    def __init__(self, trigger_trader_restart_func, trigger_risk_reduction_func, 
+                 trigger_weight_update_func, status_reporter, stop_event, app_config, 
+                 logger=None, submit_forge_task_func=None):
+        
+        # Use the provided logger
+        if logger:
+            self.logger = logger
+        else:
+            # Fallback setup
+            self.logger = logging.getLogger("SingularityFallback")
+            self.logger.setLevel(logging.INFO)
+            self.logger.propagate = False
+        
+        self.submit_forge_task = submit_forge_task_func
+        self.config = app_config
+        self.stop_event = stop_event
+        # Ensure all required attributes are initialized
+        self.trigger_weight_update_func = trigger_weight_update_func
+        # ... (rest of init: trigger_trader_restart_func, trigger_risk_reduction_func, status_reporter)
+```
+
+#### C. Isolate Worker Logging (`forge_worker.py`)
+
+Configure the root logger within the worker process to capture all output distinctly.
+
+**File:** `forge_worker.py` (Main folder files)
+
+```python
+# In forge_worker.py
+# (Assuming previous fixes for delayed imports and OMP_NUM_THREADS=1 are applied)
+import os
+import logging
+import sys
+import time
+
+def run_forge_process(symbol, agent_id, generation):
+    
+    # ... (Enforce Single Threading OMP_NUM_THREADS=1) ...
+
+    worker_pid = os.getpid()
+    
+    # IMMEDIATE DIAGNOSTIC LOGGING (using print)
+    print(f"\n>>> [DIAGNOSTIC - Worker {worker_pid}] Subprocess started for {symbol}. Single-threading enforced.")
+    sys.stdout.flush()
+    time.sleep(0.1)
+
+    # --- CRITICAL LOGGING ISOLATION FIX ---
+    # Configure the root logger for this specific worker process.
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.INFO)
+    
+    # Clear any handlers potentially inherited during the spawn process
+    if root_logger.hasHandlers():
+        root_logger.handlers.clear()
+
+    handler = logging.StreamHandler(sys.stdout)
+    # Format: Timestamp - [Worker PID] - [Logger Name] - Message
+    formatter = logging.Formatter(f'%(asctime)s - [Wkr {worker_pid}] - %(name)s - %(message)s')
+    handler.setFormatter(formatter)
+    root_logger.addHandler(handler)
+
+    # Create a specific logger instance for the worker's main messages
+    logger = logging.getLogger("ForgeWorkerMain")
+
+    # (Delayed Imports section...)
+    
+    # ... (rest of the function) ...
+```
+
+### 2\. Implement Centralized Queue and Sequential Initialization in `CrucibleEngine`
+
+This resolves the race conditions by processing Forge requests sequentially and ensuring initialization completes first.
+
+**File:** `crucible_engine.py` (Main folder files) - Continuing the class definition.
+
+```python
+# In crucible_engine.py (Continuing CrucibleEngine class)
+
+# Ensure necessary imports are present at the top of the file
+from forge.core.agent import V3Agent
+# Assuming CrucibleAgent is in arena_manager
+from forge.crucible.arena_manager import CrucibleAgent 
+from forge_worker import run_forge_process
+import json
+
+    # NEW: Centralized Forge Management Methods
+
+    def submit_forge_task(self, symbol, agent_id, generation, source="General"):
+        """Safely submits a Forge task to the central queue."""
+        task_id = symbol # Use symbol as the unique identifier
+        
+        if task_id in self.active_forge_tasks:
+            self.logger.warning(f"[{source}] Forge task for {symbol} is already running or queued. Ignoring duplicate request.")
+            return False
+        
+        self.logger.info(f"[{source}] Submitting Forge task to queue: {symbol} (Agent: {agent_id})")
+        
+        # Use asyncio.create_task to put the item in the queue asynchronously and safely
+        # This requires the event loop to be running.
+        try:
+            asyncio.get_running_loop().create_task(self.forge_queue.put((symbol, agent_id, generation, source)))
+            self.active_forge_tasks.add(task_id)
+            return True
+        except RuntimeError:
+            self.logger.error("Cannot submit Forge task: Asyncio loop is not running.")
+            return False
+
+    async def _forge_processing_loop(self):
+        """Dedicated loop to process Forge tasks sequentially from the queue."""
+        self.logger.info("Starting centralized Forge processing loop...")
+        loop = asyncio.get_running_loop()
+        while not self.stop_event.is_set():
+            try:
+                # Wait for the next task
+                symbol, agent_id, generation, source = await self.forge_queue.get()
+                task_id = symbol
+                self.logger.info(f"--- Processing Forge task from {source}: {task_id} (Agent ID: {agent_id}) ---")
+
+                try:
+                    if self.executor:
+                        # Run the task using the executor
+                        result = await loop.run_in_executor(
+                            self.executor,
+                            run_forge_process,
+                            symbol,
+                            agent_id,
+                            generation
+                        )
+                        
+                        # Handle the result (Agent initialization)
+                        if result:
+                            returned_symbol, new_agent_id = result
+                            new_v3_agent = V3Agent(symbol=returned_symbol, exchange=self.exchange, app_config=self.config)
+                            new_crucible_agent = CrucibleAgent(agent_id=new_agent_id, v3_agent=new_v3_agent)
+                            self.arena.add_agent(returned_symbol, new_crucible_agent)
+                            self.logger.info(f"AGENT {new_agent_id} IS LIVE and has been added to the arena.")
+                        else:
+                            self.logger.error(f"Forge task {task_id} failed to return a result.")
+                    else:
+                         self.logger.error("Executor not available. Cannot process Forge task.")
+
+                except Exception as e:
+                    self.logger.error(f"Error during execution of Forge task {task_id}: {e}", exc_info=True)
+                finally:
+                    # Mark task as done and remove from active set
+                    self.forge_queue.task_done()
+                    if task_id in self.active_forge_tasks:
+                        self.active_forge_tasks.remove(task_id)
+
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                self.logger.error(f"Error in Forge processing loop: {e}", exc_info=True)
+                await asyncio.sleep(10)
+
+    # MODIFIED: Ensure Sequential Initialization and Start Loops
+    async def run(self):
+        self.loop = asyncio.get_running_loop()
+        self.logger.info("Starting Hyper-Evolutionary Engine...")
+
+        # --- CRITICAL FIX: Sequential Initialization ---
+        # Complete CPU-bound initialization tasks before starting concurrent loops.
+        
+        # Phase 1: Regime Models (Uses Executor)
+        self.logger.info("--- Phase 1: Initializing Regime Models (Waiting for completion)... ---")
+        await self._initialize_regime_models()
+        self.logger.info("--- Phase 1: Complete. ---")
+        
+        # Phase 2: Immune System (CPU-Bound in main thread)
+        self.logger.info("--- Phase 2: Initializing Immune System (Waiting for completion)... ---")
+        await self._initialize_immune_system()
+        self.logger.info("--- Phase 2: Complete. ---")
+
+        # Phase 3: Start Concurrent Loops
+        self.logger.info("--- Phase 3: Starting main operational loops (Concurrent)... ---")
+        
+        # Start the dedicated queue processor first
+        asyncio.create_task(self._forge_processing_loop())
+        
+        # Start the seeding loop (which now populates the queue)
+        asyncio.create_task(self._continuous_seeding_loop())
+
+        tasks = [
+            self._trade_watcher_and_resampler(),
+            self._arena_loop(),
+            self._watchtower_loop(),
+            self.singularity_engine.run()
+        ]
+        # Use asyncio.gather to run the remaining tasks
+        await asyncio.gather(*tasks)
+
+    # MODIFIED: Seeding loop submits tasks
+    async def _continuous_seeding_loop(self):
+        self.logger.info("Starting background seeding of Generation 0 agents...")
+        
+        for symbol in self.config.ASSET_UNIVERSE:
+            if self.stop_event.is_set(): break
+                
+            if not self.arena.get_agents_for_symbol(symbol):
+                self.logger.info(f"Seeding required for: {symbol}.")
+                sanitized_symbol = symbol.split(':')[0].replace('/', '')
+                agent_id = f"{sanitized_symbol}-gen0-0"
+                
+                # Submit the task
+                self.submit_forge_task(symbol, agent_id, 0, source="Seeding")
+                await asyncio.sleep(1) # Brief pause
+
+        self.logger.info("--- Initial seeding submission loop finished. Tasks are processing in the background. ---")
+
+    # MODIFIED: Watchtower submits tasks
+    async def _watchtower_loop(self):
+        while not self.stop_event.is_set():
+            await asyncio.sleep(300)
+            self.logger.info("Watchtower commencing judgment...")
+            
+            # (Logic to populate trade_logs)
+            try:
+                with open("performance_log.jsonl", "r") as f:
+                    trade_logs = [json.loads(line) for line in f]
+            except (FileNotFoundError, json.JSONDecodeError):
+                trade_logs = []
+
+            if not trade_logs:
+                self.logger.info("No trades logged yet. Skipping judgment.")
+                continue
+
+            agents_to_replace = self.watchtower.judge_agents(self.arena.agents, trade_logs)
+            if agents_to_replace:
+                self.logger.info(f"Watchtower identified {len(agents_to_replace)} agents for replacement.")
+                for symbol, terminated_agent_id in agents_to_replace:
+                    # ... (Reaping logic) ...
+                    self.logger.warning(f"REAPING Agent {terminated_agent_id} for {symbol}.")
+                    self.arena.remove_agent(symbol, terminated_agent_id)
+                    self.generation_counters[symbol] += 1
+                    current_gen = self.generation_counters[symbol]
+                    
+                    # (New agent ID generation)
+                    sanitized_symbol = symbol.split(':')[0].replace('/', '')
+                    new_agent_id = f"{sanitized_symbol}-gen{current_gen}-{terminated_agent_id.split('-')[-1]}"
+                    
+                    # Submit the task to the centralized queue
+                    self.submit_forge_task(symbol, new_agent_id, current_gen, source="Watchtower")
+
+            self.logger.info("Watchtower judgment complete.")
+```
+
+### 3\. Update `SingularityEngine` (Use Queue and Offload CPU Tasks)
+
+Modify `SingularityEngine` to use the centralized queue and ensure its own CPU-intensive tasks are offloaded from the main asyncio loop.
+
+**File:** `singularity_engine.py` (Inferred location, Main folder files)
+
+```python
+# In singularity_engine.py (Continuing SingularityEngine class)
+import functools
+
+    # MODIFIED: Proactive loop submits tasks
+    async def _proactive_forge_loop(self):
+        self.logger.info("Starting proactive Forge loop (Centralized Queue Mode)...")
+        PROACTIVE_INTERVAL = 1800 # 30 minutes (Adjust as needed)
+
+        # Simple round-robin iteration
+        asset_iterator = iter(self.config.ASSET_UNIVERSE)
+
+        while not self.stop_event.is_set():
+            if self.submit_forge_task:
+                try:
+                    try:
+                        symbol = next(asset_iterator)
+                    except StopIteration:
+                        # Reset iterator if end is reached
+                        asset_iterator = iter(self.config.ASSET_UNIVERSE)
+                        symbol = next(asset_iterator)
+
+                    sanitized_symbol = symbol.split(':')[0].replace('/', '')
+                    timestamp = int(time.time())
+                    agent_id = f"{sanitized_symbol}-proactive-{timestamp}"
+                    
+                    # Use the centralized submission function
+                    success = self.submit_forge_task(symbol, agent_id, generation="Proactive", source="Proactive")
+                    
+                    if success:
+                        # Wait for the full interval if submission was successful
+                        await asyncio.sleep(PROACTIVE_INTERVAL)
+                    else:
+                        # If submission failed (already running), wait briefly and check the next asset
+                        await asyncio.sleep(30)
+
+                except Exception as e:
+                    self.logger.error(f"Error in proactive Forge loop: {e}", exc_info=True)
+                    await asyncio.sleep(60)
+            else:
+                 self.logger.warning("submit_forge_task_func is not available. Cannot run proactive Forge.")
+                 await asyncio.sleep(PROACTIVE_INTERVAL)
+
+
+    # MODIFIED: Offload CPU tasks in reactive loop
+    async def _reactive_drift_monitoring_loop(self):
+        self.logger.info("Starting reactive drift monitoring loop...")
+        while not self.stop_event.is_set():
+            self.logger.info("Running reactive drift check...")
+            loop = asyncio.get_running_loop()
+
+            # 1. Concept Drift Monitoring (CPU-bound)
+            self.logger.info("Monitoring for concept drift...")
+            try:
+                # CRITICAL FIX: Offload CPU-bound analysis to a thread pool
+                drift_detected = await loop.run_in_executor(None, self._analyze_drift)
+                if drift_detected:
+                    # ... (handle drift)
+            except Exception as e:
+                self.logger.error(f"Error during drift analysis offloading: {e}")
+
+            # 2. Ensemble Weight Update (Potentially CPU-bound)
+            self.logger.info("Updating ensemble weights based on performance log...")
+            try:
+                 # CRITICAL FIX: Offload CPU-bound calculation to a thread pool
+                 losses = await loop.run_in_executor(None, self._calculate_model_losses)
+                 if losses:
+                    self.trigger_weight_update_func(losses)
+            except Exception as e:
+                self.logger.error(f"Error during weight update offloading: {e}")
+
+            self.logger.info("Reactive check complete. Sleeping for 600s.")
+            await asyncio.sleep(600)
+
+    # Ensure these methods exist and are synchronous (def, not async def)
+    def _analyze_drift(self):
+        # CPU-heavy analysis happens here
+        return False 
+
+    def _calculate_model_losses(self):
+        # Calculation happens here
+        # (Ensure logic to handle missing/empty performance_log.jsonl is present)
+        # Placeholder implementation
+        try:
+            with open("performance_log.jsonl", "r") as f:
+                # ... (load and analyze logs)
+                pass
+        except FileNotFoundError:
+            self.logger.warning("Performance log not found. Skipping weight update.")
+        return {}
+
+    async def run(self):
+        self.logger.info("Singularity Engine starting its operational loops.")
+        tasks = [
+            self._reactive_drift_monitoring_loop(),
+            self._proactive_forge_loop()
+        ]
+        await asyncio.gather(*tasks)
+```

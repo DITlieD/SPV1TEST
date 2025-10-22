@@ -1,0 +1,71 @@
+
+**Realistic 1m Strategy (Scalping):**
+You must shift from aiming for rare, large wins (High R/R) to aiming for frequent, small wins (High Win Rate).
+
+*   **Target R/R:** 1:1.1 to 1:1.5
+*   **Target Win Rate:** 60%+
+
+### I. Realistic 1m Parameters (SL, TP, Holding Time)
+
+Parameters must be dynamic and volatility-based. We strongly recommend leveraging your Multi-Timeframe Architecture (MTFA) for robustness.
+
+**The MTFA Approach (Recommended):**
+Use the volatility of the *tactical* timeframe (15m) to define the risk parameters, while executing on the 1m. This filters 1m noise while respecting the broader market structure.
+
+| Parameter | Recommended Setting | Rationale |
+| :--- | :--- | :--- |
+| **Volatility Basis** | 15-minute ATR(14) | More stable than 1m ATR; reflects tactical market structure and filters noise. |
+| **Stop Loss (SL)** | 1.5x - 2.0x (15m ATR) | Wide enough to accommodate 1m noise, tight enough for controlled risk. |
+| **Take Profit (TP)** | 1.8x - 2.5x (15m ATR) | Achievable targets that maintain an R/R slightly above 1. (e.g., 2.0x SL and 2.4x TP = 1.2 R/R) |
+| **Time Stop** | 30 - 60 bars (minutes) | Forced exit if the trade stalls; edges decay quickly on 1m. |
+
+### II. Aggressive Growth Strategy ($200 Account)
+
+Rapid growth requires aggressive risk and leverage, significantly increasing the probability of ruin. This approach assumes your system can first evolve a verified edge.
+
+*   **Risk Per Trade:** To grow quickly, you must increase risk from the standard 1%.
+    *   **Recommendation:** 3% risk per trade ($6 risk).
+*   **Leverage Calculation (Example):**
+    1. Assume 3% Risk ($6).
+    2. Assume the 15m ATR calculation results in an SL distance of 0.30%.
+    3. Position Size = Risk Amount / SL Distance = $6 / 0.0030 = $2000.
+    4. Required Leverage = Position Size / Equity = $2000 / $200 = **10x Leverage**.
+*   **Dynamic Leverage:** Leverage must be dynamically calculated by the execution engine based on current volatility. Avoid fixed high leverage (e.g., 50x), as it makes stops too tight.
+*   **Daily Circuit Breaker:** Implement a mandatory halt in the `risk_management.py` module if the account loses 10% ($20) in a day.
+
+### III. Optimizing the GP Evolution and Gauntlet
+
+The evolution process must be brutally realistic to find robust strategies that can pass the Gauntlet.
+
+#### 1. Cost-Aware Fitness Function (Critical)
+
+The GP must learn to overcome real-world costs during evolution.
+
+*   **Action:** Ensure your `NumbaTurboBacktester` configuration (used by the fitness evaluator in `task_scheduler.py`) applies realistic friction: **0.18% round trip costs** (fees + slippage).
+
+#### 2. Increase Parsimony Pressure
+
+Complex strategies overfit noise. Simple strategies generalize better. You must force the GP to find simpler solutions.
+
+*   **Action:** In `forge/evolution/strategy_synthesizer.py`, increase `self.parsimony_coeff`. Increase it significantly from `0.01` to `0.05` or even `0.1` to combat 1m noise effectively.
+
+#### 3. Robust Fitness Metrics and Penalties
+
+*   Your current `ttt_fitness` (Time-to-Target) is suitable as it rewards efficient profit realization.
+*   **Action:** Ensure the penalties implemented in the previous debugging session (penalizing "Always-In" strategies and overtrading, e.g., entry rate > 25%) are active and functioning in `task_scheduler.py`.
+
+#### 4. Feature Focus (Microstructure)
+
+On the 1m timeframe, the edge is in real-time supply/demand and higher timeframe context.
+
+*   **Action:** Ensure the GP prioritizes:
+    *   **Microstructure:** Order Flow Imbalance, Book Pressure, VOI. This relies on the high-speed L2 data feed from your Rust Cerebellum implementation.
+    *   **MTFA Alignment:** Trading only when aligned with the 15m/1h trend or strategic bias.
+
+#### 5. The Gauntlet (Adversarial Testing)
+
+The validation gauntlet must be harder than the evolution environment.
+
+*   **The Cost Stress Test:** Rerun the validation with 1.5x the expected friction (0.27% round trip). Robust models should remain near breakeven or slightly profitable.
+*   **Noise Injection:** Add Gaussian noise to the OHLC data during the gauntlet run.
+*   **Latency Simulation:** Introduce a simulated delay (e.g., 100-200ms) in the gauntlet's backtester to simulate tick-to-trade latency.

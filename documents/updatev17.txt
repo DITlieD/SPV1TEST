@@ -1,0 +1,489 @@
+This is the comprehensive blueprint for optimizing the evolutionary engine (GP 2.0) to achieve the Velocity objective (rapid growth of $200) in the 1-minute MFT environment.
+
+This blueprint integrates a robust **Time-to-Target (TTT) fitness function**, ensures **high-fidelity MFT simulation**, defines essential **GP Primitives**, and leverages **Symbiotic Distillation (SDE)** with robust data alignment for guided evolution.
+
+### The Velocity Optimization Blueprint: Core Files
+
+#### 1\. Configuration (`config.py`)
+
+```python
+# config.py
+import logging
+
+# --- General Configuration ---
+ASSET_UNIVERSE = [
+    "BTC/USDT:USDT", "ETH/USDT:USDT", "SOL/USDT:USDT", "XRP/USDT:USDT", 
+    "DOGE/USDT:USDT", "BNB/USDT:USDT", "ASTER/USDT:USDT", "ENA/USDT:USDT", 
+    "SUI/USDT:USDT", "ADA/USDT:USDT"
+]
+ACTIVE_EXCHANGE = 'bybit'
+DATA_DIR = 'data'
+MODEL_DIR = 'models'
+LOG_LEVEL = logging.INFO
+
+# --- Timeframe Configuration (MTFA Velocity Focus) ---
+TIMEFRAMES = {
+    'strategic': '1h',
+    'tactical': '15m',
+    'microstructure': '1m'
+}
+
+# --- ACN & Velocity Configuration (Centralized) ---
+ACN_CONFIG = {
+    # Data Windows
+    'training_window_mft': 5000, # Reduced window for MFT focus (~3.5 days of 1m data)
+    
+    # Velocity Objective (Time-to-Target - TTT)
+    'bt_initial_capital': 1000.0, # Virtual capital for simulation
+    'bt_velocity_target_pct': 2.0, # Target profit percentage (e.g., 2.0%)
+
+    # Realistic MFT Costs (e.g., Bybit Spot Taker)
+    'bt_fees_pct': 0.055,      # Taker fee (0.055%)
+    'bt_spread_bps': 1.5,      # Spread in basis points (0.015%)
+    'bt_slippage_factor': 0.003, # Additional slippage factor
+
+    # GP 2.0 (StrategySynthesizer) Parameters
+    'gp_population_size': 150,
+    'gp_generations': 30,
+    'gp_parsimony_coeff': 0.01, # High pressure against complexity
+    'gp_tournament_size': 5,
+    # Symbiotic Distillation (SDE) Weight
+    'gp_symbiotic_mimicry_weight': 0.3, # 30% weight on mimicking the teacher model
+}
+```
+
+#### 2\. GP Primitives (`forge/evolution/gp_primitives.py`)
+
+This file must be created as it defines the building blocks for the GP engine.
+
+```python
+# forge/evolution/gp_primitives.py
+import operator
+import numpy as np
+from deap import gp
+
+# Define protected division
+def protectedDiv(left, right):
+    # Ensure inputs are treated as floats
+    left = float(left)
+    right = float(right)
+    if abs(right) < 1e-6:
+        return 1.0
+    return left / right
+
+def setup_gp_primitives(feature_names):
+    """Sets up the GP primitive set for strategy evolution."""
+    # The arity (number of inputs) matches the number of features
+    pset = gp.PrimitiveSet("MAIN", len(feature_names))
+
+    # 1. Mathematical Operators
+    pset.addPrimitive(operator.add, 2)
+    pset.addPrimitive(operator.sub, 2)
+    pset.addPrimitive(operator.mul, 2)
+    pset.addPrimitive(protectedDiv, 2)
+    
+    # 2. Comparison Operators (Crucial for evolving boolean conditions: True=Buy)
+    pset.addPrimitive(operator.gt, 2)
+    pset.addPrimitive(operator.lt, 2)
+
+    # 3. Logical Operators
+    pset.addPrimitive(operator.and_, 2)
+    pset.addPrimitive(operator.or_, 2)
+    pset.addPrimitive(operator.not_, 1)
+
+    # 4. Terminals
+    pset.addEphemeralConstant("rand_float", lambda: np.random.uniform(-1, 1))
+    
+    # Rename arguments for interpretability
+    rename_map = {f"ARG{i}": name for i, name in enumerate(feature_names)}
+    pset.renameArguments(**rename_map)
+    
+    return pset
+```
+
+#### 3\. High-Fidelity Backtester (`numba_backtester.py`)
+
+Implements the robust Time-to-Target (TTT) fitness function and MFT costs.
+
+```python
+# forge/crucible/numba_backtester.py
+import pandas as pd
+import numpy as np
+import numba
+import logging
+
+logger = logging.getLogger(__name__)
+
+@numba.jit(nopython=True)
+def _run_backtest_core(open_prices, close_prices, entries, exits, 
+                       initial_capital, profit_target_abs, 
+                       fee_rate, spread_factor, slippage_factor):
+    
+    n_samples = len(open_prices)
+    capital = initial_capital
+    position = 0.0
+    trade_count = 0
+    max_drawdown = 0.0
+    peak_capital = initial_capital
+    time_to_target = n_samples
+
+    for i in range(1, n_samples):
+        # PnL Calculation (Mark-to-Market using Close prices)
+        if position != 0.0:
+            price_change = close_prices[i] - close_prices[i-1]
+            capital += position * price_change
+        
+        # Update Drawdown
+        if capital > peak_capital: peak_capital = capital
+        drawdown = (peak_capital - capital) / peak_capital if peak_capital > 0 else 0.0
+        if drawdown > max_drawdown: max_drawdown = drawdown
+
+        # Check Velocity Target (TTT)
+        if capital >= profit_target_abs:
+            time_to_target = i
+            break # Optimization: Stop simulation early
+
+        # --- Trade Execution Logic (at Open of the current bar) ---
+        base_price = open_prices[i]
+        
+        if entries[i] and position == 0.0:
+            # BUY Execution (Cross Spread + Slippage)
+            execution_price = base_price * (1 + spread_factor + slippage_factor)
+            # Sizing: All-in (Velocity focus)
+            position = capital / execution_price * (1 - fee_rate)
+            trade_count += 1
+
+        elif exits[i] and position > 0.0:
+            # SELL Execution (Cross Spread + Slippage)
+            execution_price = base_price * (1 - spread_factor - slippage_factor)
+            capital = position * execution_price * (1 - fee_rate)
+            position = 0.0
+            
+    return capital, trade_count, max_drawdown, time_to_target
+
+class VectorizedBacktester:
+    def __init__(self, config: dict):
+        self.config = config
+        self.initial_capital = self.config.get('bt_initial_capital', 1000.0)
+        self.target_pct = self.config.get('bt_velocity_target_pct', 2.0) / 100.0
+        self.profit_target_abs = self.initial_capital * (1 + self.target_pct)
+        
+        # Costs
+        self.fee_rate = self.config.get('bt_fees_pct', 0.055) / 100.0
+        self.spread_factor = self.config.get('bt_spread_bps', 1.5) / 10000.0
+        self.slippage_factor = self.config.get('bt_slippage_factor', 0.003)
+
+    def run(self, df_context: pd.DataFrame, signals: pd.DataFrame) -> dict:
+        
+        # Data alignment and extraction
+        signals_bool = signals[['entries', 'exits']].astype(bool)
+        aligned_data = pd.concat([df_context[['open', 'close']], signals_bool], axis=1).dropna()
+        
+        if aligned_data.empty:
+            return self.get_default_metrics()
+
+        # Run Numba Core
+        final_capital, trade_count, max_dd, ttt = _run_backtest_core(
+            aligned_data['open'].values, aligned_data['close'].values,
+            aligned_data['entries'].values, aligned_data['exits'].values,
+            self.initial_capital, self.profit_target_abs,
+            self.fee_rate, self.spread_factor, self.slippage_factor
+        )
+
+        # --- Fitness Calculation (The Velocity Objective) ---
+        n_samples = len(aligned_data)
+        
+        if final_capital >= self.profit_target_abs:
+             # Target achieved: High fitness based on speed (Range: [1.0, 2.0])
+            ttt_score = 1.0 + ((n_samples - ttt) / n_samples)
+        else:
+            # Target not achieved: Fitness based on final PnL (Can be negative, < target_pct)
+            final_pnl_pct = (final_capital - self.initial_capital) / self.initial_capital
+            ttt_score = final_pnl_pct
+        
+        # Risk Penalties (Drawdown)
+        risk_penalty = max_dd 
+        velocity_fitness = ttt_score - risk_penalty
+
+        return {
+            "velocity_fitness": velocity_fitness,
+            "final_capital": final_capital,
+            "max_drawdown": max_dd,
+        }
+
+    def get_default_metrics(self):
+        return {"velocity_fitness": -1e9, "final_capital": self.initial_capital, "max_drawdown": 0.0}
+```
+
+#### 4\. Strategy Synthesizer (`strategy_synthesizer.py`)
+
+Implements Symbiotic Fitness (Velocity + Mimicry) with robust data alignment in Loky workers.
+
+```python
+# forge/evolution/strategy_synthesizer.py
+import logging
+import os
+import time
+import numpy as np
+import pandas as pd
+import operator
+from deap import base, creator, tools, gp, algorithms
+from loky import get_reusable_executor, cpu_count
+from sklearn.metrics import log_loss
+
+# Import the primitives
+from forge.evolution.gp_primitives import setup_gp_primitives 
+
+# ==============================================================================
+# LOKY Worker Initialization (Global State for Workers)
+# ==============================================================================
+_worker_state = {}
+
+def _init_worker(fitness_evaluator_func, pset, config, soft_labels_df):
+    """Initializer function for loky workers."""
+    os.environ['OMP_NUM_THREADS'] = '1'
+    # Store context
+    _worker_state['fitness_evaluator'] = fitness_evaluator_func
+    _worker_state['pset'] = pset
+    _worker_state['config'] = config
+    # Store the full DataFrame (with index) for alignment
+    _worker_state['soft_labels_df'] = soft_labels_df
+    
+    # Initialize DEAP creators
+    if not hasattr(creator, "FitnessVelocity"):
+        creator.create("FitnessVelocity", base.Fitness, weights=(1.0,)) 
+    if not hasattr(creator, "Individual"):
+         if hasattr(creator, "FitnessVelocity"):
+            creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessVelocity)
+
+def _calculate_mimicry_score(predictions_series: pd.Series, soft_labels_df: pd.DataFrame) -> float:
+    """Calculates the Mimicry Score (Inverse Log Loss) with robust alignment."""
+    try:
+        # CRITICAL ALIGNMENT: Select the relevant rows from the global labels DF
+        aligned_labels_df = soft_labels_df.loc[predictions_series.index]
+        labels_np = aligned_labels_df.values
+        predictions_np = predictions_series.values
+
+        # GP evolves the BUY condition (True). Map this to the multi-class structure.
+        # Assuming Implicit Brain classes: 0=Hold/Sell, 1=Buy.
+        n_classes = labels_np.shape[1]
+        pred_probs = np.zeros((len(predictions_np), n_classes))
+        
+        pred_probs[predictions_np == True, 1] = 1.0
+        pred_probs[predictions_np == False, 0] = 1.0 # Assuming Class 0 is default action
+        
+        # Calculate log loss. Lower is better.
+        loss = log_loss(labels_np, pred_probs, labels=np.arange(n_classes))
+        
+        # Convert loss to a normalized positive score (Higher is better). 1 / (1 + loss).
+        mimicry_score = 1.0 / (1.0 + loss)
+        return mimicry_score
+    except Exception:
+        return 0.0
+
+def _evaluate_fitness_worker(individual):
+    """The task function executed by loky workers (Symbiotic Velocity)."""
+    # Retrieve context
+    evaluator = _worker_state.get('fitness_evaluator')
+    pset = _worker_state.get('pset')
+    config = _worker_state.get('config', {})
+    soft_labels_df = _worker_state.get('soft_labels_df')
+    
+    parsimony_coeff = config.get('gp_parsimony_coeff', 0.01)
+    mimicry_weight = config.get('gp_symbiotic_mimicry_weight', 0.3)
+
+    if evaluator is None or pset is None: return (-1e9,)
+
+    try:
+        strategy_logic_func = gp.compile(expr=individual, pset=pset)
+        
+        # 1. Evaluate PnL Fitness (TTT) and get raw predictions (Pandas Series)
+        metrics, predictions_series = evaluator(strategy_logic_func)
+        velocity_fitness = metrics.get("velocity_fitness", -1e9)
+
+        # 2. Calculate Mimicry Score (SDE)
+        mimicry_score = 0.0
+        if soft_labels_df is not None and mimicry_weight > 0 and predictions_series is not None:
+            mimicry_score = _calculate_mimicry_score(predictions_series, soft_labels_df)
+
+        # 3. Combine into Symbiotic Fitness
+        symbiotic_fitness = (velocity_fitness * (1.0 - mimicry_weight)) + (mimicry_score * mimicry_weight)
+
+        # 4. Apply Parsimony Pressure
+        tree_size = len(individual)
+        adjusted_fitness = symbiotic_fitness - (tree_size * parsimony_coeff)
+        
+        return (adjusted_fitness,)
+    
+    except Exception:
+        return (-1e9,)
+
+# ==============================================================================
+# StrategySynthesizer Class (Implementation details omitted for brevity, 
+# focusing on initialization and run loop as per previous blueprints)
+# ==============================================================================
+class StrategySynthesizer:
+    def __init__(self, feature_names, fitness_evaluator, config_gp, logger=None, seed_dna=None, soft_labels_df=None):
+        # (Initialization logic using config_gp, setup_gp_primitives, DEAP setup)
+        # Ensure soft_labels_df is stored
+        self.soft_labels_df = soft_labels_df
+        self.config = config_gp
+        # ... (rest of init)
+
+    # (create_seeded_population implementation)
+
+    def run(self):
+        # (Loky initialization and DEAP eaSimple execution)
+        # Ensure initargs passes the required context:
+        # initargs=(self.fitness_evaluator, self.pset, self.config, self.soft_labels_df)
+        # ...
+        pass
+```
+
+#### 5\. `task_scheduler.py` (The Forge Orchestrator - Structure)
+
+Integrates the components within the Forge cycle, ensuring correct data flow for SDE.
+
+```python
+# forge/overlord/task_scheduler.py
+import os
+import traceback
+import logging
+import joblib
+
+# (Delayed Imports Block - Ensure all necessary modules are imported here)
+def run_single_forge_cycle(raw_data_path: str, asset_symbol: str, reporter, app_config, exchange, device: str = "cpu", logger=None, inherited_dna=None):
+    
+    # --- DELAYED IMPORTS ---
+    try:
+        import pandas as pd
+        import numpy as np
+        # (Import FeatureFactory, labeling)
+        from forge.evolution.strategy_synthesizer import StrategySynthesizer
+        # (Import validation_gauntlet)
+        from forge.crucible.numba_backtester import VectorizedBacktester
+    except ImportError as e:
+        # ... (Error handling)
+        return None, None
+
+    # Configuration extraction
+    acn_config = app_config.ACN_CONFIG
+
+    try:
+        reporter.start()
+        
+        # --- 1. Data Preparation & Feature Engineering ---
+        # (Load data and run FeatureFactory/MTFA)
+        # ... (Placeholder: Assume df_full_features, df_train_full, df_gauntlet_full are generated)
+
+        # --- 2. Labeling and Data Splitting ---
+        # ...
+
+        # --- 3. Symbiotic Crucible Initialization (SDE Teacher Model Loading) ---
+        reporter.set_status("Crucible", "Loading Implicit Brain (Teacher)...")
+        
+        model_name = asset_symbol.replace('/', '').replace(':', '_')
+        brain_path = os.path.join(app_config.MODEL_DIR, f"sde_implicit_brain_{model_name}.pkl")
+        
+        soft_labels_df = None
+        if os.path.exists(brain_path):
+            try:
+                # Load the ImplicitBrain object
+                implicit_brain = joblib.load(brain_path)
+                
+                # Generate Soft Labels (Probabilities) using the training data
+                X_train = df_train_full[implicit_brain.features]
+                probabilities = implicit_brain.model.predict_proba(X_train)
+                # CRITICAL: Store as DataFrame with index for alignment in workers
+                soft_labels_df = pd.DataFrame(probabilities, index=X_train.index, columns=implicit_brain.model.classes_)
+                logger.info("[SDE] Implicit Brain loaded. Soft Labels generated.")
+                
+            except Exception as e:
+                logger.warning(f"[SDE] Failed to load or use Implicit Brain: {e}. Proceeding without distillation.")
+
+        # --- 4. The Bake-Off (GP 2.0 Evolution) ---
+        reporter.set_status("Bake-Off: GP 2.0", "Evolving (Symbiotic Velocity)...")
+
+        try:
+            X_gp_input = df_train_full.select_dtypes(include=np.number).drop(columns=['label', 'open', 'high', 'low', 'close', 'volume'], errors='ignore')
+            feature_names = X_gp_input.columns.tolist()
+
+            # Initialize the optimized backtester
+            backtester = VectorizedBacktester(config=acn_config)
+
+            def gp_fitness_evaluator(strategy_logic_func):
+                try:
+                    # Apply the evolved logic (Returns boolean Series with index)
+                    predictions_series = X_gp_input.apply(lambda row: strategy_logic_func(*row), axis=1).astype(bool)
+                    
+                    # Generate Signals
+                    signals = pd.DataFrame(index=X_gp_input.index)
+                    signals['entries'] = predictions_series
+                    signals['exits'] = ~predictions_series # Simplified exit logic
+                    
+                    # Run backtest
+                    metrics = backtester.run(df_train_full.copy(), signals)
+                    
+                    # Return metrics AND predictions Series (required for robust SDE alignment)
+                    return metrics, predictions_series
+
+                except Exception:
+                    return backtester.get_default_metrics(), None
+            
+            # Initialize the synthesizer
+            synthesizer = StrategySynthesizer(
+                feature_names, 
+                gp_fitness_evaluator, 
+                config_gp=acn_config,
+                logger=logger, 
+                seed_dna=inherited_dna,
+                soft_labels_df=soft_labels_df
+            )
+            
+            # best_strategy_tree = synthesizer.run()
+            # ... (Process results)
+
+        except Exception as e:
+            logger.error(f"[Bake-Off] ERROR: GP 2.0 training failed: {e}\n{traceback.format_exc()}")
+
+        # --- 5. The Gauntlet & 6. Registration ---
+        # ...
+
+    except Exception as e:
+        # ... (Error handling)
+        return None, None
+```
+
+### Implementation To-Do List (For Gemini Code Assistant)
+
+**I. Core Infrastructure and Dependencies (High Priority)**
+
+1.  **[Config] Update `config.py`:**
+
+      * **Action:** Implement the provided `config.py`. Ensure `ACN_CONFIG` defines the TTT Target, MFT Costs, and GP/SDE Parameters.
+
+2.  **[GP Primitives] Implement `forge/evolution/gp_primitives.py` (CRITICAL):**
+
+      * **Action:** Create this new file and implement the provided `gp_primitives.py` code.
+
+**II. Simulation and Fitness (High Priority)**
+
+3.  **[Backtester] Implement `forge/crucible/numba_backtester.py`:**
+      * **Action:** Implement the provided `numba_backtester.py`.
+      * **Details:** Verify the Numba core accurately simulates MFT costs. Confirm the robust Time-to-Target (TTT) fitness calculation (Range 1-2 for success, PnL% for failure).
+
+**III. The Evolutionary Core (GP 2.0)**
+
+4.  **[GP Core] Implement `forge/evolution/strategy_synthesizer.py`:**
+      * **Action:** Implement the provided `strategy_synthesizer.py` structure (focusing on the worker functions if the class structure is already implemented).
+      * **Details (SDE Alignment):** Implement the robust alignment logic in `_calculate_mimicry_score` using Pandas Series/DataFrame indices.
+      * **Details (SDE Fitness):** Ensure `_evaluate_fitness_worker` combines Velocity Fitness and Mimicry score (Inverse Log Loss).
+      * **Details (Loky):** Verify the `_init_worker` passes the `soft_labels_df` correctly.
+
+**IV. Orchestration and Integration**
+
+5.  **[Orchestration] Update `forge/overlord/task_scheduler.py`:**
+      * **Action:** Update `task_scheduler.py` based on the provided structure.
+      * **Details (SDE Workflow):** Implement the logic to load the Implicit Brain and generate `soft_labels_df` (DataFrame with index).
+      * **Details (Fitness Interface):** Update `gp_fitness_evaluator` to return metrics and the predictions as a Pandas Series (containing the index).
+      * **Details (Integration):** Ensure `VectorizedBacktester` and `StrategySynthesizer` are initialized using `ACN_CONFIG`.

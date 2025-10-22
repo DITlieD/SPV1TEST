@@ -1,0 +1,174 @@
+You're absolutely right\! My apologies for getting stuck in that loop and repeating the bug hunt. I've cleared my context and will focus entirely on your request to **implement the MCE (Micro-Causality Engine)**.
+
+Based on the files provided (`micro_causality.py`, `microstructure_features_l2.py`, `l2_collector.py`, `crucible_engine.py`, `feature_factory.py`, `agent.py`), here is the TODO list for Gemini Code Assist to integrate MCE into your live trading system:
+
+-----
+
+## 🛠️ TODO List for Implementing MCE (Micro-Causality Engine)
+
+### 1\. Integrate L2 Data Collection into `CrucibleEngine`
+
+  * **Goal:** Start and manage the L2 data collection process when the main engine starts.
+  * **Location:** `crucible_engine.py`
+  * **Task:**
+    1.  Add import: `from l2_collector import L2Collector`.
+    2.  In `CrucibleEngine.__init__`:
+          * Instantiate the collector:
+            ```python
+            self.l2_collector = L2Collector(
+                assets=self.config.ASSET_UNIVERSE, # Use assets from config
+                snapshot_interval=5 # Seconds between saving snapshots (adjust as needed)
+            )
+            self.logger.info("L2 Data Collector initialized.")
+            ```
+    3.  In `CrucibleEngine.run` (or a new dedicated method called by `run`):
+          * Start the collector in a separate thread or async task:
+            ```python
+            # Option A: Thread (Simpler if L2Collector.start is blocking)
+            # import threading
+            # self.l2_thread = threading.Thread(target=self.l2_collector.start, daemon=True)
+            # self.l2_thread.start()
+            # self.logger.info("L2 Collector thread started.")
+
+            # Option B: Async Task (If L2Collector.start is async)
+            # self.l2_task = asyncio.create_task(self.l2_collector.start_async()) # Assumes an async start method
+            # self.logger.info("L2 Collector async task started.")
+            # Ensure this task is gathered/cancelled in CrucibleEngine.stop
+            ```
+    4.  In `CrucibleEngine.stop`:
+          * Add logic to gracefully stop the `L2Collector` (it needs a `stop()` method).
+            ```python
+            if hasattr(self, 'l2_collector') and self.l2_collector:
+                try:
+                    self.l2_collector.stop() # Implement this method in L2Collector
+                    # If using a thread, you might need to wait for it: self.l2_thread.join(timeout=5)
+                    self.logger.info("L2 Collector stopped.")
+                except Exception as e:
+                    self.logger.error(f"Error stopping L2 Collector: {e}")
+            ```
+
+-----
+
+### 2\. Instantiate and Train/Load MCE Components
+
+  * **Goal:** Create instances of the MCE pipeline components and load the pre-trained TFT model.
+  * **Location:** `crucible_engine.py`
+  * **Task:**
+    1.  Add imports from `micro_causality.py`:
+        ```python
+        from forge.modeling.micro_causality import (
+            MCEFeatureEngine, MCEFeatureNormalizer, MCE_TFT_Model, MCE_RealtimePipeline
+        )
+        import torch # For loading model
+        ```
+    2.  In `CrucibleEngine.__init__`:
+          * Instantiate MCE components:
+            ```python
+            self.mce_feature_engine = MCEFeatureEngine()
+            self.mce_normalizer = MCEFeatureNormalizer() # Needs to be fitted or load pre-fitted state
+            # --- TFT Model Loading ---
+            tft_model_path = "models/mce_tft_model.pth" # Define path to your trained model
+            # Determine input/output dims based on MCEFeatureEngine and expected output
+            mce_input_features = 14 # Based on MCEFeatureEngine comments
+            num_targets = 2 # MCE_Skew, MCE_Pressure
+            self.mce_tft_model = MCE_TFT_Model(
+                input_feature_dim=mce_input_features,
+                num_targets=num_targets
+                # Add other necessary TFT hyperparameters matching the trained model
+            )
+            if os.path.exists(tft_model_path):
+                try:
+                    # Load state dict correctly based on how MCE_TFT_Model saves it
+                    self.mce_tft_model.load_state_dict(torch.load(tft_model_path))
+                    self.mce_tft_model.to(config.DEVICE) # Move to configured device
+                    self.mce_tft_model.eval() # Set to evaluation mode
+                    self.logger.info(f"MCE TFT model loaded successfully from {tft_model_path}.")
+                    self.mce_pipeline = MCE_RealtimePipeline(
+                        self.mce_feature_engine, self.mce_normalizer, self.mce_tft_model
+                    )
+                    self.logger.info("MCE Realtime Pipeline initialized.")
+                except Exception as e:
+                    self.logger.error(f"Failed to load MCE TFT model from {tft_model_path}: {e}. MCE Pipeline disabled.")
+                    self.mce_pipeline = None
+            else:
+                self.logger.warning(f"MCE TFT model not found at {tft_model_path}. MCE Pipeline disabled.")
+                self.mce_pipeline = None
+            # --- End TFT Model Loading ---
+
+            # TODO: Implement fitting/loading for MCEFeatureNormalizer
+            # self.mce_normalizer.fit(historical_l2_features) # Or load pre-fitted scaler
+            self.logger.warning("MCEFeatureNormalizer needs to be fitted or loaded.")
+
+            ```
+    3.  **Normalizer Fitting/Loading:** Add logic (perhaps in `train_aux_models.py` or a dedicated MCE training script) to fit `MCEFeatureNormalizer` on historical L2 feature data and save its state (e.g., using `joblib`). Load the fitted normalizer in `CrucibleEngine.__init__`.
+
+-----
+
+### 3\. Integrate MCE Prediction into Data Processing
+
+  * **Goal:** Calculate MCE features (`MCE_Skew`, `MCE_Pressure`) for each asset on every update and make them available to the agent.
+  * **Location:** `crucible_engine.py` (`_arena_loop`) or potentially `feature_factory.py`. (Integrating in `_arena_loop` is simpler initially).
+  * **Task:**
+    1.  Inside `CrucibleEngine._arena_loop`, *after* receiving OHLCV data (`df_raw`) but *before* calling `FeatureFactory`:
+          * Get the latest L2 snapshot for the current `symbol` from `self.l2_collector.get_snapshot(symbol)`. Handle cases where the snapshot might be unavailable.
+          * If the MCE pipeline is active (`self.mce_pipeline is not None`) and an L2 snapshot exists:
+            ```python
+            try:
+                # Get latest L2 snapshot
+                l2_snapshot = self.l2_collector.get_snapshot(symbol, depth=50) # Use depth needed by MCE
+
+                if l2_snapshot:
+                    # Process snapshot using MCE Pipeline
+                    # MCE_RealtimePipeline expects raw features dict or DataFrame
+                    # Adapt based on MCEFeatureEngine input requirements
+                    # This example assumes it needs the snapshot directly
+                    mce_input_data = l2_snapshot # Adjust if it needs a DataFrame or specific format
+                    mce_output = self.mce_pipeline.process_update(symbol, mce_input_data)
+                    mce_skew = mce_output.get('MCE_Skew', 0.0) # Default to 0 if fails
+                    mce_pressure = mce_output.get('MCE_Pressure', 0.0)
+                    self.logger.debug(f"[{symbol}] MCE Output: Skew={mce_skew:.3f}, Pressure={mce_pressure:.3f}")
+                else:
+                    mce_skew, mce_pressure = 0.0, 0.0
+                    self.logger.warning(f"[{symbol}] No L2 snapshot available for MCE calculation.")
+
+            except Exception as mce_e:
+                self.logger.error(f"Error during MCE processing for {symbol}: {mce_e}")
+                mce_skew, mce_pressure = 0.0, 0.0 # Default on error
+            ```
+          * **Pass MCE Outputs:** Add `mce_skew` and `mce_pressure` as arguments when calling `self.arena.process_data`.
+
+-----
+
+### 4\. Utilize MCE Features in `Agent`
+
+  * **Goal:** Use the calculated MCE signals to influence the agent's decisions.
+  * **Location:** `arena_manager.py` (`process_data`), `agent.py` (`decide_and_execute`).
+  * **Task:**
+    1.  **Modify `ArenaManager.process_data` Signature:** Add `mce_skew: float = 0.0`, `mce_pressure: float = 0.0` to the method signature.
+    2.  **Pass MCE to Agent:** In the loop calling `agent.agent.decide_and_execute`, pass the received `mce_skew` and `mce_pressure`.
+    3.  **Modify `Agent.decide_and_execute` Signature:** Add `mce_skew: float = 0.0`, `mce_pressure: float = 0.0` to the method signature.
+    4.  **Use MCE Signals:** Incorporate `mce_skew` and `mce_pressure` into the decision logic. Examples:
+          * **Filter Signals:** Only take LONG entries if `mce_skew > SKEW_THRESHOLD` or `mce_pressure < PRESSURE_THRESHOLD`. Only take SHORT entries if `mce_skew < -SKEW_THRESHOLD` or `mce_pressure < PRESSURE_THRESHOLD`. (Define thresholds).
+          * **Adjust Confidence/Sizing:** Modify the ensemble `confidence` or the final `size_fraction` based on MCE signals. E.g., increase size if MCE aligns with the signal, decrease if it opposes or pressure is high.
+          * **Exit Condition:** Consider exiting a position if `mce_pressure` spikes above a high threshold, indicating potential forced MM liquidation.
+        <!-- end list -->
+        ```python
+        # Example within Agent.decide_and_execute ENTRY logic:
+        if ensemble_signal == 1:
+            # ... calculate base_size_fraction, final_size_fraction with KCM ...
+            mce_confidence_adj = 1.0
+            if mce_skew < -0.2: # Skew opposes LONG signal
+                mce_confidence_adj *= 0.5
+            if mce_pressure > 0.8: # High pressure = risky entry
+                mce_confidence_adj *= 0.3
+
+            final_size_fraction *= mce_confidence_adj # Adjust size based on MCE
+            self.logger.info(f"[DIAGNOSTIC] MCE Applied: Skew={mce_skew:.2f}, Pressure={mce_pressure:.2f}, AdjFactor={mce_confidence_adj:.2f}, Final Size={final_size_fraction:.2%}")
+
+            if final_size_fraction > 0.01:
+                # ... execute trade ...
+        ```
+
+-----
+
+This provides a step-by-step guide to integrating the MCE components into your live system, starting from data collection up to using the signals in the trading agent. Remember to train the TFT model (`MCE_TFT_Model`) and fit the normalizer (`MCEFeatureNormalizer`) offline first.

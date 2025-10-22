@@ -1,0 +1,134 @@
+Okay, let's create the TODO list for integrating the **Influence Mapper (Macro-Causality Engine)**. This engine aims to map information flow across assets.
+
+-----
+
+## 🛠️ TODO List for Implementing Influence Mapper (Macro-Causality)
+
+### 1\. Instantiate Influence Mapper Pipeline (`crucible_engine.py`)
+
+  * **Goal:** Create and initialize the `InfluenceMapperPipeline` when the `CrucibleEngine` starts.
+  * **Location:** `crucible_engine.py`
+  * **Task:**
+    1.  Add import: `from forge.modeling.macro_causality import InfluenceMapperPipeline`.
+    2.  In `CrucibleEngine.__init__`:
+          * Instantiate the pipeline, ensuring it has the correct asset list and potentially pre-trained GAT model path:
+            ```python
+            # Define parameters (move to config.py if desired)
+            influence_pe_window = 100 # From acn_integration.py example
+            influence_te_window = 100 # From acn_integration.py example
+            influence_gat_model_path = "models/influence_gat_model.pth" # Define path
+
+            try:
+                self.influence_mapper = InfluenceMapperPipeline(
+                    asset_list=self.config.ASSET_UNIVERSE, # Use assets from config
+                    pe_window=influence_pe_window,
+                    te_window=influence_te_window,
+                    gat_model_path=influence_gat_model_path,
+                    device=config.DEVICE # Pass the configured device
+                )
+                self.logger.info("Influence Mapper Pipeline initialized.")
+            except Exception as e:
+                self.logger.error(f"Failed to initialize Influence Mapper: {e}. Influence mapping disabled.")
+                self.influence_mapper = None
+
+            # --- GAT Model Training (Offline Task) ---
+            # NOTE: The GAT model within InfluenceMapperPipeline needs to be trained offline.
+            # Add a check here or ensure a pre-trained model exists.
+            if self.influence_mapper and not os.path.exists(influence_gat_model_path):
+                 self.logger.warning(f"Influence Mapper GAT model not found at {influence_gat_model_path}. "
+                                     f"Mapper initialized but needs training/model file. Influence mapping disabled.")
+                 self.influence_mapper = None # Disable if model is missing
+            ```
+    3.  **GAT Model Training (Offline Task):** Create a separate script or add to `train_aux_models.py` to:
+          * Load multi-asset historical data.
+          * Run the PE and TE calculations historically using `InfluenceMapperPipeline` helper methods.
+          * Build historical graph data suitable for `torch_geometric`.
+          * Instantiate the `GAT_Influence` model.
+          * Train the GAT model to predict future entropy changes based on graph structure and node features.
+          * Save the trained GAT model's state dict: `torch.save(model.state_dict(), influence_gat_model_path)`.
+
+-----
+
+### 2\. Integrate Influence Mapper Update into Main Loop (`crucible_engine.py`)
+
+  * **Goal:** Run the Influence Mapper's `process_update` periodically to get the latest influence scores.
+  * **Location:** `crucible_engine.py` (`_arena_loop` or a separate periodic task). Running it less frequently than every bar (e.g., every minute or 5 minutes) might be sufficient and more efficient.
+  * **Task:**
+    1.  **Option A (Simpler - Run in `_arena_loop`):**
+          * Inside `_arena_loop`, *before* iterating through agents or after processing features for *all* assets for a given timestamp (if possible):
+            ```python
+            influence_output = {} # Default empty dict
+            if self.influence_mapper:
+                try:
+                    # Collect latest close prices for all assets processed in this cycle
+                    # This assumes you have access to the latest data for all assets
+                    # Might need slight refactoring if _arena_loop processes one symbol at a time strictly.
+                    # If processing one symbol at a time, store latest prices in a shared dict.
+                    latest_prices = {s: df['close'].iloc[-1] for s, df in self.latest_feature_data.items()} # Example assumes self.latest_feature_data exists
+
+                    if len(latest_prices) == len(self.config.ASSET_UNIVERSE): # Ensure we have data for all assets
+                        # Offload potentially CPU/GPU intensive calculation
+                        influence_output = await asyncio.get_running_loop().run_in_executor(
+                            None, self.influence_mapper.process_update, latest_prices
+                        )
+                        self.logger.debug(f"Influence Mapper updated.")
+                    else:
+                         self.logger.debug("Influence Mapper waiting for complete market price data.")
+
+                except Exception as im_e:
+                    self.logger.error(f"Error during Influence Mapper update: {im_e}")
+                    influence_output = {} # Reset on error
+            ```
+          * Pass the relevant part of `influence_output` (scores for the specific `symbol`) to `self.arena.process_data`.
+    2.  **Option B (More Decoupled - Separate Task):**
+          * Create a new `async def _influence_mapper_loop(self):` in `CrucibleEngine`.
+          * Inside this loop, `await asyncio.sleep(UPDATE_INTERVAL)` (e.g., 60 seconds).
+          * Fetch the latest prices for all assets (perhaps using `self.exchange.fetch_tickers`).
+          * Run `self.influence_mapper.process_update` (offloaded).
+          * Store the results in a shared attribute like `self.latest_influence_scores`.
+          * In `_arena_loop`, read from `self.latest_influence_scores` instead of calculating it directly.
+          * Start `_influence_mapper_loop` in `CrucibleEngine.run` using `asyncio.create_task` and ensure it's cancelled in `stop`.
+
+-----
+
+### 3\. Pass Influence Data to `Agent` (`arena_manager.py`, `agent.py`)
+
+  * **Goal:** Make the Influence Mapper outputs available to the trading agent.
+  * **Location:** `arena_manager.py` (`process_data`), `agent.py` (`decide_and_execute`).
+  * **Task:**
+    1.  **Modify `ArenaManager.process_data` Signature:** Add parameters for the influence scores, e.g., `influence_incoming: float = 0.0`, `influence_outgoing: float = 0.0`, `predicted_entropy_delta: float = 0.0`.
+    2.  **Extract & Pass Scores:** In `ArenaManager.process_data`, extract the scores for the current `symbol` from the `influence_output` dictionary received from `CrucibleEngine`. Pass these extracted scores when calling `agent.agent.decide_and_execute`.
+    3.  **Modify `Agent.decide_and_execute` Signature:** Add the same parameters (`influence_incoming`, `influence_outgoing`, `predicted_entropy_delta`) to the method signature.
+
+-----
+
+### 4\. Utilize Influence Mapper Signals in `Agent` (`agent.py`)
+
+  * **Goal:** Use the macro-causal signals to enhance the agent's decisions.
+  * **Location:** `agent.py` (`decide_and_execute`).
+  * **Task:** Incorporate the new influence signals into the decision logic. Examples:
+      * **Risk Adjustment:** Similar to KCM, use `influence_incoming` as a measure of systemic risk or volatility. High incoming influence might warrant reducing position size: `final_size_fraction *= max(0.1, 1.0 - influence_incoming)`.
+      * **Signal Filtering/Confirmation:**
+          * Only take LONG signals if `predicted_entropy_delta < 0` (expecting stabilization or reversal upwards).
+          * Only take SHORT signals if `predicted_entropy_delta > 0` (expecting increased volatility downwards).
+          * Increase confidence or size if `influence_incoming` aligns with the trade direction (e.g., high positive influence confirms a LONG signal).
+      * **Exit Logic:** Consider exiting positions if `influence_incoming` spikes suddenly or `predicted_entropy_delta` becomes highly positive (signaling potential instability).
+    <!-- end list -->
+    ```python
+    # Example within Agent.decide_and_execute
+    self.logger.debug(f"Influence Signals: In={influence_incoming:.3f}, Out={influence_outgoing:.3f}, EntropyDelta={predicted_entropy_delta:.3f}")
+
+    # Apply risk adjustment based on incoming influence
+    influence_risk_adj = max(0.1, 1.0 - abs(influence_incoming * 2.0)) # Scale influence to [0,1] first if needed
+    final_size_fraction *= influence_risk_adj
+    self.logger.info(f"[DIAGNOSTIC] Influence Risk Applied: Factor={influence_risk_adj:.3f}, Final Size={final_size_fraction:.2%}")
+
+    # Example signal filtering:
+    # if ensemble_signal == 1 and predicted_entropy_delta > 0.05: # Expecting volatility, maybe skip LONG
+    #    self.logger.info("[DIAGNOSTIC] Skipping LONG entry due to positive predicted entropy delta.")
+    #    return None # HOLD
+    ```
+
+-----
+
+Remember to perform the offline GAT model training before running the live system with the Influence Mapper integrated. This provides the steps to incorporate macro-causal insights into your trading logic.

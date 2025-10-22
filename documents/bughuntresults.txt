@@ -1,0 +1,355 @@
+This comprehensive review provides a deep analysis of bugs, typos, and placeholder code within your system. It also includes the implementation for GP 2.0 with your requested settings (Population 50, Generations 20) and a detailed, prioritized to-do list for remediation.
+
+### I. Deep Bug Hunt & Critical Findings
+
+We have identified several critical issues affecting the stability, correctness, and robustness of the system.
+
+**A. Nested Parallelism Deadlocks (System Hangs) [CRITICAL]**
+
+  * **Issue:** This is the root cause of the Forge hanging. The `CrucibleEngine` runs the Forge (`run_forge_process`) in a background process. When components inside that process (LGBM/XGBM wrappers using `n_jobs=-1`, or the GP engine using `multiprocessing.Pool`) attempt to launch their own parallel tasks, it causes a deadlock.
+  * **Fix:** Force sequential execution within these components if they detect they are running in a subprocess (`multiprocessing.current_process().name != 'MainProcess'`).
+
+**B. Excessive Data Lagging in Forge [CRITICAL]**
+
+  * **File:** `forge/overlord/task_scheduler.py`
+  * **Issue:** The code manually shifts features by 20 bars (`.shift(20)`) after labeling. This introduces significant, unnecessary lag, forcing the model to predict using stale data from T-20.
+  * **Fix:** Remove the manual `.shift(20)` operation.
+
+**C. Incorrect Async Usage in Data Processing [HIGH]**
+
+  * **File:** `data_processing_v2.py` (in `get_aligned_mtf_data`)
+  * **Issue:** The function `get_market_data` is defined as `async`. Using `asyncio.to_thread` to call an async function is incorrect; it should be awaited as an async task.
+  * **Fix:** Replace `asyncio.to_thread(get_market_data, ...)` with direct async calls managed by `asyncio.gather`.
+
+**D. Crucible Engine Seeding Halt [HIGH]**
+
+  * **File:** `CrucibleEngine` definition (Main folder files, `_continuous_seeding_loop`)
+  * **Issue:** A `break` statement, likely left over from debugging, halts the initialization loop after the first agent is processed.
+  * **Fix:** Remove the `break` statement.
+
+**E. Validation Gauntlet Feature Access Bug [MEDIUM]**
+
+  * **File:** `validation_gauntlet.py` (in `run_full_gauntlet`)
+  * **Issue:** The function attempts to access `model.feature_names` before the model (like LGBM/XGBM) is fitted. This attribute is often set only during the `fit()` process, causing an `AttributeError`.
+  * **Fix:** Implement a fallback mechanism in the gauntlet to determine features from the input dataframe if the model attribute is missing or empty.
+
+**F. GP 2.0 Serialization Fragility [MEDIUM]**
+
+  * **File:** `ModelRegistry.register_model` (Forge folder files)
+  * **Issue:** The Genetic Programming Primitive Set (Pset) uses `functools.partial` (in `setup_gp_primitives`), which `joblib`/`pickle` cannot reliably serialize. This can crash the Forge when saving a successful GP model.
+  * **Fix:** Use the `dill` library instead of `joblib` for GP components.
+
+**G. Model Registry Initialization Error [LOW]**
+
+  * **File:** `ModelRegistry` definition (Forge folder files)
+  * **Issue:** In the `__init__` method, `self.registry_path` is assigned twice, with the second assignment potentially overwriting the default value logic incorrectly.
+    ```python
+    self.registry_path = registry_path if registry_path is not None else MODEL_DIR
+    self.registry_path = registry_path # Incorrect overwrite
+    ```
+  * **Fix:** Remove the second assignment.
+
+### II. Typo Hunt Findings
+
+1.  **XAI Reporter:**
+      * **File:** `XaiReporter` (Forge folder files, `_generate_local_explanation`)
+      * **Issue:** `top_losses = sorted_by_by_pnl.tail(3)`.
+      * **Fix:** Change to `top_losses = sorted_by_pnl.tail(3)`.
+2.  **Missing Imports:**
+      * Ensure `from tqdm import tqdm` is present in `GeneticAlgorithm` (Forge folder files) and `validation_gauntlet.py` (Main folder files) where `tqdm` is used.
+      * Ensure `import ccxt` is present in `verify_asset_availability.py` (Main folder files).
+
+### III. Placeholder/Simulation Code Hunt
+
+The following components use simulated data or simplified logic and must be replaced for production:
+
+1.  **GNN Correlation Matrix (CRITICAL):** `GraphBuilder._get_simulated_correlation_matrix` uses random data. Needs actual rolling inter-asset correlation calculation.
+2.  **On-Chain Data Fetcher (CRITICAL):** `fetch_onchain_data` generates mock data. Needs integration with a real API provider (e.g., Glassnode, CryptoQuant).
+3.  **Trade Execution (HIGH):** `V3Agent._execute_trade` uses simple market orders. Requires advanced execution logic (e.g., Limit Orders, TWAP) and robust error handling/confirmation checks.
+4.  **Sentiment Engine:** Requires `CRYPTOPANIC_API_KEY` in the `.env` file to fetch real news sentiment.
+5.  **Sandbox Mode:** Multiple files (`crucible_engine.py`, `trading_manager.py`, etc.) have `exchange.set_sandbox_mode(True)`. Must be set to `False` for production.
+
+### IV. GP 2.0 Implementation (Optimized for Forge)
+
+We will implement GP 2.0 (Population 50, Generations 20) within the Forge cycle, ensuring it runs sequentially when executed as a subprocess to prevent deadlocks.
+
+#### A. Configure `StrategySynthesizer` for Subprocess Safety
+
+**File:** `StrategySynthesizer` definition (Forge folder files)
+
+```python
+# In the file defining StrategySynthesizer (Forge folder files)
+import multiprocessing
+from deap import base, creator, tools, gp, algorithms # Ensure algorithms is imported
+import logging
+import numpy as np
+# ... other imports (setup_gp_primitives)
+
+class StrategySynthesizer:
+    def __init__(self, feature_names, fitness_evaluator, population_size=100, generations=50, logger=None):
+        # ... (Initialize attributes) ...
+        self.logger = logger if logger else logging.getLogger(__name__)
+        self.pool = None # Initialize pool to None
+
+        # --- DEAP Setup (Ensure creator definitions exist robustly) ---
+        self.pset = setup_gp_primitives(self.feature_names)
+        # Ensure creators are initialized safely (important when running in different processes)
+        if not hasattr(creator, "FitnessMax"):
+            creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+        if not hasattr(creator, "Individual"):
+            creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
+
+        self.toolbox = base.Toolbox()
+        # ... (existing toolbox registrations) ...
+        self.toolbox.register("evaluate", self.evaluate_fitness)
+
+        # CRITICAL FIX: Detect if running in a subprocess
+        is_subprocess = multiprocessing.current_process().name != 'MainProcess'
+
+        # Register the map function conditionally
+        if is_subprocess:
+            # If running in a subprocess (The Forge), use the built-in sequential map
+            self.toolbox.register("map", map)
+            self.logger.info("[GP 2.0] Initialized in Subprocess (Forge). Using sequential execution to prevent deadlock.")
+        else:
+            # If running standalone in the main process, use multiprocessing Pool
+            try:
+                self.pool = multiprocessing.Pool()
+                self.toolbox.register("map", self.pool.map)
+                self.logger.info("[GP 2.0] Initialized in Main Process. Using parallel execution.")
+            except Exception as e:
+                self.logger.warning(f"[GP 2.0] Failed to initialize Pool. Falling back to sequential execution. Error: {e}")
+                self.toolbox.register("map", map)
+
+    # ... (evaluate_fitness method remains the same) ...
+
+    def run(self):
+        pop = self.toolbox.population(n=self.population_size)
+        hof = tools.HallOfFame(1)
+        # ... (stats setup) ...
+
+        self.logger.info(f"[GP 2.0] Starting evolution for {self.generations} generations, Pop: {self.population_size}...")
+
+        # Use the efficient built-in algorithm runner which utilizes toolbox.map internally
+        try:
+            # Set verbose=True to see the progress output from DEAP
+            pop, log = algorithms.eaSimple(pop, self.toolbox, cxpb=0.5, mutpb=0.2, ngen=self.generations,
+                                           stats=stats, halloffame=hof, verbose=True)
+        except Exception as e:
+            self.logger.error(f"[GP 2.0] Error during evolution: {e}", exc_info=True)
+            return None
+
+        self.logger.info("[GP 2.0] Evolution complete.")
+        
+        # --- IMPORTANT: Close the pool ONLY if it was created ---
+        if self.pool:
+            self.pool.close()
+            self.pool.join()
+
+        return hof[0] if hof else None
+```
+
+#### B. Integrate GP 2.0 and Fix Data Lag in `task_scheduler.py`
+
+**File:** `forge/overlord/task_scheduler.py` (Forge folder files)
+
+```python
+# In forge/overlord/task_scheduler.py, inside run_single_forge_cycle
+
+def run_single_forge_cycle(raw_data_path: str, asset_symbol: str, reporter: PipelineStatus, app_config, exchange, device: str = "cpu", logger=None):
+    # ... (Data Loading and Feature Engineering - Steps 1) ...
+
+        # --- 2. Labeling and Data Splitting ---
+        reporter.set_status("Labeling", "Creating triple-barrier labels...")
+        df_full_features['label'] = create_categorical_labels(df_full_features)
+        
+        # FIX: REMOVE THE EXCESSIVE LAGGING LOGIC:
+        # horizon = 20
+        # df_full_features[df_full_features.columns.drop('label')] = df_full_features[df_full_features.columns.drop('label')].shift(horizon)
+        
+        # Drop NaNs created during feature engineering and labeling
+        df_full_features.dropna(inplace=True)
+
+        if df_full_features.empty:
+            raise ValueError("Not enough data after labeling and cleaning.")
+
+        # Split data
+        train_size = int(len(df_full_features) * 0.8)
+        df_train_full, df_gauntlet_full = df_full_features.iloc[:train_size], df_full_features.iloc[train_size:]
+        df_train_numeric = df_train_full.select_dtypes(include=np.number)
+
+        # --- 3. Environment Classification ---
+        # ... (Environment Classification logic) ...
+
+        # --- 4. The Bake-Off: Train All Challengers ---
+        reporter.set_status("Bake-Off", "Training all challenger models...")
+        # ... (Print statements) ...
+        challengers = []
+
+        # Challenger 1: GP 2.0 (Enabled and Configured)
+        try:
+            # User's desired settings
+            POP_SIZE = 50
+            GENERATIONS = 20
+            
+            reporter.set_status("Bake-Off: GP 2.0", f"Evolving (Pop: {POP_SIZE}, Gen: {GENERATIONS})...")
+            print(f"\n[Bake-Off] Training Challenger 1: GP 2.0 (Pop: {POP_SIZE}, Gen: {GENERATIONS})...")
+            
+            # Define inputs for the GP (numeric features, excluding OHLCV/Label)
+            X_gp_input = df_train_numeric.drop(columns=['label', 'open', 'high', 'low', 'close', 'volume'], errors='ignore')
+            
+            # We use the full dataframe for backtesting context (needs OHLCV)
+            X_fitness_context = df_train_full 
+            y_fitness = df_train_full['label']
+            
+            feature_names = X_gp_input.columns.tolist()
+
+            def gp_fitness_evaluator(strategy_logic_func):
+                try:
+                    # Apply the evolved logic row by row to the input data
+                    raw_predictions = X_gp_input.apply(lambda row: strategy_logic_func(*row), axis=1)
+                    
+                    # Assuming GP evolves a boolean condition for entry (BUY=True)
+                    entries = raw_predictions.astype(bool)
+                    exits = ~entries # Simplified exit logic: exit when entry condition is false
+                    
+                    signals = y_fitness.to_frame(name='label').copy()
+                    signals['entries'], signals['exits'] = entries, exits
+                    
+                    # Run backtest using the context dataframe (X_fitness_context)
+                    backtester = VectorizedBacktester()
+                    # Ensure context data has necessary columns for backtesting
+                    if 'open' not in X_fitness_context.columns or 'close' not in X_fitness_context.columns:
+                         return VectorizedBacktester().get_default_metrics()
+
+                    return backtester.run(X_fitness_context.copy(), signals)
+                except Exception:
+                    # Handle errors during strategy execution (e.g., invalid math)
+                    return VectorizedBacktester().get_default_metrics()
+            
+            # The synthesizer internally handles the multiprocessing deadlock prevention
+            synthesizer = StrategySynthesizer(feature_names, gp_fitness_evaluator, population_size=POP_SIZE, generations=GENERATIONS, logger=logger)
+            best_strategy_tree = synthesizer.run()
+            
+            if best_strategy_tree and best_strategy_tree.fitness.valid:
+                evolved_model = EvolvedStrategyWrapper(best_strategy_tree, synthesizer.pset, synthesizer.feature_names)
+                explanation = get_strategy_explanation(best_strategy_tree, synthesizer.pset)
+                challengers.append({"name": "GP 2.0", "model": evolved_model, "explanation": explanation})
+                print(f"[Bake-Off] GP 2.0 training complete. Best Fitness: {best_strategy_tree.fitness.values[0]:.4f}")
+                reporter.log(f"[Bake-Off] GP 2.0 Evolved. Fitness: {best_strategy_tree.fitness.values[0]:.4f}")
+            else:
+                print("[Bake-Off] GP 2.0 failed to find a valid strategy.")
+
+        except Exception as e:
+            print(f"[Bake-Off] ERROR: GP 2.0 training failed: {e}\n{traceback.format_exc()}")
+            reporter.log(f"[Bake-Off] ERROR: GP 2.0 failed: {e}")
+
+        # Challenger 2: LightGBM (Keep this as a benchmark)
+        # ... (The existing LightGBM code remains here, relying on the fix in models_v2.py) ...
+```
+
+### V. Detailed To-Do List
+
+#### Priority 1: Critical Stability & Deadlock Fixes
+
+1.  **[Deadlock] Fix ML Wrappers:**
+
+      * **File:** `models_v2.py` (Main folder files)
+      * **Action:** In `LGBMWrapper.fit` and `XGBWrapper.fit`, add the subprocess check and force `n_jobs=1` if true.
+
+    <!-- end list -->
+
+    ```python
+    # In LGBMWrapper.fit and XGBWrapper.fit
+    import multiprocessing
+    # ...
+    is_subprocess = multiprocessing.current_process().name != 'MainProcess'
+
+    if is_subprocess:
+        print("[Wrapper] Detected subprocess execution (Forge). Forcing n_jobs=1.")
+        default_params['n_jobs'] = 1
+    else:
+        default_params['n_jobs'] = -1
+    # ... (Ensure this logic is applied before initializing the classifier)
+    ```
+
+2.  **[Deadlock/GP 2.0] Fix StrategySynthesizer:**
+
+      * **File:** `StrategySynthesizer` definition (Forge folder files)
+      * **Action:** Apply the code changes detailed in Section IV-A above.
+
+3.  **[Bug/GP 2.0] Integrate GP and Fix Data Lag:**
+
+      * **File:** `forge/overlord/task_scheduler.py` (Forge folder files)
+      * **Action:** Apply the code changes detailed in Section IV-B above.
+
+4.  **[Bug] Fix Incorrect Async Usage:**
+
+      * **File:** `data_processing_v2.py` (Main folder files)
+      * **Action:** In `get_aligned_mtf_data`, correctly await the async `get_market_data` function.
+
+    <!-- end list -->
+
+    ```python
+    # In data_processing_v2.py, get_aligned_mtf_data
+    # Replace the calls using asyncio.to_thread(...) with direct async calls:
+    tactical_task = get_market_data(symbol, app_config.TIMEFRAMES['tactical'], limit_tactical, exchange)
+    strategic_task = get_market_data(symbol, app_config.TIMEFRAMES['strategic'], limit_strategic, exchange)
+    micro_task = get_market_data(symbol, app_config.TIMEFRAMES['microstructure'], limit_micro, exchange)
+
+    # Await them using gather
+    df_tactical_raw, df_strategic_raw, df_micro_raw = await asyncio.gather(tactical_task, strategic_task, micro_task)
+    # ...
+    ```
+
+5.  **[Bug] Fix Crucible Seeding Halt:**
+
+      * **File:** `CrucibleEngine` (Main folder files)
+      * **Action:** In `_continuous_seeding_loop`, remove the `break` statement near the end of the loop.
+
+#### Priority 2: Robustness and Correctness
+
+6.  **[Bug] Fix Validation Gauntlet Feature Access:**
+
+      * **File:** `validation_gauntlet.py` (Main folder files)
+      * **Action:** In `run_full_gauntlet`, implement fallback logic for feature determination.
+
+    <!-- end list -->
+
+    ```python
+    # In validation_gauntlet.py -> run_full_gauntlet
+        # ...
+        else:
+            model_params = model.model_params
+            # CRITICAL FIX: Determine features if model hasn't been fitted.
+            if hasattr(model, 'feature_names') and model.feature_names:
+                features = model.feature_names
+            else:
+                # Fallback logic
+                def _select_features_fallback(df):
+                   return [col for col in df.columns if col not in ['open', 'high', 'low', 'close', 'volume', 'label']]
+                features = _select_features_fallback(df_processed)
+        # ...
+    ```
+
+7.  **[Robustness] Implement `dill` for GP Serialization:**
+
+      * **Action:** Install `dill` (`pip install dill`).
+      * **File:** `ModelRegistry.register_model` (Forge folder files)
+      * **Action:** Import `dill`. Modify the saving logic to use `dill.dump()` specifically for GP components instead of `joblib.dump()`. (Note: The loading logic in the live agent will also need updating to use `dill.load`).
+
+8.  **[Typo] Fix XAI Reporter:**
+
+      * **File:** `XaiReporter` (Forge folder files)
+      * **Action:** Fix `sorted_by_by_pnl` to `sorted_by_pnl`.
+
+9.  **[Bug] Fix ModelRegistry Init:**
+
+      * **File:** `ModelRegistry` (Forge folder files)
+      * **Action:** In `__init__`, remove the redundant line `self.registry_path = registry_path`.
+
+#### Priority 3: Placeholder Replacements (Production Readiness)
+
+10. **[Data] Implement Real Correlation Matrix:** Replace simulation in `GraphBuilder`.
+11. **[Data] Implement Real On-Chain Data:** Replace simulation in `onchain_data_fetcher.py`.
+12. **[Execution] Robust Trading Logic:** Enhance `V3Agent._execute_trade`.

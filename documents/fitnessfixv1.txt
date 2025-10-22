@@ -1,0 +1,34 @@
+Here is a detailed to-do list for the code assistant to fix the bug in your fitness function.
+
+**Target File:** `forge/crucible/fitness_function.py`
+**Target Function:** `run_fitness_evaluation`
+
+### To-Do List:
+
+1.  **Locate the `run_fitness_evaluation` function.** This function contains the logic that is failing silently.
+
+2.  **Improve Error Visibility in the `try...except` Block:**
+    * Find the `except Exception as e:` line at the end of the function.
+    * Modify the code inside the `except` block to **print the specific error message**. This will help debug any *other* potential errors that are being hidden.
+    * Change the line `print(f"[Fitness] Error during evaluation: {e}")` (which is currently commented out) to be an active `print` or `logging` statement.
+
+3.  **Add an Explicit Check for the `'open'` Column:**
+    * Go to the section labeled `--- 3. High-Fidelity Backtesting ---`.
+    * After the line `backtest_data['close'] = y_val`, but **before** the line `backtest_data['open'] = X_val['open']`, insert a new check.
+    * This check must verify if the string `'open'` exists in `X_val.columns`.
+    * If `'open'` is **not** in `X_val.columns`, the function should immediately print a new, clear error message like `"[Fitness] Error: 'open' column not in X_val. Cannot run backtest."`
+    * After printing, the function must `return VectorizedBacktester().get_default_metrics()`.
+
+4.  **Add an Explicit Check for the `'ATRr'` Column:**
+    * Find the line `atr_col = next((c for c in X_val.columns if c.startswith('ATRr')), None)`.
+    * Immediately after this line, check if the `atr_col` variable is `None`.
+    * If `atr_col` **is** `None` (meaning no ATR column was found), the function should immediately print a new, clear error message like `"[Fitness] Error: No 'ATRr' column (e.g., 'ATRr_14') in X_val. Cannot run backtest."`
+    * After printing, the function must `return VectorizedBacktester().get_default_metrics()`.
+    * The existing `else` block that does this should be modified to use the new print statement.
+
+5.  **Remove Redundant Code:**
+    * If the `'ATRr'` check is successful (i.e., `atr_col` is not `None`), the line `backtest_data[atr_col] = X_val[atr_col]` is unnecessary because `backtest_data` is already a copy of `X_val`. This line can be safely removed.
+
+6.  **Final Instruction (Most Important):**
+    * After applying all code fixes, the assistant **must remind the user** that these changes only make the *error visible*.
+    * The assistant must explain that the **real solution** is to **fix the data preparation pipeline** (in whichever script handles that, like `data_processing_v2.py` or similar) to ensure that the `X_train` and `X_val` DataFrames **always include the `'open'` column and at least one ATR column (e.g., `'ATRr_14'`)** *before* they are ever passed to the genetic algorithm.

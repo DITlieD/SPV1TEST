@@ -1,0 +1,143 @@
+Okay, let's create the TODO list for integrating the **Topological Radar (TDA-based Regime Detection)**. This will replace or augment the HMM/HDBSCAN regime detection.
+
+-----
+
+## 🛠️ TODO List for Implementing Topological Radar
+
+### 1\. Instantiate Topological Radar (`crucible_engine.py`)
+
+  * **Goal:** Create an instance of the `TopologicalRadar` to manage the TDA calculations.
+  * **Location:** `crucible_engine.py`
+  * **Task:**
+    1.  Add import: `from acp_engines import TopologicalRadar`.
+    2.  In `CrucibleEngine.__init__`:
+          * Instantiate the Radar:
+            ```python
+            # Define TDA parameters (move to config.py if desired)
+            tda_window_size = 50 # From acp_engines.py example
+            tda_embedding_dim = 3 # From acp_engines.py example
+            tda_embedding_delay = 1 # From acp_engines.py example
+            tda_threshold_std = 2.0 # From acp_engines.py example
+
+            self.topological_radar = TopologicalRadar(
+                window_size=tda_window_size,
+                embedding_dim=tda_embedding_dim,
+                embedding_delay=tda_embedding_delay
+            )
+            self.logger.info("Topological Radar initialized.")
+
+            # Store persistence history per asset
+            self.persistence_history = {symbol: [] for symbol in self.config.ASSET_UNIVERSE}
+            self.tda_threshold_std = tda_threshold_std # Store threshold
+            ```
+    3.  **Install Dependency:** Ensure the `ripser` library (or `GUDHI`) is installed in your environment, as `TopologicalRadar` relies on it for full persistence calculation. Add `ripser` to your `requirements.txt`. If it's not installed, the Radar will fall back to a simplified variance calculation.
+
+-----
+
+### 2\. Integrate TDA Regime Change Detection into Main Loop (`crucible_engine.py`)
+
+  * **Goal:** Calculate the persistence score and detect regime changes using the Radar on each relevant update.
+  * **Location:** `crucible_engine.py` (`_arena_loop`).
+  * **Task:**
+    1.  Inside `_arena_loop`, *after* the `FeatureFactory` has processed the data (`df_features`):
+          * Check if `self.topological_radar` exists.
+          * Extract the necessary input data (e.g., returns) from `df_features`. The Radar expects a numpy array of returns.
+            ```python
+            regime_change_detected = False # Default
+            if self.topological_radar and not df_features.empty:
+                try:
+                    # Calculate returns (use appropriate column, e.g., 'close')
+                    # Ensure enough data points match radar's window_size
+                    returns_series = df_features['close'].pct_change().dropna()
+
+                    if len(returns_series) >= self.topological_radar.window_size:
+                        # Get the most recent window of returns
+                        recent_returns = returns_series.tail(self.topological_radar.window_size).values
+
+                        # Get the historical persistence for this symbol
+                        history = self.persistence_history.get(symbol, [])
+
+                        # --- Offload TDA Calculation ---
+                        # TDA can be computationally intensive, especially ripser
+                        loop = asyncio.get_running_loop()
+                        regime_change_detected = await loop.run_in_executor(
+                            None, # Use default thread pool
+                            self.topological_radar.detect_regime_change,
+                            recent_returns,
+                            history, # Pass the list directly
+                            self.tda_threshold_std
+                        )
+                        # --- End Offload ---
+
+                        # Update the history (important!)
+                        self.persistence_history[symbol] = history # The list is modified in-place
+
+                        if regime_change_detected:
+                            self.logger.warning(f"[{symbol}] Topological Radar detected REGIME CHANGE!")
+                    else:
+                        self.logger.debug(f"[{symbol}] Insufficient data ({len(returns_series)}) for TDA window ({self.topological_radar.window_size}).")
+
+                except Exception as tda_e:
+                    self.logger.error(f"Error during Topological Radar processing for {symbol}: {tda_e}")
+                    regime_change_detected = False # Default on error
+            ```
+          * **Pass Signal:** Add `regime_change_detected: bool` as an argument when calling `self.arena.process_data`.
+
+-----
+
+### 3\. Pass TDA Signal to `Agent` (`arena_manager.py`, `agent.py`)
+
+  * **Goal:** Make the TDA regime change signal available to the trading agent.
+  * **Location:** `arena_manager.py` (`process_data`), `agent.py` (`decide_and_execute`).
+  * **Task:**
+    1.  **Modify `ArenaManager.process_data` Signature:** Add `regime_change_detected: bool = False` to the method signature.
+    2.  **Pass TDA Signal to Agent:** In the loop calling `agent.agent.decide_and_execute`, pass the received `regime_change_detected` flag.
+    3.  **Modify `Agent.decide_and_execute` Signature:** Add `regime_change_detected: bool = False` to the method signature.
+
+-----
+
+### 4\. Utilize TDA Signal in `Agent` (`agent.py`)
+
+  * **Goal:** Use the regime change signal to influence the agent's decisions, typically by increasing caution.
+  * **Location:** `agent.py` (`decide_and_execute`).
+  * **Task:** Incorporate the `regime_change_detected` flag into the decision logic. Examples:
+      * **Reduce Risk/Size:** If `regime_change_detected` is `True`, significantly reduce the calculated position size (e.g., `final_size_fraction *= 0.1`) or skip entries entirely.
+      * **Force Exits:** If `regime_change_detected` is `True` and the agent is `in_position`, potentially trigger a forced exit (`force_exit = True; exit_reason = 'TDA Regime Change Detected'`).
+      * **Invalidate Signals:** Temporarily ignore entry signals (`ensemble_signal == 1`) for a few bars after a regime change is detected to allow the market to stabilize.
+    <!-- end list -->
+    ```python
+    # Example within Agent.decide_and_execute
+    self.logger.debug(f"TDA Regime Change Signal: {regime_change_detected}")
+
+    if regime_change_detected:
+        self.logger.warning("[DIAGNOSTIC] TDA Regime Change detected! Applying caution.")
+        # Option 1: Force Exit if in position
+        if self.in_position:
+            self.logger.warning("[DIAGNOSTIC] Forcing exit due to TDA regime change.")
+            await self._execute_trade(signal='EXIT', size_fraction=1.0, atr=atr, features=latest_features) # Use latest features
+            return { 'action': 'SELL', 'symbol': self.symbol, 'price': current_price, 'reason': 'TDA Regime Change Exit' }
+        # Option 2: Prevent Entries
+        # This will naturally happen if we reduce size fraction below threshold
+        # Or add an explicit check:
+        # if ensemble_signal == 1:
+        #     self.logger.warning("[DIAGNOSTIC] Blocking entry due to TDA regime change.")
+        #     return None # HOLD
+
+    # Apply risk adjustment based on TDA signal
+    tda_risk_adj = 0.1 if regime_change_detected else 1.0 # Drastic reduction during change
+    final_size_fraction *= tda_risk_adj # Apply adjustment AFTER other calcs (KCM, RL Gov)
+    self.logger.info(f"[DIAGNOSTIC] TDA Risk Applied: Factor={tda_risk_adj:.2f}, Final Size={final_size_fraction:.2%}")
+
+    # --- Continue with modified final_size_fraction ---
+    if not self.in_position and ensemble_signal == 1:
+        if final_size_fraction > 0.01:
+             # ... execute entry trade with reduced size ...
+        else:
+             self.logger.info(f"[DIAGNOSTIC] Entry skipped/size reduced below threshold due to TDA signal.")
+             return None # HOLD
+    # ... rest of decide_and_execute
+    ```
+
+-----
+
+By implementing these steps, the Topological Radar will be integrated, providing an alternative, potentially faster-reacting signal for market regime changes that can be used to adjust risk or trading behavior. Remember to handle the `ripser` dependency.

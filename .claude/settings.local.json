@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"Get-Content ''C:\\Users\\LieD\\Desktop\\crypto trading bots\\.Singularity Protocol\\documents\\lastestlogv7.txt'' | Select-Object -Last 200\")",
+      "Bash(dir \"C:\\Users\\LieD\\Desktop\\crypto trading bots\\.Singularity Protocol\\models\\BTCUSDTUSDT_Model_1\" /b)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

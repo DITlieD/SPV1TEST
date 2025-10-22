@@ -1,0 +1,206 @@
+This analysis addresses the performance bottleneck during GP 2.0 training, where CPU utilization is capped at 40% despite the optimizations in "Velocity Upgrade V1". This limitation stems from the previous necessity of running the GP evolution sequentially to prevent deadlocks within the nested parallelism architecture (CrucibleEngine Executor -\> Forge Worker -\> GP Evolution).
+
+To unlock maximum velocity and achieve near 100% CPU utilization safely, we will implement **`loky`**, a robust, parallel execution backend designed specifically for these scenarios.
+
+### The Velocity Booster: `loky` Integration
+
+`loky` replaces `multiprocessing.Pool` and the sequential `map`, offering better performance and robustness against deadlocks in nested parallelism. It allows us to safely parallelize the GP evaluations within the Forge worker process.
+
+#### 1\. Installation
+
+```bash
+pip install loky
+```
+
+#### 2\. Implementation in `StrategySynthesizer`
+
+We will refactor the `StrategySynthesizer` to utilize `loky`. This requires defining worker initialization and evaluation functions compatible with `loky`'s execution model.
+
+**File:** `forge/evolution/strategy_synthesizer.py` (Forge folder files)
+
+```python
+# In forge/evolution/strategy_synthesizer.py
+import logging
+import os
+import time
+import numpy as np
+from deap import base, creator, tools, gp, algorithms
+# Import loky components
+from loky import get_reusable_executor, cpu_count
+
+# Ensure setup_gp_primitives is imported (This must exist in your codebase)
+# from forge.evolution.gp_primitives import setup_gp_primitives 
+
+# ==============================================================================
+# LOKY Worker Initialization (Global State for Workers)
+# ==============================================================================
+
+# Dictionary to hold data in loky worker processes.
+_worker_state = {}
+
+def _init_worker(fitness_evaluator_func, pset, parsimony_coeff):
+    """Initializer function for loky workers."""
+    # CRITICAL: Enforce single-threading in the worker's underlying libraries (Numpy/BLAS/MKL).
+    # This prevents massive slowdowns and low-level deadlocks due to thread contention 
+    # when many Python processes run simultaneously.
+    os.environ['OMP_NUM_THREADS'] = '1'
+    os.environ['MKL_NUM_THREADS'] = '1'
+    os.environ['OPENBLAS_NUM_THREADS'] = '1'
+    os.environ['VECLIB_MAXIMUM_THREADS'] = '1'
+    os.environ['NUMEXPR_NUM_THREADS'] = '1'
+
+    # Store context in the worker's global state
+    _worker_state['fitness_evaluator'] = fitness_evaluator_func
+    _worker_state['pset'] = pset
+    _worker_state['parsimony_coeff'] = parsimony_coeff
+    
+    # Initialize DEAP creators within the worker context (required as loky uses 'spawn'-like behavior)
+    if not hasattr(creator, "FitnessMax"):
+        # Weights=(1.0,) assumes maximization (e.g., maximizing TTT fitness which is negative)
+        creator.create("FitnessMax", base.Fitness, weights=(1.0,)) 
+    if not hasattr(creator, "Individual"):
+         if hasattr(creator, "FitnessMax"):
+            creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
+
+def _evaluate_fitness_worker(individual):
+    """The task function executed by loky workers."""
+    # Retrieve context from the initialized worker state
+    evaluator = _worker_state.get('fitness_evaluator')
+    pset = _worker_state.get('pset')
+    parsimony_coeff = _worker_state.get('parsimony_coeff', 0.001)
+
+    if evaluator is None or pset is None:
+        return (-1e9,) # Return severe penalty if context is missing
+
+    try:
+        # Compile and Evaluate
+        strategy_logic_func = gp.compile(expr=individual, pset=pset)
+        metrics = evaluator(strategy_logic_func)
+        
+        # Fitness calculation (Using TTT fitness as per Velocity V1 implementation)
+        raw_fitness = metrics.get("ttt_fitness", -1e9) 
+
+        # Apply Parsimony Pressure (Optimization from Velocity V1)
+        tree_size = len(individual)
+        adjusted_fitness = raw_fitness - (tree_size * parsimony_coeff)
+        
+        # DEAP expects a tuple
+        return (adjusted_fitness,)
+    
+    except Exception:
+        # Handle potential errors during evaluation (e.g., invalid math operations in the GP tree)
+        return (-1e9,)
+
+# ==============================================================================
+# StrategySynthesizer Class
+# ==============================================================================
+
+class StrategySynthesizer:
+    def __init__(self, feature_names, fitness_evaluator, population_size=50, generations=20, logger=None, seed_dna=None):
+        self.feature_names = feature_names
+        self.fitness_evaluator = fitness_evaluator
+        self.population_size = population_size
+        self.generations = generations
+        self.seed_dna = seed_dna
+        self.logger = logger if logger else logging.getLogger(__name__)
+        
+        # Velocity V1 settings
+        self.parsimony_coeff = 0.001
+        
+        # DEAP Setup (Pset and Creators)
+        self.pset = setup_gp_primitives(self.feature_names)
+        
+        # Robust creator initialization (Main process)
+        if not hasattr(creator, "FitnessMax"):
+            creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+        if not hasattr(creator, "Individual"):
+             if hasattr(creator, "FitnessMax"):
+                creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
+
+        self.toolbox = base.Toolbox()
+        # CRITICAL: Ensure standard DEAP operators are registered (expr, individual, population, select, mate, mutate)
+        # These must exist in your implementation. Example:
+        # self.toolbox.register("expr", gp.genHalfAndHalf, pset=self.pset, min_=1, max_=4)
+        # self.toolbox.register("individual", tools.initIterate, creator.Individual, self.toolbox.expr)
+        # self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
+        # self.toolbox.register("select", tools.selTournament, tournsize=3)
+        # self.toolbox.register("mate", gp.cxOnePoint)
+        # self.toolbox.register("mutate", gp.mutUniform, expr=self.toolbox.expr, pset=self.pset)
+        
+        # Register the worker evaluation function
+        self.toolbox.register("evaluate", _evaluate_fitness_worker)
+        
+        self.executor = None
+
+    def create_seeded_population(self, n):
+        # (Implementation as defined in the Reborn system plan)
+        # Fallback if Reborn logic is not fully implemented or population creator is missing:
+        if not hasattr(self.toolbox, "population"):
+             self.logger.error("Toolbox population creator is not registered.")
+             return []
+        
+        # If seed_dna logic (Reborn) is implemented, it goes here.
+        # For now, using standard population generation as a robust fallback.
+        return self.toolbox.population(n=n)
+
+    def run(self):
+        # Determine the number of workers. Use all available cores.
+        n_workers = cpu_count()
+        self.logger.info(f"[GP 2.0] Starting evolution. Initializing loky executor with {n_workers} workers.")
+
+        # Initialize the loky executor with the initializer
+        start_time = time.time()
+        try:
+            # get_reusable_executor is robust against nested parallelism
+            self.executor = get_reusable_executor(
+                max_workers=n_workers,
+                initializer=_init_worker,
+                # Pass the necessary context arguments
+                initargs=(self.fitness_evaluator, self.pset, self.parsimony_coeff),
+                timeout=600 # Set a timeout for robustness (e.g., 10 minutes per task)
+            )
+        except Exception as e:
+            self.logger.error(f"[GP 2.0] Failed to initialize loky executor: {e}. Falling back to sequential.")
+            self.toolbox.register("map", map) # Fallback to sequential
+            self.executor = None
+        else:
+            # Register the executor's map function with the DEAP toolbox
+            self.toolbox.register("map", self.executor.map)
+            self.logger.info(f"[GP 2.0] Loky executor initialized in {time.time() - start_time:.2f}s.")
+
+        
+        pop = self.create_seeded_population(n=self.population_size)
+        if not pop:
+            self.logger.error("[GP 2.0] Failed to create initial population. Aborting.")
+            return None
+
+        hof = tools.HallOfFame(1)
+        
+        # Stats setup (Optimized with Numpy)
+        stats = tools.Statistics(lambda ind: ind.fitness.values)
+        stats.register("avg", np.mean)
+        stats.register("std", np.std)
+        stats.register("min", np.min)
+        stats.register("max", np.max)
+
+        self.logger.info(f"[GP 2.0] Running evolution for {self.generations} generations, Pop: {self.population_size}...")
+
+        # Use the efficient built-in algorithm runner (which now uses the loky map)
+        try:
+            # Set verbose=True to monitor progress in the logs
+            pop, log = algorithms.eaSimple(pop, self.toolbox, cxpb=0.5, mutpb=0.2, ngen=self.generations,
+                                           stats=stats, halloffame=hof, verbose=True)
+        except Exception as e:
+            self.logger.error(f"[GP 2.0] Error during evolution: {e}", exc_info=True)
+            return None
+        finally:
+            # CRITICAL: Shut down the executor after the run if it was initialized
+            if self.executor:
+                self.logger.info("[GP 2.0] Shutting down loky executor.")
+                # Use shutdown(wait=True) to ensure all processes terminate cleanly
+                self.executor.shutdown(wait=True)
+                self.executor = None
+
+        self.logger.info(f"[GP 2.0] Evolution complete. Total time: {time.time() - start_time:.2f}s.")
+        return hof[0] if hof else None
+```

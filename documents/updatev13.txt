@@ -1,0 +1,94 @@
+Okay, let's integrate the **SDE (Symbiotic Distillation Engine)**. This involves training the `ImplicitBrain` (TFT model) and using its `SoftLabelGenerator` to guide the GP evolution with a "Symbiotic Fitness" function.
+
+-----
+
+## 🛠️ TODO List for Implementing SDE (Symbiotic Distillation Engine)
+
+### 1\. Train the Implicit Brain (TFT Model) - Offline/Periodic Task
+
+  * **Goal:** Train the master TFT model (`ImplicitBrain`) on a comprehensive dataset including base features and any available MCE/Influence features.
+  * **Location:** A new training script (e.g., `train_sde_brain.py`) or integrated into `train_aux_models.py`.
+  * **Task:**
+    1.  **Create Training Script:**
+          * Import necessary modules: `ImplicitBrain`, `TimeSeriesDataSet` from `pytorch_forecasting`, data loading functions (`get_market_data`, potentially MCE/Influence feature generation).
+          * Load historical data (OHLCV) for all relevant assets (`ASSET_UNIVERSE`).
+          * **Generate Comprehensive Features:** Run the *full* feature engineering pipeline on the historical data, including base technical indicators, *and crucially*, MCE and Influence Mapper features if they are intended to be part of the Brain's input.
+          * **Generate Labels:** Create appropriate target labels for the TFT (e.g., future return classification - HOLD/BUY/SELL, perhaps using `get_triple_barrier_labels`).
+          * **Prepare `TimeSeriesDataSet`:** Combine features and labels for all assets. Convert the combined `pd.DataFrame` into a `TimeSeriesDataSet` suitable for `pytorch_forecasting` (this requires adding `time_idx`, `group_id` columns, and defining static/time-varying features). Use `GroupNormalizer` or similar for scaling.
+          * **Instantiate `ImplicitBrain`:** Create an instance, ensuring `input_dims` match the number of features in the dataset.
+          * **Train:** Use PyTorch Lightning's `Trainer` to train the `ImplicitBrain` on the `TimeSeriesDataSet`. Configure checkpoints to save the best model.
+          * **Save:** Save the trained `ImplicitBrain` model checkpoint (e.g., `models/sde_implicit_brain.ckpt`).
+
+-----
+
+### 2\. Load Trained Implicit Brain in `StrategySynthesizer`
+
+  * **Goal:** Make the trained TFT model available during the GP evolution process.
+  * **Location:** `strategy_synthesizer.py`
+  * **Task:**
+    1.  Add imports: `from forge.evolution.symbiotic_crucible import ImplicitBrain, SoftLabelGenerator`, `import torch`.
+    2.  In `StrategySynthesizer.__init__`:
+          * Load the trained model:
+            ```python
+            self.implicit_brain = None
+            self.soft_label_generator = None
+            brain_path = "models/sde_implicit_brain.ckpt" # Path to saved checkpoint
+            if os.path.exists(brain_path):
+                try:
+                    # Instantiate with correct parameters matching the saved model
+                    # You might need to load hyperparameters from the checkpoint first
+                    # This is a simplified loading example
+                    self.implicit_brain = ImplicitBrain.load_from_checkpoint(brain_path)
+                    self.implicit_brain.to(config.DEVICE) # Move to appropriate device
+                    self.implicit_brain.eval() # Set to evaluation mode
+                    self.soft_label_generator = SoftLabelGenerator(self.implicit_brain, temperature=2.0) # Adjust temperature as needed
+                    self.logger.info("Implicit Brain (SDE) loaded successfully.")
+                except Exception as e:
+                    self.logger.error(f"Failed to load Implicit Brain: {e}. SDE disabled.")
+            else:
+                self.logger.warning(f"Implicit Brain model not found at {brain_path}. SDE disabled.")
+            ```
+
+-----
+
+### 3\. Modify Fitness Evaluation to Include Symbiotic Score
+
+  * **Goal:** Calculate the mimicry score between the GP strategy and the Implicit Brain's soft labels and incorporate it into the final fitness.
+  * **Location:** `strategy_synthesizer.py` (specifically the `evaluate_fitness` function or the function passed to `toolbox.register("evaluate", ...)`).
+  * **Task:**
+    1.  Modify the fitness evaluation function signature to accept the `soft_label_generator` if needed, or access it via `self`.
+    2.  Inside the fitness function, *after* running the base backtest (`backtester.run_backtest`) to get `base_fitness` (e.g., TTT score or PSR):
+          * Check if `self.soft_label_generator` is available. If not, return only the base fitness (and potentially complexity penalty).
+          * **Generate Soft Labels:** Use `self.soft_label_generator.generate_soft_labels(X_fitness_context)` (where `X_fitness_context` is the feature DataFrame used for backtesting) to get the Brain's probability distributions. Ensure `X_fitness_context` includes *all* features the Brain expects.
+          * **Get GP Predictions:** Obtain the raw predictions (probabilities if possible, otherwise signals 0/1/2) from the current GP `individual` on `X_fitness_context`. If the GP only outputs signals 0/1/2, convert them to a one-hot encoded format (e.g., `[1,0,0]` for HOLD, `[0,1,0]` for BUY, `[0,0,1]` for SELL).
+          * **Calculate Mimicry Score:** Compute the cross-entropy loss (or KL divergence) between the GP's predictions (as probabilities/one-hot) and the Brain's `soft_labels`. Handle potential alignment issues (e.g., NaNs, different lengths).
+            ```python
+            # Example using cross-entropy (assuming GP outputs probabilities gp_probs)
+            # Ensure gp_probs and soft_labels are aligned and have the same shape [n_samples, n_classes]
+            # Add small epsilon for numerical stability
+            mimicry_loss = -torch.sum(soft_labels * torch.log(gp_probs + 1e-9), dim=1).mean().item()
+            # Lower loss = better mimicry. Convert to a score where higher is better.
+            mimicry_score = -mimicry_loss
+            ```
+          * **Combine Fitness:** Calculate the final symbiotic fitness. Add the (weighted) `mimicry_score` to the `base_fitness` (and subtract the KCM penalty if integrated). Define `SDE_WEIGHT` (e.g., 0.1-0.3).
+            ```python
+            # Assuming KCM penalty is calculated
+            final_fitness = (BASE_FITNESS_WEIGHT * base_fitness) + \
+                            (SDE_WEIGHT * mimicry_score) - \
+                            (KCM_WEIGHT * kcm_penalty)
+            return final_fitness, # Return tuple for DEAP
+            ```
+
+-----
+
+### 4\. Ensure Correct Features for Implicit Brain
+
+  * **Goal:** Provide the Implicit Brain with the exact feature set it was trained on when generating soft labels.
+  * **Location:** `strategy_synthesizer.py` (Fitness evaluation function).
+  * **Task:**
+    1.  When preparing the `X_fitness_context` DataFrame for backtesting and soft label generation, ensure it contains *all* features the `ImplicitBrain` was trained on (base technicals + MCE + Influence, if applicable). This might require running MCE/Influence feature generation steps here if they weren't already part of the main feature set passed in.
+    2.  Verify the order and names of columns match the training data used for the Brain.
+
+-----
+
+By completing these steps, the SDE will be integrated, allowing the knowledge captured by the complex TFT model (`ImplicitBrain`) to guide the evolution of the simpler, interpretable GP strategies towards more robust and potentially more performant solutions.

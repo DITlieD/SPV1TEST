@@ -1,0 +1,221 @@
+This is an excellent strategic direction. Integrating Higher Timeframe (HTF) analysis into your 1-minute (1m) execution strategy—known as Multi-Timeframe Analysis (MTFA)—is not only doable but **highly beneficial** for robust performance in high-velocity trading.
+
+### The Rationale: Why MTFA is Essential for Velocity
+
+The 1m timeframe provides execution speed but suffers from significant noise. MTFA provides the necessary context to filter this noise and identify high-probability opportunities.
+
+1.  **Noise Reduction:** HTFs (e.g., 15m, 1h) filter out random fluctuations. Signals confirmed across multiple timeframes are significantly more reliable, reducing the risk of the evolutionary process overfitting to 1m noise.
+2.  **Dominant Trend Alignment:** HTFs reveal the "path of least resistance." Aligning 1m entries with the broader market trend drastically increases the probability of success.
+3.  **Improved Velocity via Quality:** By focusing on higher-probability trades, the system reduces the impact of transaction costs and drawdowns, accelerating the path to the profit target (improving the Time-to-Target metric).
+
+### Implementation Blueprint: Autonomous MTF Integration
+
+The most effective integration method for an evolutionary system (GP 2.0) is **HTF Feature Injection**. We calculate features on the HTFs and inject them into the 1m dataframe. The GP 2.0 engine will then **autonomously discover** how to use this context.
+
+The critical challenge is aligning the data without **lookahead bias**, ensuring that at any 1m timestamp, only the most recently *closed* HTF data is used. We will achieve this using `pandas.merge_asof(direction='backward')`.
+
+#### 1\. Define the Timeframe Hierarchy
+
+Update the configuration to include clear definitions for the roles of each timeframe.
+
+  * **File:** `config.py`
+
+<!-- end list -->
+
+```python
+# In config.py
+# --- Timeframe Configuration (MTFA Velocity Focus) ---
+TIMEFRAMES = {
+    'strategic': '1h',       # Major trend context and regime definition
+    'tactical': '15m',       # Intermediate structure and setup confirmation
+    'microstructure': '1m'   # PRIMARY execution timeframe
+}
+# Ensure data preparation scripts (e.g., prepare_all_data.py) fetch these timeframes.
+```
+
+#### 2\. Implement Centralized MTFA Processing Logic
+
+We will create a robust utility function to handle independent feature generation and subsequent alignment. This modular approach ensures `FeatureFactory` processes each timeframe cleanly and efficiently.
+
+  * **File:** `data_processing_v2.py` (or a dedicated utility file)
+
+<!-- end list -->
+
+```python
+import pandas as pd
+import numpy as np
+# Ensure FeatureFactory is imported correctly based on your project structure
+from forge.data_processing.feature_factory import FeatureFactory
+import logging
+
+# Initialize a logger
+logger = logging.getLogger("DataProcessingV2")
+
+def process_and_align_mtfa(data_dict: dict, app_config, exchange=None) -> pd.DataFrame:
+    """
+    Processes features for multiple timeframes independently and aligns HTF features onto the LTF.
+    
+    Args:
+        data_dict: Dictionary containing raw dataframes keyed by timeframe name.
+        app_config, exchange: Configuration and exchange object passed to FeatureFactory.
+    """
+    processed_tfs = {}
+    
+    # 1. Identify LTF robustly
+    timeframes = list(data_dict.keys())
+    try:
+        # Identify the lowest timeframe (e.g., '1m') based on time delta
+        ltf_name = min(timeframes, key=lambda tf: pd.to_timedelta(tf).total_seconds())
+    except ValueError as e:
+        logger.error(f"ERROR: Could not parse timeframes {timeframes}: {e}. Aborting MTFA.")
+        return pd.DataFrame()
+
+    # 2. Process each timeframe independently
+    for tf_name, df_raw in data_dict.items():
+        if df_raw.empty:
+            continue
+            
+        logger.info(f"  [MTFA] Processing features for timeframe: {tf_name}")
+        
+        # Initialize FeatureFactory (Requires dictionary structure for input)
+        # We use a temporary key 'MTFA_TEMP' for processing.
+        ff = FeatureFactory({'MTFA_TEMP': df_raw.copy()}, logger=logger)
+        # exchange=None is passed if we are in the Forge worker context (determined by the caller)
+        processed_data = ff.create_all_features(app_config, exchange)
+        processed_df = processed_data.get('MTFA_TEMP')
+
+        if processed_df is None: continue
+
+        # 3. Rename features and handle OHLCV
+        if tf_name != ltf_name:
+            # Identify features (excluding OHLCV)
+            feature_cols = [col for col in processed_df.columns if col not in ['open', 'high', 'low', 'close', 'volume']]
+            
+            # Suffix HTF features (e.g., 'RSI_14' -> 'RSI_14_1h')
+            rename_map = {col: f"{col}_{tf_name}" for col in feature_cols}
+            
+            # Keep only the features, discard the HTF OHLCV
+            processed_tfs[tf_name] = processed_df[feature_cols].rename(columns=rename_map)
+        else:
+            # Keep the LTF dataframe as is (including OHLCV)
+            processed_tfs[tf_name] = processed_df
+
+    if ltf_name not in processed_tfs:
+        logger.error(f"LTF data {ltf_name} missing after processing.")
+        return pd.DataFrame()
+
+    # 4. Alignment and Injection
+    ltf_df = processed_tfs[ltf_name]
+    ltf_df.sort_index(inplace=True) # Required for merge_asof
+
+    for tf_name, htf_df in processed_tfs.items():
+        if tf_name == ltf_name:
+            continue
+            
+        htf_df.sort_index(inplace=True)
+        logger.info(f"  [MTFA] Aligning {tf_name} features onto {ltf_name}...")
+
+        # CRITICAL: Use merge_asof for causality-preserving alignment
+        # direction='backward' ensures we only use data available AT or BEFORE the LTF timestamp.
+        ltf_df = pd.merge_asof(
+            ltf_df, 
+            htf_df, 
+            left_index=True, 
+            right_index=True,
+            direction='backward',
+            allow_exact_matches=True
+        )
+
+    # 5. Final Sanitization
+    ltf_df.replace([np.inf, -np.inf], np.nan, inplace=True)
+    # Drop initial rows where HTF data wasn't available yet.
+    ltf_df.dropna(inplace=True) 
+
+    return ltf_df
+```
+
+#### 3\. Update the Forge Data Pipeline (`task_scheduler.py`)
+
+The Forge worker must load the necessary historical CSVs for all timeframes (as it cannot use `ccxt`) and utilize this new MTFA utility.
+
+  * **File:** `forge/overlord/task_scheduler.py`
+
+<!-- end list -->
+
+```python
+# In forge/overlord/task_scheduler.py -> run_single_forge_cycle
+
+# Update function signature if necessary (ensure app_config, exchange, logger are passed)
+def run_single_forge_cycle(raw_data_path: str, asset_symbol: str, reporter: PipelineStatus, app_config, exchange, device: str = "cpu", logger=None, inherited_dna=None):
+    
+    # ... (Delayed Imports Block)
+    # Ensure process_and_align_mtfa is imported in the delayed imports block
+    try:
+        import pandas as pd
+        import os
+        # ... other imports (FeatureFactory, etc.)
+        # Ensure this import matches the location of the new function
+        from data_processing_v2 import process_and_align_mtfa 
+    except ImportError as e:
+        # ... (Error handling for imports)
+        return None, None
+
+    try:
+        reporter.start()
+
+        # --- 1. MTFA Data Preparation & Feature Engineering ---
+        reporter.set_status("Data Loading", f"Loading MTFA data for {asset_symbol}...")
+
+        mtfa_data = {}
+        base_symbol = asset_symbol.split(':')[0].replace('/', '')
+        
+        # Define data limits appropriate for MFT (Velocity Upgrade)
+        def get_limit(tf_name):
+            try:
+                # Ensure pd (pandas) is available from delayed imports
+                seconds = pd.to_timedelta(tf_name).total_seconds()
+            except ValueError:
+                return 1000 # Default fallback
+
+            if seconds <= 60: return 2500    # 1m: ~41 hours (Focus on recent data)
+            if seconds <= 900: return 500    # 15m: ~5 days
+            return 500                       # 1h+: ~20 days
+
+        # Load all required timeframes defined in config
+        ltf_name = app_config.TIMEFRAMES['microstructure']
+        
+        # Iterate through all defined timeframes (strategic, tactical, microstructure)
+        for tf_role, tf_name in app_config.TIMEFRAMES.items():
+            # We rely on the pre-fetched CSV data in the worker context
+            path = f"data/{base_symbol}_{tf_name}_raw.csv"
+            if os.path.exists(path):
+                limit = get_limit(tf_name)
+                df = pd.read_csv(path, index_col='timestamp', parse_dates=True).tail(limit)
+                mtfa_data[tf_name] = df
+            else:
+                logger.warning(f"Missing data for {tf_name} at {path}. MTFA incomplete.")
+
+        if ltf_name not in mtfa_data or mtfa_data[ltf_name].empty:
+            raise FileNotFoundError(f"Primary LTF data ({ltf_name}) missing for {asset_symbol}")
+
+        logger.info("Starting MTFA processing and alignment...")
+        
+        # Use the centralized MTFA utility
+        # In the Forge worker context, exchange is typically None.
+        df_full_features = process_and_align_mtfa(mtfa_data, app_config, exchange=exchange)
+        
+        logger.info("MTFA processing and alignment complete.")
+
+        if df_full_features.empty:
+            raise ValueError("MTFA processing resulted in an empty DataFrame.")
+
+        # --- 2. Labeling and Data Splitting ---
+        # The rest of the Forge cycle proceeds as normal. 
+        # The models (GP/ML) now have access to the enriched feature set 
+        # (e.g., 'RSI_14_15m', 'VMD_0_1h').
+        
+        # ... (Continue with Labeling, Bake-Off, Gauntlet, etc.)
+        
+        # Ensure the return values match the expected structure (model_id, winning_dna)
+        # ...
+```

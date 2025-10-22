@@ -1,0 +1,171 @@
+
+### The Objective: Maximizing Geometric Growth
+
+If the goal is speed, we must maximize the **Geometric Mean Return (GMR)**. This is the metric that captures the effect of compounding.
+
+#### The Optimal Framework: Log Wealth and the Kelly Criterion
+
+The mathematically optimal strategy for maximizing GMR is the **Kelly Criterion**, which determines the optimal fraction of capital to risk based on the strategy's edge. In optimization and reinforcement learning, the most effective way to target GMR is to maximize the **Logarithm of Portfolio Wealth (Log Wealth)**.
+
+#### The Trade-Off: Velocity vs. Ruin
+
+A strategy that maximizes growth often skirts the edge of ruin. We must mitigate this using:
+
+1.  **Fractional Kelly:** Using a fraction (e.g., 20-30%) of the calculated Kelly size.
+2.  **Optimization Constraints:** Pruning strategies with excessive drawdowns or low statistical significance during evolution.
+
+### Detailed Implementation To-Do List
+
+To orient the "Adaptive Machine" towards maximizing growth velocity, we must integrate this objective throughout the system.
+
+#### Phase 1: Prerequisite - Calibrated Probabilities
+
+The Kelly Criterion demands accurate estimates of win probability. If the model is overconfident, Kelly sizing will lead to ruin.
+
+**1.1. Ensure Robust Model Calibration**
+
+  * **File:** `models_v2.py`, `wfo_manager.py`
+  * **Tool:** `sklearn.calibration.CalibratedClassifierCV`
+  * **Steps:**
+    1.  During the training phase (within WFO), wrap the base models (LGBM, XGBoost) using `CalibratedClassifierCV`.
+    2.  Specify `method='isotonic'` (Isotonic Regression), as it often performs well with Gradient Boosting models.
+    3.  Ensure the Hydra ensemble uses these calibrated probabilities for its final output.
+
+**1.2. Implement Calibration Monitoring**
+
+  * **File:** `forge/monitoring/drift_detector.py`
+  * **Steps:**
+    1.  Implement monitoring of the Brier Score (a metric measuring the accuracy of probability forecasts).
+    2.  If the Brier Score degrades significantly, signal the Drift Detector to trigger a re-optimization, as the probabilities are no longer reliable for Kelly sizing.
+
+#### Phase 2: Optimization Objective (The Fitness Function)
+
+Align the evolutionary process (The Forge/Crucible) with the growth objective using constrained optimization.
+
+**2.1. Implement Required Metrics in Backtester**
+
+  * **File:** `backtester.py` (The `vectorbt` implementation)
+  * **Steps:** Ensure the backtester calculates and returns:
+    1.  **Log Wealth:** `log_returns = np.log(portfolio.returns() + 1); log_wealth = log_returns.sum()`.
+    2.  **Maximum Drawdown (MDD):** `mdd = portfolio.max_drawdown()`.
+    3.  **Probabilistic Sharpe Ratio (PSR):** (Implement the Bailey and Lopez de Prado formula) to measure statistical significance.
+    4.  **Total Trades.**
+
+**2.2. Update the Optimization Target (Fitness Function)**
+
+  * **File:** `elite_tuner.py` (and `forge/crucible/blueprint_factory.py`)
+  * **Action:** Modify the Optuna `objective` function to maximize Log Wealth while enforcing constraints using `TrialPruned`.
+
+<!-- end list -->
+
+```python
+import optuna
+import numpy as np
+
+# Define Constraints (Crucial for survival - move to config.py)
+MIN_TRADES = 50      # Minimum activity required
+MIN_PSR = 0.95       # 95% confidence that the strategy is statistically significant
+MDD_THRESHOLD = 0.30 # Maximum acceptable drawdown (e.g., 30% for aggressive growth)
+
+def objective(trial):
+    # ... (Evolve parameters, features, horizons, model type) ...
+
+    # Run the simulation
+    metrics = run_backtest(...) # Returns dict of metrics
+
+    # 1. Constraint Handling (The Brakes)
+    if metrics is None or metrics['total_trades'] < MIN_TRADES:
+        raise optuna.TrialPruned() # Insufficient activity
+
+    if metrics.get('psr', 0) < MIN_PSR:
+       raise optuna.TrialPruned() # Statistically insignificant
+
+    if metrics.get('max_drawdown', 1.0) > MDD_THRESHOLD:
+        raise optuna.TrialPruned() # Excessive risk
+
+    # 2. The Engine (Maximize Growth Velocity)
+    # Maximize Log Wealth for fastest compound growth
+    log_wealth = metrics.get('log_wealth', -1e9)
+
+    if np.isnan(log_wealth) or np.isinf(log_wealth):
+        return -1e9 # Handle failures
+
+    return log_wealth # Optuna maximizes this value
+```
+
+#### Phase 3: Risk Management and Execution (The Accelerator)
+
+Implement optimal sizing for growth.
+
+**3.1. Implement Fractional Kelly Criterion (FKC)**
+
+  * **File:** `risk_management.py`
+  * **Steps:** Implement the Kelly formula using the specific trade's probability and payoff.
+
+<!-- end list -->
+
+```python
+def calculate_fractional_kelly(win_prob, risk_reward_ratio, fraction):
+    # Kelly % = P - ( (1-P) / R )
+    # P = win_prob, R = risk_reward_ratio
+    if risk_reward_ratio <= 0:
+        return 0.0
+
+    full_kelly = win_prob - ((1 - win_prob) / risk_reward_ratio)
+
+    if full_kelly <= 0:
+        return 0.0 # Edge is too small or negative
+
+    return full_kelly * fraction
+```
+
+**3.2. Integrate Dynamic Sizing and Uncertainty Adjustment**
+
+  * **File:** `trading_manager.py`
+  * **Steps:**
+    1.  Define the base Kelly Fraction (`BASE_KELLY_FRACTION`, e.g., 0.25). This balances aggression with safety.
+    2.  Before a trade, fetch the calibrated probability (P) from Hydra and the Risk/Reward Ratio (R) based on the trade setup (SL/TP).
+    3.  **Uncertainty Adjustment:** Fetch the Uncertainty Score (from Conformal Prediction/BNN).
+        ```python
+        uncertainty_score = get_uncertainty_score() # Normalized 0 to 1
+        # Reduce fraction linearly as uncertainty increases
+        adjusted_kelly_fraction = BASE_KELLY_FRACTION * (1 - uncertainty_score)
+        ```
+    4.  Calculate the position size using `calculate_fractional_kelly(P, R, adjusted_kelly_fraction)`.
+    5.  **Safety Rail:** Implement a hard cap (e.g., never risk more than 10% of total capital on a single trade).
+
+#### Phase 4: Decision Making Objective (The RL Governor)
+
+Ensure the RL Governor optimizes for compound growth.
+
+**4.1. Update the RL Reward Function to Log Returns**
+
+  * **File:** `rl_governor.py` (The `RLGovernorEnv` class, `step` function)
+  * **Action:** Change the reward calculation to the change in the logarithm of wealth.
+
+<!-- end list -->
+
+```python
+# In rl_governor.py (inside the step function)
+import numpy as np
+
+def calculate_reward(self, previous_wealth, current_wealth):
+    # Handle Ruin (Critical for aggressive strategies)
+    if current_wealth <= 0 or previous_wealth <= 0:
+        return -1000.0 # Large penalty for ruin
+
+    # Reward is the change in the logarithm of wealth
+    reward = np.log(current_wealth) - np.log(previous_wealth)
+
+    # (Recommended) Apply Drawdown Penalty
+    # Penalize the agent if drawdown exceeds the threshold to align with constraints.
+    current_drawdown = self.calculate_current_drawdown()
+    if current_drawdown > MDD_THRESHOLD:
+        reward -= (current_drawdown - MDD_THRESHOLD) * PENALTY_FACTOR
+
+    return reward
+```
+
+**4.2. Retrain the RL Governor**
+
+  * **Action:** Retrain the RL policy using this new reward function in the `market_simulator.py`.

@@ -1,0 +1,126 @@
+Okay, let's create the TODO list for integrating **Chimera Engine** and **Apex Predator** from `acp_engines.py` into your system. This integration aims to make your strategy evolution process adversarial, evolving strategies that not only perform well generally but also exploit perceived weaknesses in common market strategies.
+
+**Important Considerations:**
+
+  * **Complexity:** This is a significant integration that deeply modifies the evolution process.
+  * **Chimera's Target:** `ChimeraEngine` needs a `strategy_template` representing the *type* of opponent strategy you want to infer (e.g., a simple RSI, Bollinger Band, or moving average crossover strategy) and reasonable parameter bounds for it.
+  * **Observed Microstructure:** The current `extract_microstructure_signature` in `acp_engines.py` requires *signals*. To infer an unknown opponent, you'll need to adapt this or create a new function to extract a signature directly from *market data* (e.g., using volatility, spread dynamics, order flow imbalance metrics over a recent window) to serve as the target for inference.
+
+-----
+
+## 🛠️ TODO List for Implementing Chimera & Apex Predator
+
+### 1\. Define Opponent Strategy Template and Bounds
+
+  * **Goal:** Provide `ChimeraEngine` with a model of the opponent strategy it should try to infer.
+  * **Location:** A new utility file (e.g., `forge/evolution/opponent_templates.py`) or within `crucible_engine.py` / `singularity_engine.py`.
+  * **Task:**
+    1.  Create a Python function (e.g., `simple_rsi_opponent`) that takes a DataFrame and a list/dict of parameters (like RSI period, buy/sell thresholds) and returns trading signals (0=Hold, 1=Buy, -1=Sell). This function will be the `strategy_template` for Chimera.
+    2.  Define realistic parameter bounds for this template (e.g., `param_bounds = [(10, 30), (20, 40), (60, 80)]` for RSI period, buy threshold, sell threshold).
+
+-----
+
+### 2\. Implement Observed Microstructure Extraction from Market Data
+
+  * **Goal:** Create a function to generate a target microstructure signature based *only* on recent market data (price, volume, potentially TFI/spread), which Chimera will try to replicate.
+  * **Location:** `acp_engines.py` (modify `ChimeraEngine` or add a new helper function) or a utility file.
+  * **Task:**
+    1.  Define a function `extract_observed_market_signature(price_df: pd.DataFrame) -> np.ndarray`.
+    2.  Inside this function, calculate metrics that represent recent market dynamics relevant to the chosen `strategy_template`. Examples:
+          * Recent volatility (e.g., ATR percentage).
+          * Average spread (if L2 data is available).
+          * Trade Flow Imbalance (TFI) mean/std dev.
+          * Price return skewness/kurtosis.
+    3.  Return these metrics as a NumPy array, ensuring the *order and number* of metrics match what `ChimeraEngine.extract_microstructure_signature` (when run with simulated signals) would produce. This might require adjusting `extract_microstructure_signature` as well.
+
+-----
+
+### 3\. Integrate Chimera Engine Execution
+
+  * **Goal:** Periodically run Chimera to infer opponent parameters based on recent market activity.
+  * **Location:** `singularity_engine.py` (recommended, as it's less frequent than per-bar updates) or `crucible_engine.py`.
+  * **Task:**
+    1.  Add imports: `from acp_engines import ChimeraEngine`, `from opponent_templates import simple_rsi_opponent, opponent_param_bounds` (assuming Step 1 creates these).
+    2.  In `SingularityEngine.__init__` (or `CrucibleEngine.__init__`):
+          * Instantiate Chimera:
+            ```python
+            self.chimera_engine = ChimeraEngine(
+                strategy_template=simple_rsi_opponent # From Step 1
+            )
+            self.opponent_param_bounds = opponent_param_bounds # From Step 1
+            self.inferred_opponent_params = None # Store latest inferred params
+            self.logger.info("Chimera Engine initialized.")
+            ```
+    3.  Create a new async method in `SingularityEngine`, e.g., `async def _run_chimera_inference(self):`.
+    4.  Inside `_run_chimera_inference`:
+          * Get recent historical data (e.g., last 200-500 bars) for a representative asset (e.g., BTC/USDT) or average across assets.
+          * Calculate the `observed_market_signature` using the function from Step 2.
+          * Run inference (potentially offloaded to executor):
+            ```python
+            try:
+                # Offload CPU-bound optimization
+                inference_result = await asyncio.get_running_loop().run_in_executor(
+                    None, # Default thread pool executor
+                    self.chimera_engine.infer_strategy_parameters,
+                    observed_market_signature,
+                    recent_price_df,
+                    self.opponent_param_bounds
+                )
+                if inference_result and inference_result.get('fit_quality', 0) > 0.5: # Check fit quality
+                    self.inferred_opponent_params = inference_result['parameters']
+                    self.logger.info(f"Chimera inferred opponent params: {self.inferred_opponent_params} (Fit: {inference_result['fit_quality']:.2f})")
+                else:
+                    self.logger.warning("Chimera inference failed or fit quality too low.")
+                    # Keep previous params or reset to default if desired
+            except Exception as chimera_e:
+                self.logger.error(f"Error during Chimera inference: {chimera_e}")
+            ```
+    5.  Call `_run_chimera_inference` periodically within the `SingularityEngine`'s main loop (e.g., once per hour or alongside the reactive loop).
+
+-----
+
+### 4\. Integrate Apex Predator into Fitness Evaluation
+
+  * **Goal:** Modify the GP fitness calculation to include an adversarial score based on the inferred opponent strategy.
+  * **Location:** `strategy_synthesizer.py` (Fitness evaluation function).
+  * **Task:**
+    1.  Add imports: `from acp_engines import ApexPredator`. Need access to `ChimeraEngine` instance and `inferred_opponent_params`.
+    2.  In `StrategySynthesizer.__init__`:
+          * Instantiate Apex Predator, passing the `ChimeraEngine` instance (this assumes `StrategySynthesizer` is instantiated where `ChimeraEngine` is available, e.g., within `CrucibleEngine` or passed down). Alternatively, pass the necessary components separately.
+            ```python
+            # Assuming chimera_engine instance is passed or accessible
+            self.apex_predator = ApexPredator(chimera_engine=chimera_engine, alpha=0.6, beta=0.4) # Adjust weights as needed
+            self.logger.info("Apex Predator initialized.")
+            # Need access to the opponent template function as well
+            self.opponent_strategy_template = simple_rsi_opponent
+            ```
+    3.  Modify the fitness evaluation function (`evaluate_fitness`):
+          * After getting the `base_fitness` (e.g., TTT/PSR) and the candidate strategy's signals (`our_signals`):
+          * Get the latest `inferred_opponent_params` (e.g., from `self.inferred_opponent_params` if passed down). If none are available, skip the adversarial part.
+          * Generate opponent signals: `opponent_signals = self.opponent_strategy_template(X_fitness_context, inferred_opponent_params)`.
+          * Calculate dual fitness:
+            ```python
+            if self.apex_predator and self.inferred_opponent_params is not None:
+                try:
+                    dual_fitness = self.apex_predator.calculate_dual_fitness(
+                        our_strategy_signals=our_signals, # Signals from the candidate GP strategy
+                        traditional_fitness=base_fitness, # TTT or PSR score
+                        opponent_strategy_signals=opponent_signals,
+                        price_df=X_fitness_context # DataFrame used for backtest
+                    )
+                    # Combine with KCM penalty if used
+                    final_fitness = dual_fitness - (KCM_WEIGHT * kcm_penalty)
+                    self.logger.debug(f"Dual Fitness: Base={base_fitness:.2f}, Adversarial Adjusted={dual_fitness:.2f}, Final={final_fitness:.2f}")
+                except Exception as apex_e:
+                    self.logger.error(f"Error calculating dual fitness: {apex_e}. Using base fitness.")
+                    final_fitness = base_fitness - (KCM_WEIGHT * kcm_penalty) # Fallback
+            else:
+                 # Fallback if Apex Predator isn't active or no opponent params
+                 final_fitness = base_fitness - (KCM_WEIGHT * kcm_penalty)
+
+            return final_fitness, # Return tuple for DEAP
+            ```
+
+-----
+
+This integration path focuses on using Chimera/Apex to *influence the evolution* via the fitness function. It requires careful setup of the opponent template and the observed market signature extraction. Remember this adds significant complexity and computational cost (especially Chimera's optimization step).

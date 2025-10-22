@@ -1,0 +1,142 @@
+Okay, I see the `problemsv1.txt` log snippet. [cite\_start]It seems like the system *starts* loading `BTCUSDTUSDT_Model_1`[cite: 1068, 1069], but you're right, the subsequent logs don't confirm it's actively trading or fully integrated, and the UI isn't reflecting it correctly.
+
+To figure out exactly what's going wrong with the model loading, UI display, and model archive filtering, I need to look at the relevant code sections.
+
+Let's try fetching those files again.
+Okay, based on the logs and the code snippets you've provided, here's a detailed TODO list for your VS Code assistant (like Gemini Code Assist) to fix the model loading and UI issues:
+
+-----
+
+## 🛠️ TODO List for Gemini Code Assist
+
+Here are the specific changes needed to address the issues:
+
+### 1\. Fix Agent Model ID Assignment (`forge/core/agent.py`)
+
+  * **Goal:** Ensure the `V3Agent` correctly reports the ID of the model it's managing, so it shows up in the UI bot card.
+  * [cite\_start]**Location:** Inside the `V3Agent` class, likely within or just after the `_load_specialist_models` method [cite: 2945-2968] [cite\_start]or potentially in the `__init__` method after models are loaded [cite: 2933-2937].
+  * **Task:**
+    1.  After successfully loading models in `_load_specialist_models`, determine the primary model ID the agent should represent. [cite\_start]Since the agent seems designed around a specific `model_instance_id` (which is the directory name)[cite: 2456, 2459], use `self.agent_id` for this.
+    2.  Assign this ID to `self.current_model_id`.
+        ```python
+        # Inside V3Agent, potentially at the end of _load_specialist_models
+        # or called after it in __init__ if models are loaded there.
+
+        def _update_current_model_id(self):
+            # Use the agent's unique ID (derived from the model directory)
+            # as the identifier displayed in the UI.
+            if self.agent_id:
+                 self.current_model_id = self.agent_id
+                 self.logger.info(f"Set current_model_id to: {self.current_model_id}")
+            # Optional: Add logic here if you need to select a *specific* model
+            # from self.specialist_models based on some criteria.
+            # For now, using self.agent_id aligns with how agents are created.
+
+        # Ensure _update_current_model_id() is called after models are loaded.
+        # Example: Add this call at the end of __init__
+        # self.specialist_models = self._load_specialist_models()
+        # self._update_current_model_id() # <--- ADD THIS
+        ```
+
+-----
+
+### 2\. Fix Model Archive Display (UI & Backend)
+
+  * **Goal:** Make the "Model Archive" table in the UI show *only* GP 2.0 models by reading directly from the `models` directory metadata, instead of reading from `performance_log.jsonl`.
+  * **Location 1:** `dashboard.js`
+  * **Task 1:** Change the `fetchModels` function to use the correct API endpoint `/api/models/list` instead of `/api/models`.
+    ```javascript
+    // Inside dashboard.js
+    async function fetchModels() {
+        try {
+            // Change this line:
+            // const response = await fetch('/api/models');
+            // To this:
+            const response = await fetch('/api/models/list'); // <-- FIX
+
+            if (!response.ok) return;
+            // The /api/models/list endpoint returns {'models': [...]}, adjust if needed
+            const data = await response.json();
+            updateModels(data.models || []); // <-- Adjust based on API response structure
+        } catch (error) {
+            console.error('Error fetching models:', error);
+        }
+    }
+    ```
+  * **Location 2:** `app.py`
+  * [cite\_start]**Task 2:** Modify the `/api/models/list` endpoint [cite: 2219-2224] to filter for GP 2.0 models based on metadata.
+    ```python
+    # Inside app.py, within the setup_routes function
+
+    @app.route('/api/models/list', methods=['GET'])
+    def get_models_list():
+        # ... (existing code to scan models_dir) ...
+        models_list = []
+        models_dir = app_config.MODEL_DIR
+        if not os.path.exists(models_dir):
+            return jsonify({"models": [], "error": "Models directory not found."})
+
+        for item_name in os.listdir(models_dir):
+            item_path = os.path.join(models_dir, item_name)
+            if os.path.isdir(item_path):
+                metadata_path = os.path.join(item_path, 'metadata.json')
+                if os.path.exists(metadata_path):
+                    try:
+                        with open(metadata_path, 'r') as f:
+                            metadata = json.load(f)
+
+                        # --- ADD FILTERING LOGIC ---
+                        # Check if the model type is GP 2.0 (adjust key if needed)
+                        model_type = metadata.get("blueprint", {}).get("model_type") # Check metadata structure
+                        is_gp_model = model_type == "GP 2.0" # Adjust if type name is different
+
+                        if is_gp_model: # Only add GP 2.0 models
+                            # --- END FILTERING LOGIC ---
+                            models_list.append({
+                                'model_id': metadata.get('model_id', item_name),
+                                'asset_symbol': metadata.get('asset_symbol', 'N/A'),
+                                'status': metadata.get('status', 'purgatory'),
+                                # Adjust key based on actual metadata if needed
+                                'fitness_score': metadata.get('validation_metrics', {}).get('wfa_metrics', {}).get('sharpe_ratio', 'N/A'),
+                                'registration_time': metadata.get('registration_time', 'N/A'),
+                                # Add architecture if needed by JS updateModels
+                                'architecture': model_type
+                            })
+                    except Exception as e:
+                        print(f"[API] Error reading metadata for {item_name}: {e}")
+
+        # Optional: Sort models by registration time descending
+        models_list.sort(key=lambda x: x.get('registration_time', '0'), reverse=True)
+
+        return jsonify({"models": models_list})
+
+    # [cite_start]Task 3 (Optional Cleanup): Remove the old `/api/models` endpoint [cite: 2236] from `app.py` and the corresponding `updateModels` logic in `dashboard.js` if it's no longer needed, to avoid confusion.
+    ```
+
+-----
+
+### 3\. Ensure GP 2.0 Models Can Trade (`forge/core/agent.py`)
+
+  * [cite\_start]**Goal:** Verify that the check preventing non-GP models from trading [cite: 2969-2971] works correctly with models loaded via `EvolvedStrategyWrapper`.
+  * **Location:** `forge/core/agent.py`
+  * **Task:**
+    1.  [cite\_start]Confirm that when a GP 2.0 model is loaded using `EvolvedStrategyWrapper` in `_load_specialist_models` [cite: 2952-2954], the wrapper instance is correctly stored.
+    2.  [cite\_start]**Add `is_gp_model = True`** to the `EvolvedStrategyWrapper` class in `validation_gauntlet.py` (or wherever it's defined) so the check `hasattr(model, 'is_gp_model')` [cite: 2969] passes.
+        ```python
+        # In validation_gauntlet.py (or where EvolvedStrategyWrapper is defined)
+        class EvolvedStrategyWrapper:
+            def __init__(self, tree, pset, feature_names):
+                self.tree = tree
+                self.pset = pset
+                self.feature_names = feature_names
+                self.strategy_logic = gp.compile(expr=self.tree, pset=self.pset)
+                self.model_params = {}
+                self.is_gp_model = True # <--- ADD THIS ATTRIBUTE
+
+            # ... (rest of the class definition)
+        ```
+    3.  [cite\_start]Review the `decide_and_execute` method [cite: 2969-2996] [cite\_start]in `V3Agent` to ensure that once the `is_gp_agent` check passes [cite: 2970][cite\_start], the agent proceeds to generate signals and potentially execute trades via `_execute_trade`[cite: 2997]. The logic seems present, but this confirms the GP model check is the main gatekeeper.
+
+-----
+
+Once these changes are applied, the UI should correctly display the `model_instance_id` on the bot cards, the Model Archive should only list GP 2.0 models from the filesystem, and the agents managing those GP 2.0 models should be able to execute trades.

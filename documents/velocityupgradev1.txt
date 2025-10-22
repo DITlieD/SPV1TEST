@@ -1,0 +1,123 @@
+This is a strategic roadmap designed to maximize the system's learning velocity and achieve rapid capital growth (the $200 target). To gain a decisive edge, we must shift the system's philosophy from long-term robustness to hyper-velocity adaptation, computational efficiency, and the aggressive exploitation of short-lived alpha.
+
+Here is the blueprint for transforming the system into a Velocity-Driven Hyper-Evolutionary Engine.
+
+### I. Redefining the Objective: Velocity over Stability
+
+The current optimization for `log_wealth` favors stable, long-term growth. To maximize velocity, we must redefine the fitness function to reward speed.
+
+#### 1. The Velocity Objective: Time-to-Target (TTT)
+
+We will change the primary optimization metric in the Forge.
+
+*   **The Concept:** The fitness score is the inverse of the number of time steps required to reach a specific profit target (e.g., +5% equity or the $200 target).
+*   **The Edge:** This directly aligns the evolutionary pressure with the explicit goal of rapid growth. Strategies that achieve the target quickly dominate the population.
+*   **Implementation:** Modify the `VectorizedBacktester` to calculate the time taken to hit the target. The `StrategySynthesizer` and ML Bake-Off will optimize for this TTT metric.
+
+### II. The Apex Accelerator: Surrogate-Assisted Evolution (SAE)
+
+The single biggest bottleneck in the evolutionary process (GP/GA) is the **evaluation step**—running expensive backtests for thousands of individuals.
+
+#### 2. The Fitness Oracle (Surrogate Modeling)
+
+*   **The Concept:** Train a fast, lightweight ML model (the "Oracle" or "Surrogate") to *predict* the fitness (TTT) of a strategy based on its DNA (GP tree structure or hyperparameters) *without* running the backtest.
+*   **The Edge:** Evaluation time drops by 99%+, allowing for vastly larger populations and more generations in the same amount of time.
+*   **Implementation (The Hyper-Evolution Loop):**
+    1.  The GP/GA generates a large population (e.g., 2000 individuals).
+    2.  The Oracle instantly screens all 2000.
+    3.  Only the Top 2% (40 individuals) predicted to be the best undergo *actual* high-fidelity backtesting.
+    4.  The evolution proceeds using the actual fitness of the top 2%.
+    5.  The results of the top 2% are used to continuously re-train and refine the Oracle.
+
+### III. Computational Efficiency (Optimizing the Bottlenecks)
+
+The Forge cycle speed is limited by feature engineering and backtesting execution time.
+
+#### 3. High-Performance Feature Engineering (VMD/Wavelets)
+
+*   **The Problem:** CEEMDAN, while powerful, is extremely slow and often causes bottlenecks even in the optimized, single-threaded Forge workers.
+*   **The Solution:** Replace CEEMDAN with faster time-frequency analysis techniques.
+    *   **Variational Mode Decomposition (VMD):** Significantly faster than CEEMDAN and often provides cleaner signal separation.
+    *   **Discrete Wavelet Transform (DWT):** Extremely fast and excellent at capturing multi-scale information.
+*   **The Edge:** 10x-50x speedup in the `FeatureFactory`, drastically reducing the Forge cycle time.
+
+#### 4. JAX/Numba Accelerated Backtesting
+
+*   **The Problem:** Python loops and Pandas operations in the `VectorizedBacktester` are inherently slow.
+*   **The Solution:** Use Numba or JAX to compile the core backtesting logic down to machine code.
+*   **The Edge:** Near C-level performance for fitness evaluations. This complements the Surrogate Model by making the *actual* evaluations faster too.
+
+### IV. Architectural Shift: Continuous Adaptation
+
+The current cycle (Train -> Deploy -> Wait for Failure -> Retrain) introduces too much lag.
+
+#### 5. The "Pit Crew" Architecture (Continuous Shadow Evolution)
+
+We must ensure the system is always ready to deploy a better model instantly.
+
+*   **The Concept:** The Forge runs continuously, producing models that are placed on a "Challenger Bench" rather than immediately deployed.
+*   **The "Hot-Swap" Mechanism:**
+    1.  The `CrucibleEngine` continuously evaluates the models on the Challenger Bench against the live market data (shadow mode).
+    2.  If a Challenger demonstrates significantly higher velocity (better TTT) than the currently active Champion for that asset, the system performs an immediate hot-swap.
+*   **The Edge:** The system adapts in near real-time based on superior performance, not just waiting for the active model to fail.
+
+#### 6. Aggressive Continuous Weight Optimization (CWO)
+
+We will weaponize the `HedgeEnsembleManager` for velocity.
+
+*   **The Concept:** Execute rapid, decisive shifts in capital allocation.
+*   **Implementation:**
+    1.  Increase the Hedge `learning_rate` significantly (from 0.1 towards 0.5+).
+    2.  Run the `SingularityEngine` reactive loop much more frequently (e.g., every 60 seconds instead of 600s).
+*   **The Edge:** If a new model (e.g., a hot-swapped challenger) shows immediate alpha, the system shifts the majority of the capital to it instantly, maximizing exploitation of the current regime.
+
+### V. The Next Frontier: Meta-Learning Models
+
+While the above optimizes the *process*, the models themselves can be made inherently faster at learning.
+
+#### 7. Regime-Aware Meta-Learning (MAML/Reptile)
+
+*   **The Concept:** Instead of learning a single strategy, Meta-Learning models (like those trained with MAML or Reptile) *learn how to learn* quickly. They are trained across diverse historical regimes to find a set of initial weights that can adapt to *any* specific regime with very few data points.
+*   **The Edge:** The model adapts almost instantly (within a few bars) to the current market dynamics, eliminating the need to wait for a full Forge cycle when the market shifts. This is the cutting edge of adaptive trading.
+
+---
+
+### Detailed Implementation To-Do List (Prioritized for Velocity)
+
+#### Phase 1: Computational Speed and Objective Focus (Immediate Impact)
+
+1.  **[Objective] Implement Time-to-Target (TTT) Fitness:**
+    *   **File:** `forge/crucible/backtester.py`
+    *   **Action:** Modify the `run` method to calculate TTT.
+    *   **File:** `forge/evolution/strategy_synthesizer.py` (and ML Bake-Off logic)
+    *   **Action:** Change the primary optimization target from `log_wealth` to `TTT`.
+
+2.  **[Feature Engineering] Replace CEEMDAN with VMD/DWT:**
+    *   **File:** `forge/data_processing/feature_factory.py`
+    *   **Action:** Install `vmdpy` or a Wavelet library. Replace `_generate_ceemdan_features` with `_generate_vmd_features` or `_generate_dwt_features`.
+
+3.  **[Backtesting] Accelerate with Numba:**
+    *   **File:** `forge/crucible/backtester.py`
+    *   **Action:** Profile the core backtesting loop, convert Pandas operations to NumPy, and apply the `@numba.jit(nopython=True)` decorator.
+
+#### Phase 2: Surrogate Acceleration (The Game Changer)
+
+4.  **[Meta-Learning] Implement the Fitness Oracle (SAE):**
+    *   **Action:** Create a new module `forge/evolution/surrogate_manager.py`.
+    *   **Action:** Implement DNA Vectorization (converting GP trees/hyperparameters to vectors).
+    *   **Action:** Define and train the Surrogate Model (e.g., `LGBMRegressor`).
+    *   **Action:** Integrate the SAE loop into `StrategySynthesizer.run`: Screen population with Oracle -> Evaluate top 2% with real backtest -> Update Oracle.
+
+#### Phase 3: Architectural Adaptation
+
+5.  **[Architecture] Implement the "Pit Crew":**
+    *   **File:** `crucible_engine.py`
+    *   **Action:** Implement the "Challenger Bench" data structure.
+    *   **Action:** Modify `_forge_processing_loop` to place new models on the bench.
+    *   **Action:** Implement the `_shadow_evaluation_loop` and the "Hot-Swap" mechanism based on TTT outperformance.
+
+6.  **[Adaptation] Implement Aggressive CWO:**
+    *   **File:** `singularity_engine.py`
+    *   **Action:** Reduce the sleep time in `_reactive_drift_monitoring_loop` to 60s.
+    *   **File:** `forge/models/ensemble_manager.py` (or configuration)
+    *   **Action:** Increase the `HedgeEnsembleManager` learning rate to 0.5.

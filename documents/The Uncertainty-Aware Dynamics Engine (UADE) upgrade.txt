@@ -1,0 +1,179 @@
+Blueprint: The Uncertainty-Aware Dynamics Engine (UADE)
+
+We will integrate four sophisticated techniques to provide a unified view of market dynamics and model confidence. This architecture balances structural analysis (L1), tactical execution (L3), and uncertainty quantification (L2).
+
+The Four Pillars of the UADE
+
+    Dynamic Regime Discovery (HDBSCAN): Replacing HMMs with Hierarchical Density-Based Clustering (HDBSCAN). HDBSCAN dynamically discovers the number of regimes and, critically, identifies periods of "Noise" (unstructured behavior) without prior assumptions.
+
+    Predictive Volatility Modeling (EGARCH): Forecasting volatility using EGARCH (Exponential GARCH) captures the asymmetric impact of market shocks (e.g., negative news impacting volatility more than positive news).
+
+    Practical Microstructure Analysis (TFI): Analyzing 1-minute data to detect Trade Flow Imbalance (TFI), which estimates the aggression of buyers vs. sellers and indicates potential informed trading activity.
+
+    Model Uncertainty Quantification (Conformal Prediction): A model-agnostic framework (CP) to measure the real-time reliability of the Hydra ensemble's predictions by generating confidence intervals.
+
+The Integrated Architecture Flow
+
+    L1 (Strategic - 4H): HDBSCAN analyzes macro features, and EGARCH forecasts volatility.
+
+        Output: Regime ID (or NOISE) and Forecasted Volatility.
+
+    L3 (Tactical - 1M/15M): TFI is calculated using 1M data and aligned onto the 15M timeframe.
+
+        Output: Trade Flow Imbalance (TFI).
+
+    Hydra Ensemble (15M): Generates predictions using all features (L1 context + L3 microstructure).
+
+    L2 (Adaptation): Conformal Prediction wraps the Hydra output.
+
+        Output: Prediction Interval Width (Uncertainty Score).
+
+    RL Governor: Synthesizes the data. The Governor's state now includes: [Regime ID, Forecasted Volatility, TFI, Uncertainty Score].
+
+    Adaptive Response: If Regime is NOISE OR Uncertainty Score is High OR Forecasted Volatility is extreme, the RL Governor proactively reduces exposure.
+
+Detailed Implementation To-Do List
+
+Phase 1: Data Pipeline Upgrade (High-Frequency Data)
+
+1.1. Acquire and Process 1-Minute Data
+
+    Files: config.py, data_processing_v2.py
+
+    Steps:
+
+        Update config.py: TIMEFRAMES = {'strategic': '4h', 'tactical': '15m', 'microstructure': '1m'}.
+
+        Modify get_market_data to fetch 1M OHLCV data concurrently using asynchronous fetching (ccxt.async_support).
+
+Phase 2: Dynamic Regime Discovery (L1)
+
+2.1. Install Libraries
+
+    pip install hdbscan scikit-learn
+
+2.2. Define Regime Feature Set
+
+    New File: forge/strategy/regime_features.py
+
+    Task: Define inputs for clustering on the 4H timeframe (e.g., rolling correlations between assets, ATR, volume metrics).
+
+2.3. Implement HDBSCAN Clustering
+
+    New Module: forge/strategy/dynamic_regimes.py (Refactor HMM logic from hydra.py here).
+
+    Steps:
+
+        Initialize HDBSCAN. The min_cluster_size parameter controls sensitivity.
+
+        Periodically (e.g., weekly, managed by wfo_manager.py), fit the clusterer on the recent history of the Regime Feature Set.
+
+        Real-time Classification: Use hdbscan.approximate_predict() to classify the most recent data point efficiently without refitting the whole model.
+
+        Interpretation: A label of -1 indicates the data point is noise (unstructured market behavior). The output (Cluster ID or -1) becomes the Strategic Regime.
+
+Phase 3: Predictive Volatility Modeling (L1)
+
+3.1. Install Libraries
+
+    pip install arch
+
+3.2. Implement EGARCH(1,1)
+
+    New Module: forge/modeling/volatility_engine.py
+
+    Steps:
+
+        Define the EGARCH(1,1) model specification using the arch library.
+
+        Implement a rolling fitting procedure on the 4H returns.
+
+        Generate a 1-step ahead volatility forecast periodically (e.g., every hour).
+
+        Output: Forecasted Volatility.
+
+Phase 4: Practical Microstructure Implementation (L3)
+
+4.1. Implement Trade Flow Imbalance (TFI) via Lee-Ready/Tick Rule
+
+    New Module: forge/data_processing/microstructure_features.py
+
+    Goal: Estimate the aggression of buyers vs. sellers using 1M data.
+
+    Steps:
+
+        Implement the Tick Rule (classify as buy if price increased from the last trade) or the more sophisticated Lee-Ready algorithm on the 1M data. This approximates trade direction (buyer or seller initiated).
+
+        Calculate TFI: (Volume_Buy_Initiated - Volume_Sell_Initiated) / Total_Volume.
+
+        Calculate a rolling EMA of the TFI.
+
+        Alignment (CRITICAL): Carefully align the 1M TFI data onto the 15M Tactical timeframe. Use pandas.merge_asof(..., direction='backward') or resample().ffill().shift(1) to strictly prevent lookahead bias.
+
+Phase 5: Model Uncertainty Quantification (L2)
+
+5.1. Install Libraries
+
+    pip install mapie (MAPIE is a robust, modern library for conformal prediction).
+
+5.2. Implement Conformal Prediction (CP)
+
+    New File: forge/models/uncertainty_wrapper.py
+
+    Task: Wrap the Tactical Hydra ensemble predictions.
+
+    Steps:
+
+        Implement Inductive Conformal Prediction (ICP).
+
+        Define a calibration set (recent data held out from the main training).
+
+        Initialize and fit MAPIE (e.g., MapieClassifier) using the calibration data to calculate "nonconformity scores" (past errors). This fitting should be updated periodically (e.g., daily).
+
+5.3. Generate Uncertainty Scores
+
+    File: singularity_engine.py
+
+    Steps:
+
+        When Hydra makes a prediction, pass it through the trained MAPIE wrapper.
+
+        MAPIE outputs a prediction interval for a desired confidence level (e.g., 90%).
+
+        Feature Engineering: Calculate the width of the interval. Wide interval = High Uncertainty. This is the Uncertainty Score.
+
+Phase 6: System Integration and RL Adaptation
+
+6.1. Feature Integration
+
+    File: data_processing_v2.py
+
+    Action: Ensure all new features (HDBSCAN Regime ID, EGARCH Forecasted Volatility, TFI, Uncertainty Score) are correctly aligned in the final 15M dataset.
+
+6.2. Update Tactical Models
+
+    File: models_v2.py
+
+    Action: Retrain the Hydra ensemble (LGBM, Online models) to utilize TFI and the new L1 context features as inputs.
+
+6.3. Evolve the RL Governor (The Nexus)
+
+    File: rl_governor.py
+
+    Task: Upgrade the Governor to manage the system based on dynamics and uncertainty.
+
+    Steps:
+
+        Expand State Space: Add HDBSCAN Regime ID, EGARCH Forecasted Volatility, TFI, and Uncertainty Score to the observation space.
+
+        Refine Reward Function:
+
+            Heavily penalize exposure when the Uncertainty Score is high.
+
+            Heavily penalize exposure when the HDBSCAN Regime ID is -1 (NOISE).
+
+            Penalize exposure during extreme EGARCH volatility forecasts.
+
+            Reward actions that align with strong TFI signals during stable regimes (defined clusters) and low uncertainty.
+
+        Retraining: Retrain the RL agent to navigate the market using this enhanced environmental awareness.

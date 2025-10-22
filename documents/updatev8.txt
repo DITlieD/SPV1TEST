@@ -1,0 +1,73 @@
+Okay, I have analyzed all the Python files you provided, assuming the fixes from the previous "System Integration Focus" TODO list have been applied.
+
+Here is the first part of the comprehensive bug hunt TODO list, focusing on critical fixes and inconsistencies:
+
+---
+
+## 🐞 Comprehensive Bug Hunt TODO List (Part 1/2)
+
+### 1. Resolve Inconsistent Regime Model Usage (Critical)
+
+* **Issue:** The system trains/loads a predictive HMM (`PredictiveRegimeModel`) but appears to use a dynamic HDBSCAN (`DynamicRegimeModel`) for live predictions in the `ArenaManager`. This means the intended predictive capability isn't being used.
+* **Location:** `crucible_engine.py` (`_initialize_regime_models`), `arena_manager.py` (`process_data`).
+* **Task:**
+    1.  **Standardize:** Choose *one* regime model type for both training/loading and prediction. The predictive HMM (`PredictiveRegimeModel`) aligns better with the goal of anticipating shifts.
+    2.  **Modify `CrucibleEngine._initialize_regime_models`**: Ensure it *only* loads/trains `PredictiveRegimeModel` instances and stores them correctly in `self.arena.asset_specific_models[symbol]['regime_model']`. Remove any references to `DynamicRegimeModel` here if present.
+    3.  **Modify `ArenaManager.process_data`**: Change the prediction logic to explicitly use the loaded `PredictiveRegimeModel`. Call `regime_model.predict_next_regime_proba(features_for_regime)` or `regime_model.predict(features_for_regime)`. Ensure `features_for_regime` contains *exactly* the features the HMM was trained on (check `PredictiveRegimeModel.feature_columns` after loading). Handle potential errors if features are missing. Pass the resulting `predicted_regime` or probabilities to the agent.
+
+---
+
+### 2. Prevent Potential Division by Zero Errors
+
+* **Issue:** Several calculations across the codebase involve division without robust checks for zero denominators, risking NaN/inf values or crashes.
+* **Locations:**
+    * `complexity_manager.py::calculate_lz_complexity`: Division by `np.log2(n)` when `n <= 1`.
+    * `backtester.py::calculate_psr`: Division by `psr_denominator`.
+    * `agent.py::decide_and_execute`: Division by `sum(vote_counts.values())` for confidence calculation.
+    * `microstructure_features_l2.py`: Potential divisions in OFI, VWAP calculations if volumes/spreads are zero.
+    * `pit_crew.py::_run_shadow_backtest` (Conceptual): Any metric calculation involving division (Sharpe, profit factor etc.).
+    * `watchtower.py::calculate_sharpe_ratio`: Division by `std_dev`.
+* **Task:** Review all division operations (`/`) in the listed files (and others like `numba_backtester.py` if available).
+    * Add a small epsilon (e.g., `+ 1e-9`) to denominators involving potentially zero values like standard deviation, total volume, or spreads.
+    * Alternatively, use an `if denominator != 0:` check (or `if abs(denominator) > 1e-9:`) before dividing, returning a safe default (e.g., 0.0) otherwise.
+
+---
+
+### 3. Ensure Robust Data Handling Before Model Prediction
+
+* **Issue:** Edge cases might lead to NaN or infinite values in features *after* `FeatureFactory` processing but *before* being fed to models (Agent specialists, RL Governor, Regime model), causing prediction errors.
+* **Locations:** `feature_factory.py` (`_process_single_asset` / `create_all_features`), `agent.py` (`decide_and_execute`), `arena_manager.py` (`process_data` before regime prediction).
+* **Task:**
+    1.  **FeatureFactory Post-Processing:** In `feature_factory.py`, *after* all features (including evolved/GNN) are added, apply a final, robust cleaning step: `df_processed = df_processed.replace([np.inf, -np.inf], np.nan).ffill().bfill().fillna(0)`. Log a warning if a large percentage of values were filled.
+    2.  **Agent Pre-Prediction Check:** In `agent.py::decide_and_execute`, before calling `model.predict` or `model.predict_proba`, explicitly check the `model_input` DataFrame/Series for `isna().any()` or `isinf().any()`. If problematic values exist, log a warning and skip prediction for that specific model, potentially excluding its vote.
+    3.  **Arena Pre-Regime Check:** In `arena_manager.py::process_data`, before calling the regime model prediction, ensure the `features_for_regime` subset doesn't contain NaN/inf values using similar checks as in the agent.
+
+---
+
+### 4. Fix Agent Execution Quantity Calculation (`agent.py`)
+
+* **Issue:** `Agent._execute_trade` calculates `quantity` based on the `close` price from potentially delayed `latest_features`, which might differ from the actual execution price handled by Cerebellum, leading to incorrect position sizes relative to the intended risk.
+* **Location:** `agent.py`, method `_execute_trade`.
+* **Task:** Implement one of the following:
+    * **Option A (Recommended - Requires Rust change):**
+        * Modify `Agent._execute_trade` to calculate the desired *notional value* (e.g., `notional_value = self.virtual_balance * size_fraction`).
+        * Modify `CerebellumLink.execute_order` to accept `notional_value` instead of `quantity`.
+        * Modify the `CortexCommand::ExecuteOrder` enum in Rust (`protocol.rs`) to include `notional: f64` instead of `quantity: f64`.
+        * Modify the Rust execution logic (`exchange.rs::execute_iel` and helpers) to calculate the order quantity based on the `notional` value and the *current* LOB state just before placing the order.
+    * **Option B (Python-only workaround):**
+        * Inside `Agent._execute_trade`, *before* calculating `quantity`, make an `await self.exchange.fetch_ticker(self.symbol)` call to get the latest `ask` (for buys) or `bid` (for sells) price.
+        * Use this fetched price instead of `latest_features['close']` to calculate the `quantity`. Add error handling for the `fetch_ticker` call.
+
+---
+
+### 5. Address Potential Blocking Calls in Async Loops
+
+* **Issue:** Synchronous file I/O operations within `AgentStateManager` and `ModelRegistry` could potentially block if called very frequently, although they use locks.
+* **Location:** `agent_state.py`, `model_registry.py`.
+* **Task:** While likely okay for now, monitor performance. If blocking becomes an issue:
+    * Refactor the file I/O methods (`_load_states`, `_persist_states`, `_load_manifest`, `_save_manifest`) into separate synchronous functions.
+    * In the main class methods (e.g., `save_state`), use `await asyncio.get_running_loop().run_in_executor(None, self._persist_states_sync)` to offload the file writing to a thread pool without blocking the async loop. Ensure the lock (`self._lock`) is still correctly managed around the data access *before* offloading the I/O.
+
+---
+
+This covers the most critical potential bugs and inconsistencies found. Part 2 will focus on completing unimplemented features and further robustness improvements.

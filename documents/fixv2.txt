@@ -1,0 +1,62 @@
+Please replace the entire _trade_watcher_and_resampler function in your crucible_engine.py file with the following corrected and robust version.
+Python
+
+    async def _trade_watcher_and_resampler(self):
+        """
+        Watches for individual trades, reconstructs OHLCV candles, and
+        triggers feature engineering.
+        This is a robust replacement for watch_ohlcv.
+        """
+        self.logger.info("Starting Trade Watcher and Resampler loop...")
+        trade_cache = {symbol: [] for symbol in self.config.ASSET_UNIVERSE}
+        
+        async def watch_trades_for_symbol(symbol):
+            # Alpaca uses 'BTC/USD', not 'BTC/USDT'. This correctly replaces it.
+            execution_symbol = symbol.replace('USDT', 'USD') if self.config.ACTIVE_EXCHANGE == 'alpaca' else symbol
+            while not self.stop_event.is_set():
+                try:
+                    trades = await self.exchange.watch_trades(execution_symbol)
+                    
+                    # --- THE DEFINITIVE ROBUST HANDLING FIX ---
+                    # 1. Ensure the incoming message is always a list for uniform processing.
+                    if trades and not isinstance(trades, list):
+                        trades = [trades]
+
+                    if trades:
+                        # 2. Filter out any non-trade dictionaries from the list.
+                        valid_trades = [t for t in trades if isinstance(t, dict) and 'price' in t and 'amount' in t]
+                        if valid_trades:
+                            trade_cache[symbol].extend(valid_trades)
+                    # --- END OF FIX ---
+
+                except Exception as e:
+                    self.logger.error(f"[{symbol}] Error in trade watcher: {e}. Retrying...")
+                    await asyncio.sleep(10)
+
+        # Start a trade watcher for each symbol
+        watcher_tasks = [watch_trades_for_symbol(s) for s in self.config.ASSET_UNIVERSE]
+        asyncio.gather(*watcher_tasks)
+
+        # Main resampling loop
+        while not self.stop_event.is_set():
+            await asyncio.sleep(5) 
+            for symbol in self.config.ASSET_UNIVERSE:
+                if not trade_cache[symbol]:
+                    continue
+
+                trades = trade_cache[symbol]
+                trade_cache[symbol] = []
+
+                df_trades = pd.DataFrame(trades)
+                df_trades['datetime'] = pd.to_datetime(df_trades['timestamp'], unit='ms')
+                df_trades.set_index('datetime', inplace=True)
+
+                resampler = df_trades['price'].resample(self.config.TIMEFRAMES['tactical'])
+                df_ohlcv = resampler.ohlc()
+                df_ohlcv['volume'] = df_trades['amount'].resample(self.config.TIMEFRAMES['tactical']).sum()
+                df_ohlcv.dropna(inplace=True)
+
+                if not df_ohlcv.empty:
+                    self.logger.info(f"[{symbol}] Resampled new {self.config.TIMEFRAMES['tactical']} candle(s).")
+                    df_ohlcv.attrs['symbol'] = symbol
+                    await self.raw_data_queue.put(df_ohlcv)

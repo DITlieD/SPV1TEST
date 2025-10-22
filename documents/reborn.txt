@@ -1,0 +1,442 @@
+This is a detailed analysis and implementation plan for the "Reborn" system, encompassing evolutionary inheritance and task prioritization, along with optimizations for faster evolution.
+
+### Current Implementation Status
+
+The "Reborn" system is **NOT** currently implemented.
+
+1.  **No Inheritance:** Knowledge from terminated champions is lost; new Forge cycles start randomly.
+2.  **No Prioritization:** The Forge queue is FIFO (First-In, First-Out); urgent replacements are not prioritized.
+
+### Implementation Plan: The "Reborn" System
+
+This plan implements DNA persistence, a priority queue, and genetic injection, utilizing `dill` for robust serialization across processes.
+
+#### Prerequisites
+
+**Install `dill`:** Standard Python serialization (`pickle`) cannot handle complex DEAP objects. `dill` is required for inter-process communication.
+
+```bash
+pip install dill
+```
+
+#### Phase 1: DNA Structure and Persistence
+
+**1. Define `get_dna()` in Model Wrappers**
+
+  * **File:** `validation_gauntlet.py` (Main folder files)
+
+<!-- end list -->
+
+```python
+# In validation_gauntlet.py -> EvolvedStrategyWrapper
+class EvolvedStrategyWrapper:
+    # ... (existing methods) ...
+    def get_dna(self):
+        """Returns the DNA (GP Tree, Pset, and features) for inheritance."""
+        return {
+            'architecture': 'GP2_Evolved',
+            'tree': self.tree,
+            'pset': self.pset, # Essential for reconstruction
+            'features': self.feature_names
+        }
+```
+
+  * **File:** `models_v2.py` (Main folder files)
+
+<!-- end list -->
+
+```python
+# In models_v2.py -> BaseBatchModel (Apply to LGBMWrapper/XGBWrapper)
+class BaseBatchModel:
+    # ... (existing methods) ...
+    def get_dna(self):
+        """Returns the DNA (Parameters and features) for inheritance."""
+        return {
+            'architecture': self.__class__.__name__,
+            'params': self.model_params,
+            'features': self.feature_names if hasattr(self, 'feature_names') else []
+        }
+```
+
+**2. Store DNA in `CrucibleAgent`**
+
+  * **File:** `forge/crucible/arena_manager.py` (Main folder files)
+
+<!-- end list -->
+
+```python
+# In forge/crucible/arena_manager.py
+class CrucibleAgent:
+    # Update __init__ to accept optional dna
+    def __init__(self, agent_id: str, v3_agent, dna=None):
+        self.agent_id = agent_id
+        self.v3_agent = v3_agent
+        self.dna = dna # Store the DNA
+        # ... (other attributes)
+
+class ArenaManager:
+    # ... (other methods)
+    # Ensure this helper method exists
+    def get_agent_by_id(self, symbol: str, agent_id: str):
+        """Safely retrieves an agent object by its ID."""
+        agents = self.agents.get(symbol, [])
+        for agent in agents:
+            if agent.agent_id == agent_id:
+                return agent
+        return None
+```
+
+#### Phase 2: Prioritization and DNA Transmission
+
+**1. Implement Priority Queue and Serialization in `CrucibleEngine`**
+
+  * **File:** `crucible_engine.py` (Main folder files)
+
+<!-- end list -->
+
+```python
+# In crucible_engine.py
+import asyncio
+import time
+import dill # Import dill
+import logging
+
+# Define Priority Levels (Lower number = Higher priority)
+PRIORITY_HIGH = 1   # Watchtower (Reaping)
+PRIORITY_MEDIUM = 5 # Seeding
+PRIORITY_LOW = 10   # Proactive
+
+class CrucibleEngine:
+    def __init__(self, app_config, is_main_instance: bool = False):
+        # ...
+        # Change to PriorityQueue
+        self.forge_queue = asyncio.PriorityQueue()
+        self.active_forge_tasks = set()
+        # ... (rest of init)
+
+    # Update submit_forge_task
+    def submit_forge_task(self, symbol, agent_id, generation, source="General", priority=PRIORITY_MEDIUM, champion_dna=None):
+        task_id = symbol
+        
+        if task_id in self.active_forge_tasks:
+            # ... (logging warning)
+            return False
+        
+        self.logger.info(f"[{source}] Submitting Forge task (P{priority}): {symbol}. Inheritance: {champion_dna is not None}")
+        
+        # CRITICAL: Serialize DNA using dill
+        serialized_dna = None
+        if champion_dna:
+            try:
+                serialized_dna = dill.dumps(champion_dna)
+            except Exception as e:
+                self.logger.error(f"Failed to serialize DNA: {e}. Proceeding without inheritance.")
+
+        task_data = (symbol, agent_id, generation, source, serialized_dna)
+        timestamp = time.time()
+        # Queue item format: (priority, timestamp, data)
+        queue_item = (priority, timestamp, task_data)
+
+        try:
+            asyncio.get_running_loop().create_task(self.forge_queue.put(queue_item))
+            self.active_forge_tasks.add(task_id)
+            return True
+        except RuntimeError:
+            self.logger.error("Cannot submit Forge task: Asyncio loop is not running.")
+            return False
+
+    # Update _watchtower_loop (Extraction and High Priority)
+    async def _watchtower_loop(self):
+        # ... (Judgment logic)
+            agents_to_replace = self.watchtower.judge_agents(self.arena.agents, trade_logs)
+            if agents_to_replace:
+                for symbol, terminated_agent_id in agents_to_replace:
+                    
+                    # CRITICAL: Retrieve the DNA before removing the agent
+                    champion_dna = None
+                    terminated_agent = self.arena.get_agent_by_id(symbol, terminated_agent_id)
+                    if terminated_agent and hasattr(terminated_agent, 'dna'):
+                        champion_dna = terminated_agent.dna
+
+                    self.logger.warning(f"REAPING Agent {terminated_agent_id}. DNA retrieved: {champion_dna is not None}.")
+                    self.arena.remove_agent(symbol, terminated_agent_id)
+                    
+                    # ... (New agent ID generation) ...
+                    
+                    # Submit the task with HIGH priority and the DNA
+                    self.submit_forge_task(symbol, new_agent_id, current_gen, source="Watchtower", priority=PRIORITY_HIGH, champion_dna=champion_dna)
+
+    # Update _continuous_seeding_loop
+    async def _continuous_seeding_loop(self):
+         # ...
+         # Use PRIORITY_MEDIUM for seeding
+         self.submit_forge_task(symbol, agent_id, 0, source="Seeding", priority=PRIORITY_MEDIUM)
+         # ...
+```
+
+**2. Update Proactive Loop Priority**
+
+  * **File:** `singularity_engine.py` (Main folder files)
+
+<!-- end list -->
+
+```python
+# In singularity_engine.py -> _proactive_forge_loop
+# Define locally if import from crucible_engine is not feasible
+PRIORITY_LOW = 10 
+
+    async def _proactive_forge_loop(self):
+        # ...
+        # Use PRIORITY_LOW for proactive submissions
+        success = self.submit_forge_task(symbol, agent_id, generation="Proactive", source="Proactive", priority=PRIORITY_LOW)
+        # ...
+```
+
+#### Phase 3: DNA Transport and Utilization
+
+**1. Update `forge_worker.py` (Transport and Deserialization)**
+
+  * **File:** `forge_worker.py` (Main folder files)
+
+<!-- end list -->
+
+```python
+# In forge_worker.py
+# Update the function signature
+def run_forge_process(symbol, agent_id, generation, serialized_dna=None):
+    # ... (Initialization, OMP settings, Logging setup) ...
+
+    # Delayed Imports
+    try:
+        import dill # Import dill inside the worker
+        # ... (other imports)
+    # ...
+
+    # Deserialize DNA
+    inherited_dna = None
+    if serialized_dna:
+        try:
+            inherited_dna = dill.loads(serialized_dna)
+            logger.info("Successfully deserialized inherited DNA.")
+        except Exception as e:
+            logger.error(f"Failed to deserialize DNA in worker: {e}")
+
+    try:
+        # ...
+        # Pass the DNA into the cycle and capture the return values
+        model_id, winning_dna = run_single_forge_cycle(
+            # ... (other arguments)
+            inherited_dna=inherited_dna, # Pass the deserialized DNA
+            logger=logger
+        )
+        
+        logger.info(f"✅ Forge cycle for {agent_id} completed.")
+        
+        # Serialize the winning DNA before returning
+        serialized_winning_dna = None
+        if winning_dna:
+            try:
+                serialized_winning_dna = dill.dumps(winning_dna)
+            except Exception as e:
+                logger.error(f"Failed to serialize winning DNA for return: {e}")
+
+        # Return the full result: symbol, new_id, serialized_new_dna
+        return symbol, model_id, serialized_winning_dna
+        
+    except Exception as e:
+        logger.error(f"Error in subprocess forge for {agent_id}: {e}", exc_info=True)
+        return symbol, None, None # Return tuple on failure
+```
+
+**2. Update `task_scheduler.py`**
+
+  * **File:** `forge/overlord/task_scheduler.py` (Forge folder files)
+
+<!-- end list -->
+
+```python
+# In task_scheduler.py -> run_single_forge_cycle
+# Update function signature to accept inherited_dna
+def run_single_forge_cycle(..., logger=None, inherited_dna=None):
+    # ... (Delayed Imports and Initialization) ...
+
+    try:
+        # ... (Data Prep) ...
+
+        # --- 4. The Bake-Off ---
+        # ...
+        # Challenger 1: GP 2.0
+        try:
+            # ... (GP setup)
+            # Initialize the synthesizer with the seed DNA
+            # Ensure StrategySynthesizer is available in scope (from delayed imports)
+            
+            synthesizer = StrategySynthesizer(..., logger=logger, seed_dna=inherited_dna)
+            best_strategy_tree = synthesizer.run()
+            
+            if best_strategy_tree and best_strategy_tree.fitness.valid:
+                # ...
+                # Ensure the DNA is stored in the challenger list
+                challengers.append({"name": "GP 2.0", "model": evolved_model, "dna": evolved_model.get_dna(), ...})
+
+        # ... (Bake-off for other models)
+
+        # --- 7. Registration and Return ---
+        if best_model_info and model_id:
+            # Return the ID AND the DNA of the winner
+            winning_dna = best_model_info.get("dna") 
+            return model_id, winning_dna
+        else:
+            return None, None
+    
+    except Exception as e:
+        # ... (Error handling)
+        return None, None
+```
+
+**3. Update `CrucibleEngine` Processing Loop (Result Handling)**
+
+  * **File:** `crucible_engine.py` (Main folder files)
+
+<!-- end list -->
+
+```python
+# In crucible_engine.py -> CrucibleEngine._forge_processing_loop
+    async def _forge_processing_loop(self):
+        # ...
+        while not self.stop_event.is_set():
+            try:
+                # Unpack the prioritized item
+                priority, timestamp, task_data = await self.forge_queue.get()
+                symbol, agent_id, generation, source, serialized_dna = task_data
+                task_id = symbol
+                
+                self.logger.info(f"--- Processing Forge task from {source} (P{priority}): {task_id} ---")
+
+                try:
+                    if self.executor:
+                         # Run the task
+                         result = await loop.run_in_executor(
+                            self.executor,
+                            run_forge_process,
+                            symbol, agent_id, generation, serialized_dna
+                        )
+                        
+                        # Handle the updated result format (symbol, id, serialized_dna)
+                        if result and isinstance(result, tuple) and len(result) == 3:
+                            returned_symbol, new_agent_id, serialized_winning_dna = result
+                            
+                            if new_agent_id:
+                                # Deserialize the winning DNA
+                                new_dna = None
+                                if serialized_winning_dna:
+                                    try:
+                                        new_dna = dill.loads(serialized_winning_dna)
+                                    except Exception as e:
+                                        self.logger.error(f"Failed to deserialize winning DNA in main process: {e}")
+
+                                # (Initialize V3Agent)
+                                from forge.core.agent import V3Agent
+                                from forge.crucible.arena_manager import CrucibleAgent
+                                new_v3_agent = V3Agent(symbol=returned_symbol, exchange=self.exchange, app_config=self.config)
+
+                                # Initialize CrucibleAgent with the DNA
+                                new_crucible_agent = CrucibleAgent(agent_id=new_agent_id, v3_agent=new_v3_agent, dna=new_dna)
+                                self.arena.add_agent(returned_symbol, new_crucible_agent)
+                                self.logger.info(f"AGENT {new_agent_id} IS LIVE. DNA captured: {new_dna is not None}.")
+                            # ... (else/error handling)
+                # ... (exception handling and finally block)
+```
+
+#### Phase 4: Utilize the DNA and Optimize Evolution
+
+**1. Update `StrategySynthesizer` (Injection, Caching, Parsimony)**
+
+  * **File:** `forge/evolution/strategy_synthesizer.py` (Forge folder files)
+
+<!-- end list -->
+
+```python
+# In strategy_synthesizer.py
+from deap import creator, gp, tools
+
+class StrategySynthesizer:
+    # Update __init__ signature
+    def __init__(self, feature_names, fitness_evaluator, population_size=50, generations=20, logger=None, seed_dna=None):
+        # ... (existing initialization)
+        self.seed_dna = seed_dna
+        
+        # NEW: Optimization Initialization
+        self.fitness_cache = {}
+        self.parsimony_coeff = 0.001 # Penalize complex trees
+
+        # ... (DEAP setup)
+
+    # Modified: Incorporate Caching and Parsimony Pressure
+    def evaluate_fitness(self, individual):
+        # 1. Check Cache
+        tree_str = str(individual)
+        if tree_str in self.fitness_cache:
+            return self.fitness_cache[tree_str]
+
+        # 2. Compile and Evaluate
+        strategy_logic_func = gp.compile(expr=individual, pset=self.pset)
+        metrics = self.fitness_evaluator(strategy_logic_func)
+        raw_fitness = metrics.get("log_wealth", -1e9)
+
+        # 3. Apply Parsimony Pressure
+        tree_size = len(individual)
+        adjusted_fitness = raw_fitness - (tree_size * self.parsimony_coeff)
+        
+        # 4. Update Cache and Return (DEAP expects a tuple)
+        result = (adjusted_fitness,)
+        self.fitness_cache[tree_str] = result
+        return result
+
+    def create_seeded_population(self, n):
+        """Creates a population, injecting and mutating the seed DNA."""
+        pop = []
+        
+        # 1. Inject the Champion
+        seed_individual = None
+        if self.seed_dna and self.seed_dna.get('architecture') == 'GP2_Evolved':
+            try:
+                seed_tree = self.seed_dna['tree']
+                # Clone using the toolbox to ensure proper instantiation
+                seed_individual = self.toolbox.clone(seed_tree)
+
+                # Crucial: Delete fitness values from the previous run
+                if hasattr(seed_individual, 'fitness') and seed_individual.fitness.valid:
+                   del seed_individual.fitness.values
+                   
+                pop.append(seed_individual)
+                self.logger.info("[GP 2.0] Injected Champion DNA.")
+            except Exception as e:
+                self.logger.warning(f"[GP 2.0] Failed to inject seed DNA. Error: {e}")
+                seed_individual = None
+
+        # 2. Inject Mutations of the Champion (Micro-Mutation)
+        if seed_individual:
+            mutation_count = int(n * 0.2) # 20% of the population
+            for _ in range(mutation_count):
+                try:
+                    mutant = self.toolbox.clone(seed_individual)
+                    mutant, = self.toolbox.mutate(mutant)
+                    del mutant.fitness.values
+                    pop.append(mutant)
+                except Exception:
+                    pass
+
+        # 3. Fill the rest randomly
+        remaining = n - len(pop)
+        if remaining > 0:
+            random_pop = self.toolbox.population(n=remaining)
+            pop.extend(random_pop)
+            
+        return pop
+
+    def run(self):
+        # Use the new seeded population creator
+        pop = self.create_seeded_population(n=self.population_size)
+        # ... (rest of the run method)
+```
