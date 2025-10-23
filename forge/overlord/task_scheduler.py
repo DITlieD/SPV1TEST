@@ -86,12 +86,12 @@ def run_single_forge_cycle(raw_data_path: str, asset_symbol: str, reporter: Pipe
                       import nest_asyncio
                       nest_asyncio.apply()
                       logger.warning("Applied nest_asyncio to run async data fetching in task_scheduler.")
-                      aligned_data = asyncio.run(get_aligned_mtf_data(asset_symbol, app_config, exchange_instance))
+                      aligned_data = asyncio.run(get_aligned_mtf_data(asset_symbol, app_config, exchange_instance, limit=5000))
                  else:
-                     aligned_data = asyncio.run(get_aligned_mtf_data(asset_symbol, app_config, exchange_instance))
+                     aligned_data = asyncio.run(get_aligned_mtf_data(asset_symbol, app_config, exchange_instance, limit=5000))
              except RuntimeError as e:
                   logger.error(f"Asyncio runtime error fetching data: {e}. Trying direct run.")
-                  aligned_data = asyncio.run(get_aligned_mtf_data(asset_symbol, app_config, exchange_instance))
+                  aligned_data = asyncio.run(get_aligned_mtf_data(asset_symbol, app_config, exchange_instance, limit=5000))
 
              if aligned_data.empty:
                   raise ValueError("Failed to get aligned market data.")
@@ -217,13 +217,13 @@ def run_single_forge_cycle(raw_data_path: str, asset_symbol: str, reporter: Pipe
         if not feature_cols:
              raise ValueError("No feature columns identified for training/evolution.")
 
-        # Prepare final datasets
-        X_train = train_data[feature_cols]
+        # --- FIX: Keep full dataframes for X_train and X_val ---
+        X_train = train_data
         y_train = train_data['label']
         
-        X_val = val_data # Keep non-feature cols needed by fitness_function ('open', 'ATRr_*', 'close' for returns)
+        X_val = val_data
         y_val = val_data['label']
-        returns_val = val_data['close'].pct_change().fillna(0) # Needed for fitness function
+        returns_val = val_data['close'].pct_change().fillna(0)
 
         logger.info(f"Data split complete: X_train {X_train.shape}, X_val {X_val.shape}")
         
@@ -302,7 +302,7 @@ def run_single_forge_cycle(raw_data_path: str, asset_symbol: str, reporter: Pipe
                                        self._model = model_cls(**blueprint.hyperparameters)
                                        self.blueprint = blueprint
                                        self.features = list(blueprint.features) # Gauntlet needs features
-                                   def fit(self, X, y): self._model.fit(X[self.features], y)
+                                   def fit(self, X, y, **kwargs): self._model.fit(X[self.features], y, **kwargs)
                                    def predict(self, X): return self._model.predict(X[self.features])
                                    # Add get_params if gauntlet needs it
                                    def get_params(self, deep=True):
@@ -399,12 +399,39 @@ def run_single_forge_cycle(raw_data_path: str, asset_symbol: str, reporter: Pipe
         reporter.set_status("Registration", f"Registering champion model: {champion_info['name']}")
         registry = ModelRegistry()
         
+        # --- FIX: Re-train and Save the Champion Model Object ---
+        try:
+            champion_model = champion_info['model']
+            logger.info(f"Re-training champion model '{champion_info['name']}' on full training data...")
+            
+            # --- FINAL FIX: Pass the full DataFrame to the fit method ---
+            # The champion_model (BlueprintGauntletWrapper) is responsible for selecting its own features.
+            champion_model.fit(X_train, y_train)
+            logger.info("Champion model re-training complete.")
+
+            # Get the path where the model should be saved
+            model_dir = registry.get_model_instance_path(asset_symbol, model_instance_id)
+            os.makedirs(model_dir, exist_ok=True)
+            model_save_path = os.path.join(model_dir, "model.joblib")
+
+            # Save the trained model object
+            joblib.dump(champion_model, model_save_path)
+            logger.info(f"Champion model object saved to: {model_save_path}")
+
+        except Exception as e:
+            logger.error(f"FATAL: Failed to re-train and save the champion model object: {e}", exc_info=True)
+            # If we can't save the model, there's no point proceeding with registration.
+            return None, None
+        # --- END FIX ---
+
         # Prepare blueprint/params for registration
         # If champion came from GA, its 'model' is BlueprintGauntletWrapper
         registered_params = {}
-        if isinstance(champion_info.get("model"), BlueprintGauntletWrapper):
+        model_type_for_metadata = "Unknown" # Default
+        if hasattr(champion_info.get("model"), 'blueprint'):
             # Extract blueprint info
             bp = champion_info["model"].blueprint
+            model_type_for_metadata = bp.architecture # e.g., "LGBM", "XGB"
             registered_params = {
                 "architecture": bp.architecture,
                 "features": list(bp.features), # Convert frozenset to list for JSON
@@ -416,17 +443,16 @@ def run_single_forge_cycle(raw_data_path: str, asset_symbol: str, reporter: Pipe
         else:
              # Handle champions from other sources (MetaLearner, etc.) if they exist
              # Need to get their relevant parameters
+             model_type_for_metadata = champion_info.get('name', 'Custom')
              registered_params = {"info": "Parameters not extracted for non-GA champion"}
 
 
         model_id = registry.register_model(
              symbol=asset_symbol,
              model_instance_id=model_instance_id,
-             model_type=champion_info['name'], # Use challenger name as type?
+             model_type=model_type_for_metadata, # Use the specific architecture (LGBM, etc.)
              model_params=registered_params, # Store extracted blueprint/params
-             performance_metrics=champion_info.get("results", {}).get("metrics", {}), # Store gauntlet metrics
-             # model_object=None # Don't store the trained model object itself in registry
-             # xai_report_path=None # Add path if XAI is generated
+             performance_metrics=champion_info.get("results", {}).get("metrics", {}),
         )
         
         # Get the DNA (serialized blueprint dict) associated with the champion

@@ -81,12 +81,13 @@ RISK_PARAMETER_RANGES = {
 }
 
 class ModelBlueprint:
-    def __init__(self, architecture, features, hyperparameters, training_horizon, risk_parameters):
+    def __init__(self, architecture, features, hyperparameters, training_horizon, risk_parameters, device='cpu'):
         self.architecture = architecture
         self.features = frozenset(features) # Use frozenset for consistency
         self.hyperparameters = hyperparameters if hyperparameters is not None else {}
         self.training_horizon = training_horizon
         self.risk_parameters = risk_parameters if risk_parameters is not None else {}
+        self.device = device # <-- ADDED
         self.fitness = -1.0 # Initialize fitness
         self.shared_fitness = -1.0
 
@@ -105,14 +106,14 @@ class ModelBlueprint:
                 f"Fitness: {fitness_str})")
 
 
-def create_random_blueprint(min_horizon, max_horizon):
+def create_random_blueprint(min_horizon, max_horizon, device='cpu'):
     arch = random.choice(MODEL_ARCHITECTURES)
     
     # --- FIX: Ensure at least one feature group is selected ---
     if not FEATURE_SUBSETS:
          # No features available at all, return a dummy blueprint
          print("Warning: FEATURE_SUBSETS is empty in genetic_algorithm.py!")
-         return ModelBlueprint(arch, frozenset(), {}, min_horizon, {})
+         return ModelBlueprint(arch, frozenset(), {}, min_horizon, {}, device=device)
 
     feats = []
     # Ensure at least one group is chosen, even if only one group exists
@@ -173,7 +174,7 @@ def create_random_blueprint(min_horizon, max_horizon):
     risk_params = {p: random.uniform(*r) for p, r in RISK_PARAMETER_RANGES.items()}
     horizon = random.randint(min_horizon, max_horizon)
 
-    return ModelBlueprint(arch, frozenset(unique_feats), hps, horizon, risk_params)
+    return ModelBlueprint(arch, frozenset(unique_feats), hps, horizon, risk_params, device=device)
 
 
 # --- MULTIPROCESSING OPTIMIZATION: Pool Initializer and Worker Data ---
@@ -325,7 +326,7 @@ class GeneticAlgorithm:
             for _ in range(needed):
                 # Ensure create_random_blueprint doesn't fail catastrophically
                 try:
-                    bp = create_random_blueprint(self.min_horizon, self.max_horizon)
+                    bp = create_random_blueprint(self.min_horizon, self.max_horizon, device=self.device)
                     if bp: # Check if blueprint creation was successful
                         self.islands[i].append(bp)
                     else:
@@ -652,8 +653,8 @@ class GeneticAlgorithm:
     def crossover(self, p1, p2):
         """Performs crossover between two parent blueprints."""
         # --- FIX: Create copies to avoid modifying parents directly ---
-        c1 = ModelBlueprint(p1.architecture, p1.features, p1.hyperparameters.copy(), p1.training_horizon, p1.risk_parameters.copy())
-        c2 = ModelBlueprint(p2.architecture, p2.features, p2.hyperparameters.copy(), p2.training_horizon, p2.risk_parameters.copy())
+        c1 = ModelBlueprint(p1.architecture, p1.features, p1.hyperparameters.copy(), p1.training_horizon, p1.risk_parameters.copy(), device=self.device)
+        c2 = ModelBlueprint(p2.architecture, p2.features, p2.hyperparameters.copy(), p2.training_horizon, p2.risk_parameters.copy(), device=self.device)
 
 
         if random.random() > self.crossover_rate:
@@ -747,7 +748,8 @@ class GeneticAlgorithm:
              bp_orig.features, # Frozenset is immutable, ok to copy directly
              bp_orig.hyperparameters.copy(),
              bp_orig.training_horizon,
-             bp_orig.risk_parameters.copy()
+             bp_orig.risk_parameters.copy(),
+             device=self.device
         )
         bp.fitness = -1.0 # Reset fitness after mutation
         bp.shared_fitness = -1.0

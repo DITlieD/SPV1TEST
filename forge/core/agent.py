@@ -68,9 +68,9 @@ class V3Agent:
         
         # Initialize components
         self.model_registry = ModelRegistry(registry_path=self.config.MODEL_DIR)
-        self.governor = None
+        self.governor = self._load_rl_governor()
         self.hdbscan_model = None
-        self.hedge_weights = {}
+        self.pending_trade_details = {}
 
         self.specialist_models = self._load_specialist_models()
         self._update_current_model_id() # <--- ADD THIS
@@ -91,6 +91,12 @@ class V3Agent:
                 'capital_deployed': avg_price * executed_qty,
                 'commission_paid': avg_price * executed_qty * 0.0007, # Assuming 0.07% commission
             }
+            # --- ACTIVATE RISK MANAGEMENT ---
+            if self.pending_trade_details:
+                self.current_trade.update(self.pending_trade_details)
+                self.logger.info(f"Activated SL/TP for current trade: SL={self.current_trade.get('stop_loss'):.2f}, TP={self.current_trade.get('take_profit'):.2f}")
+                self.pending_trade_details = {} # Clear after use
+            # --- END ---
             self._finalize_position(signal='ENTRY', amount=executed_qty, price=avg_price, atr=None, features=None)
         elif side == "Sell":
             self.in_position = False
@@ -155,7 +161,7 @@ class V3Agent:
 
     def _load_rl_governor(self):
         try:
-            model_path = os.path.join(self.config.MODEL_DIR, f"{self.sanitized_symbol}_RLG.joblib")
+            model_path = os.path.join(self.config.MODEL_DIR, f"{self.sanitized_symbol}_RLG.zip")
             if os.path.exists(model_path):
                 self.logger.info(f"Loading Deep RL Governor from {model_path}")
                 return RLGovernor.load(model_path, env=None)
@@ -267,12 +273,6 @@ class V3Agent:
             self.logger.warning("[DIAGNOSTIC] No specialist models loaded. Cannot make a decision.")
             return None
 
-        # --- STRATEGY: Only allow evolved GP 2.0 models to trade ---
-        is_gp_agent = any(getattr(model, 'is_gp_model', False) for model in self.specialist_models.values())
-        if not is_gp_agent:
-            self.logger.info("Agent has no evolved GP 2.0 models. Waiting for Forge to create one. No trades will be placed.")
-            return None
-        # ---------------------------------------------------------
         
         self.logger.info(f"[DIAGNOSTIC] {len(self.specialist_models)} specialist models are active.")
         latest_features = features_df.tail(1)
@@ -289,61 +289,49 @@ class V3Agent:
                 except Exception as e:
                     self.logger.error(f"Error during MetaLearner fast-update for {model_id}: {e}")
 
-        # --- ENSEMBLE PREDICTION ---
-        predictions = {}
-        probabilities = {}
-        for model_id, model in self.specialist_models.items():
-            try:
-                if hasattr(model, 'feature_names'):
-                    required_features = model.feature_names
-                    missing = set(required_features) - set(latest_features.columns)
-                    if missing:
-                        self.logger.warning(f"Model {model_id} requires missing features: {missing}. Skipping prediction.")
-                        continue
-                    model_input = latest_features[required_features]
-                else:
-                    model_input = latest_features
-                
-                # PRE-PREDICTION CHECK
-                if model_input.isnull().values.any() or np.isinf(model_input.values).any():
-                    self.logger.warning(f"Model {model_id} input contains NaN or Inf. Skipping prediction.")
-                    continue
+        # --- SINGLE MODEL PREDICTION ---
+        # Since the architecture is one agent per model, we don't need ensemble logic.
+        model_id, model = next(iter(self.specialist_models.items()))
 
-                pred = model.predict(model_input)
-                if isinstance(pred, np.ndarray): pred = pred[0] if len(pred) > 0 else 0
-                elif isinstance(pred, pd.Series): pred = pred.values[0]
-                predictions[model_id] = int(pred)
+        try:
+            if hasattr(model, 'feature_names'):
+                required_features = model.feature_names
+                missing = set(required_features) - set(latest_features.columns)
+                if missing:
+                    self.logger.warning(f"Model {model_id} requires missing features: {missing}. Skipping prediction.")
+                    return None
+                model_input = latest_features[required_features]
+            else:
+                model_input = latest_features
 
-                if hasattr(model, 'predict_proba'):
-                    try:
-                        proba = model.predict_proba(model_input)
-                        if isinstance(proba, np.ndarray) and proba.ndim == 2:
-                            probabilities[model_id] = proba[0]
-                    except Exception: pass
-            except Exception as e:
-                self.logger.error(f"Error getting prediction from model {model_id}: {e}")
+            if model_input.isnull().values.any() or np.isinf(model_input.values).any():
+                self.logger.warning(f"Model {model_id} input contains NaN or Inf. Skipping prediction.")
+                return None
 
-        self.logger.info(f"[DIAGNOSTIC] Raw predictions: {predictions}")
-        if not predictions:
-            self.logger.warning("[DIAGNOSTIC] No valid predictions received.")
+            pred = model.predict(model_input)
+            if isinstance(pred, np.ndarray): pred = pred[0] if len(pred) > 0 else 0
+            elif isinstance(pred, pd.Series): pred = pred.values[0]
+            
+            signal = int(pred)
+            confidence = 0.75 # Default confidence if model doesn't provide it
+
+            if hasattr(model, 'predict_proba'):
+                try:
+                    proba = model.predict_proba(model_input)
+                    if isinstance(proba, np.ndarray) and proba.ndim == 2:
+                        # Set confidence to the probability of the predicted class
+                        confidence = proba[0][signal]
+                except Exception:
+                    self.logger.warning(f"Could not get probability from model {model_id}. Using default confidence.")
+            
+            self.logger.info(f"[DIAGNOSTIC] Model {model_id} produced signal={signal} with confidence={confidence:.2%}")
+
+        except Exception as e:
+            self.logger.error(f"Error getting prediction from model {model_id}: {e}")
             return None
 
-        # --- VOTING LOGIC ---
-        vote_counts = {0: 0, 1: 0, 2: 0}
-        total_weight = 0
-        for model_id, pred in predictions.items():
-            weight = self.hedge_weights.get(model_id, 1.0 / len(predictions) if predictions else 1.0)
-            vote_counts[pred] += weight
-            total_weight += weight
-        
-        # Refined Exit Signal
-        if total_weight > 0 and (vote_counts[2] / total_weight) > 0.5:
-            ensemble_signal = 2 # Force exit if weighted majority votes to exit
-        else:
-            ensemble_signal = max(vote_counts, key=vote_counts.get)
+        ensemble_signal = signal # Use the direct signal from the single model
 
-        confidence = vote_counts[ensemble_signal] / total_weight if total_weight > 0 else 0
-        self.logger.info(f"[DIAGNOSTIC] Ensemble vote: {vote_counts} -> Signal={ensemble_signal}, Confidence={confidence:.2%}")
 
         # --- Regime-based parameter adjustment ---
         if regime_id == 0: # Trending
@@ -367,26 +355,6 @@ class V3Agent:
                 kelly_fraction = calculate_fractional_kelly(win_prob, risk_reward, fraction=0.5)
                 self.logger.info(f"[DIAGNOSTIC] Kelly Fraction calculated: {kelly_fraction:.4f}")
                 size_fraction = min(kelly_fraction, 0.95) * risk_multiplier
-
-                # --- RL Governor ---
-                if self.governor:
-                    try:
-                        gov_obs = latest_features[self.governor.feature_names]
-                        gov_action, _ = self.governor.predict(gov_obs, deterministic=True)
-                        # Assuming governor action is a multiplier between 0.5 and 1.5
-                        size_fraction *= gov_action[0]
-                        self.logger.info(f"RL Governor adjusted size fraction by {gov_action[0]:.2f}")
-                    except Exception as e:
-                        self.logger.error(f"Error using RL Governor: {e}")
-
-                # --- MCE Adjustment ---
-                mce_confidence_adj = 1.0
-                if mce_skew < -0.2: # Skew opposes LONG signal
-                    mce_confidence_adj *= 0.5
-                if mce_pressure > 0.8: # High pressure = risky entry
-                    mce_confidence_adj *= 0.3
-                size_fraction *= mce_confidence_adj
-                self.logger.info(f"[DIAGNOSTIC] MCE Applied: Skew={mce_skew:.2f}, Pressure={mce_pressure:.2f}, AdjFactor={mce_confidence_adj:.2f}, Final Size={size_fraction:.2%}")
 
                 if size_fraction > 0.01:
                     self.logger.info(f"[DIAGNOSTIC] Position size ({size_fraction:.2%}) is valid. EXECUTING TRADE.")
@@ -474,6 +442,19 @@ class V3Agent:
                 self.logger.info(f"[DIAGNOSTIC] TDA Risk Applied: Factor={tda_risk_adj:.2f}, Final Size={size_fraction:.2%}")
 
                 if size_fraction > 0.01:
+                    # --- DYNAMIC RISK MANAGEMENT ---
+                    stop_loss_distance = self.config.STOP_LOSS_ATR_MULTIPLE * atr
+                    stop_loss_price = current_price - stop_loss_distance
+                    
+                    take_profit_price = current_price + (stop_loss_distance * risk_reward)
+                    
+                    self.pending_trade_details = {
+                        'stop_loss': stop_loss_price,
+                        'take_profit': take_profit_price
+                    }
+                    self.logger.info(f"Calculated SL: {stop_loss_price:.2f} | TP: {take_profit_price:.2f} (ATR: {atr:.4f}, R:R: {risk_reward})")
+                    # --- END DYNAMIC RISK MANAGEMENT ---
+
                     await self._execute_trade(signal='ENTRY', size_fraction=size_fraction, atr=atr, features=latest_features)
                     return { 'action': 'BUY', 'symbol': self.symbol, 'price': current_price, 'size_fraction': size_fraction, 'reason': f'Ensemble ENTRY signal (confidence: {confidence:.2%}, Kelly: {kelly_fraction:.2%})' }
         return None
@@ -632,29 +613,5 @@ class V3Agent:
             self.logger.info(f"Trade logged: {net_pnl:+.2f} USD ({pnl_pct:+.2f}%) over {duration_hours:.1f}h | R-Multiple: {r_multiple:.2f}")
         except Exception as e:
             self.logger.error(f"Failed to write exit to performance log: {e}")
-
-    def update_hedge_weights(self, losses: dict):
-        """
-        Updates ensemble weights based on recent losses from the hedge manager.
-        This allows dynamic adjustment of model voting power based on performance.
-        """
-        if not losses:
-            return
-
-        # The 'losses' are inverse performance, so we invert them to get weights.
-        # A model with lower loss gets a higher weight.
-        # We can use a softmax function to convert losses to weights that sum to 1.
-        
-        model_ids = list(losses.keys())
-        loss_values = np.array([losses[mid] for mid in model_ids])
-        
-        # Convert losses to weights (lower loss = higher weight)
-        # We subtract the max loss to avoid large numbers, then exponentiate.
-        # This is a stable softmax calculation.
-        shift_losses = loss_values - np.max(loss_values)
-        exp_losses = np.exp(-shift_losses) # Use negative to invert loss
-        weights = exp_losses / np.sum(exp_losses)
-        
-        self.hedge_weights = {model_id: weight for model_id, weight in zip(model_ids, weights)}
 
         self.logger.debug(f"Hedge weight update received and processed: {self.hedge_weights}")

@@ -82,7 +82,7 @@ class TransformerWrapper:
             'features': self.feature_names if hasattr(self, 'feature_names') else []
         }
 
-    def fit(self, df_train, device='cpu', generation=0):
+    def fit(self, df_train, device='cpu', **kwargs):
         # --- BRUTE FORCE GPU ---
         if device.lower() in ['gpu', 'cuda']:
             if not torch.cuda.is_available():

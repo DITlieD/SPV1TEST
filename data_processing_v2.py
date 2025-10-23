@@ -328,10 +328,10 @@ def get_specialist_labels(df, atr_col, module_type='reversion', window=20, std_d
     else:
         return pd.Series(0, index=df.index)
 
-async def get_aligned_mtf_data(symbol: str, app_config, exchange):
-    limit_tactical = 2000
-    limit_strategic = limit_tactical // 16
-    limit_micro = limit_tactical * 15
+async def get_aligned_mtf_data(symbol: str, app_config, exchange, limit=2000):
+    limit_tactical = limit
+    limit_strategic = limit // 16
+    limit_micro = limit * 15
 
     tactical_task = get_market_data(symbol, app_config.TIMEFRAMES['tactical'], limit_tactical, exchange)
     strategic_task = get_market_data(symbol, app_config.TIMEFRAMES['strategic'], limit_strategic, exchange)

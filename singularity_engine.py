@@ -48,6 +48,15 @@ class SingularityEngine:
         self.hedge_manager = hedge_manager
         self.active_forges = set()
         self.cycle_completion_event = asyncio.Event()
+
+        # --- ACP Integration: Initialize Chimera Engine ---
+        self.opponent_param_bounds = opponent_param_bounds
+        self.chimera_engine = ChimeraEngine(
+            strategy_template=simple_rsi_opponent,
+            max_iterations=50 # Configurable
+        )
+        # --- End ACP Integration ---
+
         self.logger.info("Singularity Engine initialized.")
         self.logger.info(f"Asset universe order: {self.config.ASSET_UNIVERSE}")
 
@@ -143,102 +152,6 @@ class SingularityEngine:
             self.logger.info("All active forge tasks for the cycle are complete.")
             self.cycle_completion_event.set()
 
-    async def _reactive_drift_monitoring_loop(self):
-        self.logger.info("Starting reactive drift monitoring loop...")
-        while not self.stop_event.is_set():
-            self.logger.info("Running reactive drift check...")
-            loop = asyncio.get_running_loop()
-
-            self.logger.info("Monitoring for concept drift...")
-            try:
-                drift_detected = await loop.run_in_executor(None, self._analyze_drift)
-                if drift_detected:
-                    pass # Drift handling logic
-            except Exception as e:
-                self.logger.error(f"Error during drift analysis offloading: {e}")
-
-            self.logger.info("Updating ensemble weights based on performance log...")
-            try:
-                 losses = await loop.run_in_executor(None, self._calculate_model_losses)
-                 if losses:
-                    self.trigger_weight_update_func(losses)
-            except Exception as e:
-                self.logger.error(f"Error during weight update offloading: {e}")
-
-            self.logger.info(f"Reactive check complete. Sleeping for {self.drift_check_interval}s.")
-            await asyncio.sleep(self.drift_check_interval)
-
-    def _analyze_drift(self):
-        try:
-            with open("performance_log.jsonl", "r") as f:
-                lines = f.readlines()
-            
-            if not lines:
-                return False
-
-            model_performance = {}
-            for line in lines:
-                try:
-                    log = json.loads(line)
-                    model_id = log.get("model_id")
-                    pnl = log.get("net_pnl")
-                    if model_id and pnl is not None:
-                        if model_id not in model_performance:
-                            model_performance[model_id] = []
-                        model_performance[model_id].append(pnl)
-                except json.JSONDecodeError:
-                    continue
-            
-            drift_detected = False
-            for model_id, pnls in model_performance.items():
-                if len(pnls) > 100: # Check for drift if there are more than 100 trades
-                    pnl_series = pd.Series(pnls)
-                    detector = DriftDetector() # Create a new detector for each model
-                    drift_point = detector.run_on_series(pnl_series)
-                    if drift_point > 0:
-                        self.logger.info(f"Drift detected for model {model_id} at index {drift_point}.")
-                        drift_detected = True
-            
-            return drift_detected
-
-        except FileNotFoundError:
-            self.logger.warning("Performance log not found. Skipping drift analysis.")
-            return False
-
-    def _calculate_model_losses(self):
-        try:
-            with open("performance_log.jsonl", "r") as f:
-                lines = f.readlines()
-            
-            if not lines:
-                return {}
-
-            model_performance = {}
-            for line in lines:
-                try:
-                    log = json.loads(line)
-                    model_id = log.get("model_id")
-                    pnl = log.get("net_pnl")
-                    if model_id and pnl is not None:
-                        if model_id not in model_performance:
-                            model_performance[model_id] = []
-                        model_performance[model_id].append(pnl)
-                except json.JSONDecodeError:
-                    continue
-            
-            model_losses = {}
-            for model_id, pnls in model_performance.items():
-                # Using sum of negative PnL as loss.
-                total_pnl = np.sum(pnls)
-                loss = -total_pnl
-                model_losses[model_id] = loss
-
-            return model_losses
-
-        except FileNotFoundError:
-            self.logger.warning("Performance log not found. Skipping weight update.")
-            return {}
-
     async def _run_chimera_inference(self):
         """Periodically runs Chimera to infer opponent parameters."""
         from forge.acp.acp_engines import extract_observed_market_signature
@@ -279,7 +192,7 @@ class SingularityEngine:
     async def run(self):
         self.logger.info("Singularity Engine starting its operational loops.")
         tasks = [
-            self._reactive_drift_monitoring_loop(),
             self._proactive_forge_loop(),
+            self._chimera_loop(),
         ]
         await asyncio.gather(*tasks)
